@@ -21,6 +21,7 @@ public class RemoteDriverConfigGui extends WebDriverConfigGui implements ItemLis
     private static final long serialVersionUID = 100L;
     JTextField remoteSeleniumGridText;
     JComboBox capabilitiesComboBox;
+    JCheckBox headlessEnabled;
     JLabel errorMsg;
 
     private JComboBox fileDetectorsComboBox;
@@ -65,7 +66,14 @@ public class RemoteDriverConfigGui extends WebDriverConfigGui implements ItemLis
             remoteSeleniumGridText.setText(config.getSeleniumGridUrl());
             capabilitiesComboBox.setSelectedItem(config.getCapability());
             fileDetectorsComboBox.setSelectedItem(config.getFileDetectorOption());
+
+            getHeadlessEnabled().setSelected(config.isHeadlessEnabled());
         }
+    }
+
+
+    public JCheckBox getHeadlessEnabled() {
+        return headlessEnabled;
     }
 
     @Override
@@ -76,6 +84,7 @@ public class RemoteDriverConfigGui extends WebDriverConfigGui implements ItemLis
             config.setSeleniumGridUrl(remoteSeleniumGridText.getText());
             config.setCapability((RemoteCapability)capabilitiesComboBox.getSelectedItem());
             config.setFileDetectorOption((FileDetectorOption)fileDetectorsComboBox.getSelectedItem());
+            config.setHeadlessEnabled(getHeadlessEnabled().isSelected());
         }
     }
 
@@ -84,6 +93,7 @@ public class RemoteDriverConfigGui extends WebDriverConfigGui implements ItemLis
         final JPanel remotePanel = new VerticalPanel();
         final JLabel remoteUrlLabel = new JLabel();
         final JLabel capabilitiesLabel = new JLabel();
+        final JLabel headlessEnabledLabel = new JLabel();
         final JLabel fileDetectorLabel = new JLabel();
 
         remoteUrlLabel.setText("Selenium Grid URL");
@@ -94,6 +104,9 @@ public class RemoteDriverConfigGui extends WebDriverConfigGui implements ItemLis
         capabilitiesLabel.setText("Capability");
         capabilitiesComboBox = new JComboBox(RemoteCapability.values());
 
+        headlessEnabledLabel.setText("Headless");
+        headlessEnabled = new JCheckBox("Use Chrome headless mode");
+
         fileDetectorLabel.setText("File detector");
         fileDetectorsComboBox = new JComboBox(FileDetectorOption.values());
 
@@ -102,6 +115,8 @@ public class RemoteDriverConfigGui extends WebDriverConfigGui implements ItemLis
         remotePanel.add(errorMsg=new JLabel());
         remotePanel.add(capabilitiesLabel);
         remotePanel.add(capabilitiesComboBox);
+        remotePanel.add(headlessEnabledLabel);
+        remotePanel.add(headlessEnabled);
         remotePanel.add(fileDetectorLabel);
         remotePanel.add(fileDetectorsComboBox);
 
@@ -118,6 +133,7 @@ public class RemoteDriverConfigGui extends WebDriverConfigGui implements ItemLis
         remoteSeleniumGridText.setText(StringUtils.EMPTY);
         capabilitiesComboBox.setSelectedIndex(2);
         fileDetectorsComboBox.setSelectedIndex(1);
+        headlessEnabled.setSelected(false);
     }
 
 	@Override

@@ -16,12 +16,13 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.*;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
@@ -154,6 +155,24 @@ public class ChromeDriverConfigTest {
         assertThat(capabilities.getCapability(ChromeOptions.CAPABILITY), is(nullValue()));
     }
 
+    @Test
+    public void shouldHaveChromeOptionsWhenRemoteIsEnabled() {
+        config.setHeadlessEnabled(true);
+        final Capabilities capabilities = config.createCapabilities();
+        TreeMap capability = (TreeMap) capabilities.getCapability(ChromeOptions.CAPABILITY);
+        assertThat(capability, is(notNullValue()));
+        List<String> args = (List<String>) capability.get("args");
+        assertThat(args, is(notNullValue()));
+        assertEquals(1, args.size());
+        assertEquals("--headless", args.get(0));
+    }
+
+    @Test
+    public void shouldNotHaveChromeOptionsWhenRemoteIsNotEnabled() {
+        config.setAndroidEnabled(false);
+        final Capabilities capabilities = config.createCapabilities();
+        assertThat(capabilities.getCapability(ChromeOptions.CAPABILITY), is(nullValue()));
+    }
 
     @Test
     public void shouldHaveInsecureCertsWhenInsecureCertsIsEnabled() {

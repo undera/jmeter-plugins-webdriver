@@ -4,10 +4,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.jorphan.logging.LoggingManager;
 import org.apache.log.Logger;
 import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.*;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import static com.googlecode.jmeter.plugins.webdriver.config.RemoteCapability.CHROME;
 
 public class RemoteDriverConfig extends WebDriverConfig<RemoteWebDriver> {
 
@@ -15,6 +18,7 @@ public class RemoteDriverConfig extends WebDriverConfig<RemoteWebDriver> {
 	private static final String REMOTE_SELENIUM_GRID_URL = "RemoteDriverConfig.general.selenium.grid.url";
 	private static final String REMOTE_CAPABILITY = "RemoteDriverConfig.general.selenium.capability";
 	private static final String REMOTE_FILE_DETECTOR = "RemoteDriverConfig.general.selenium.file.detector";
+	private static final String HEADLESS_ENABLED = "RemoteDriverConfig.chrome.headless_enabled";
 
 	private static final Logger LOGGER = LoggingManager.getLoggerForClass();
 
@@ -22,6 +26,13 @@ public class RemoteDriverConfig extends WebDriverConfig<RemoteWebDriver> {
 		DesiredCapabilities capabilities = RemoteDesiredCapabilitiesFactory.build(getCapability());
 		capabilities.setCapability(CapabilityType.PROXY, createProxy());
 		capabilities.setJavascriptEnabled(true);
+
+		if (getCapability().equals(CHROME) && isHeadlessEnabled()) {
+			final ChromeOptions chromeOptions = new ChromeOptions();
+			chromeOptions.addArguments("--headless");
+			capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
+		}
+
 		return capabilities;
 	}
 
@@ -75,4 +86,11 @@ public class RemoteDriverConfig extends WebDriverConfig<RemoteWebDriver> {
 		}
 	}
 
+	public boolean isHeadlessEnabled() {
+		return getPropertyAsBoolean(HEADLESS_ENABLED);
+	}
+
+	public void setHeadlessEnabled(boolean enabled) {
+		setProperty(HEADLESS_ENABLED, enabled);
+	}
 }

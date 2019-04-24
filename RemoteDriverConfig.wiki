@@ -19,4 +19,7 @@ Specify the URL of the Selenium Grid. The URL must be correct, if you specify a 
 === Capability ===
 Specify which browser selects from your Selenium Grid. Currently it only selects the browser matching the browserName. So if you are running three concurrent users it will spin three browser instances in a selenium grid node.
 
+=== Headless ===
+Specify if the browser is to be run in headless mode.
+
 Please see the [Roadmap] document for future plans.
