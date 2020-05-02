@@ -32,6 +32,8 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
      * Ideally we would have stored the WebDriver instances in the JMeterVariables object, however the JMeterVariables
      * is cleared BEFORE threadFinished() callback is called (hence would never be able to quit the WebDriver).
      */
+    // PATCH: Added changes to stow the WebDriver in both places, regardless. This is so other samplers who might
+    // be interested in leveraging the WebDriver instance can get a handle to it without too much trouble.
     private static final Map<String, WebDriver> webdrivers = new ConcurrentHashMap<String, WebDriver>();
 
     private static final String PROXY_PAC_URL = "WebDriverConfig.proxy_pac_url";
@@ -205,7 +207,6 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
             setThreadBrowser(getPreparedBrowser());
             LOGGER.info("Created browser object: " + browser);
         }
-        getThreadContext().getVariables().putObject(WebDriverConfig.BROWSER, getThreadBrowser());
     }
 
     @Override
@@ -294,6 +295,8 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
     protected void setThreadBrowser(T browser) {
         if (browser != null) {
             webdrivers.put(currentThreadName(), browser);
+            // Make sure we stow the object in both places, in case someone wants a copy
+            getThreadContext().getVariables().putObject(WebDriverConfig.BROWSER, browser);
         }
     }
 
