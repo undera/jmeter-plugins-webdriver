@@ -26,6 +26,7 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
     private static final String ANDROID_ENABLED = "ChromeDriverConfig.android_enabled";
     private static final String HEADLESS_ENABLED = "ChromeDriverConfig.headless_enabled";
     private static final String INSECURECERTS_ENABLED = "ChromeDriverConfig.insecurecerts_enabled";
+    private static final String INCOGNITO_ENABLED = "ChromeDriverConfig.incognito_enabled";
     private static final Map<String, ChromeDriverService> services = new ConcurrentHashMap<String, ChromeDriverService>();
 
     public void setChromeDriverPath(String path) {
@@ -44,7 +45,7 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
 		capabilities.setCapability(CapabilityType.LOGGING_PREFS, logPrefs);
         
 
-        if(isAndroidEnabled() || isHeadlessEnabled()) {
+        if(isAndroidEnabled() || isHeadlessEnabled() || isIncognitoEnabled()) {
             //Map<String, String> chromeOptions = new HashMap<String, String>();
             //chromeOptions.put("androidPackage", "com.android.chrome");
             ChromeOptions chromeOptions = new ChromeOptions();
@@ -55,11 +56,16 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
                 chromeOptions.addArguments("--headless");
 
             }
+            if (isIncognitoEnabled()) {
+                chromeOptions.addArguments("--incognito");
+
+            }
             capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
         }
-	if(isInsecureCertsEnabled()) {
-	        capabilities.setCapability("acceptInsecureCerts", true);
-	}
+
+        if(isInsecureCertsEnabled()) {
+              capabilities.setCapability("acceptInsecureCerts", true);
+        }
 
         return capabilities;
     }
@@ -122,4 +128,13 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
     public void setInsecureCertsEnabled(boolean enabled) {
         setProperty(INSECURECERTS_ENABLED, enabled);
     }
+
+    public boolean isIncognitoEnabled() {
+        return getPropertyAsBoolean(INCOGNITO_ENABLED);
+    }
+
+    public void setIncognitoEnabled(boolean enabled) {
+        setProperty(INCOGNITO_ENABLED, enabled);
+    }
+
 }

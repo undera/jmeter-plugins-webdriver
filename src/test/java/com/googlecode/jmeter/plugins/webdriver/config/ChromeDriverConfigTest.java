@@ -207,4 +207,11 @@ public class ChromeDriverConfigTest {
         config.setInsecureCertsEnabled(true);
         assertThat(config.isInsecureCertsEnabled(), is(true));
     }
+
+    @Test
+    public void getSetIncognitoEnabled() {
+        assertThat(config.isIncognitoEnabled(), is(false));
+        config.setIncognitoEnabled(true);
+        assertThat(config.isIncognitoEnabled(), is(true));
+    }
 }
