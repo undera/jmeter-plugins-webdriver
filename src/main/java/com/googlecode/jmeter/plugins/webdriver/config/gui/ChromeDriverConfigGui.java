@@ -15,6 +15,7 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
     JCheckBox androidEnabled;
     private JCheckBox headlessEnabled;
     private JCheckBox insecureCertsEnabled;
+    private JCheckBox incognitoEnabled;
 
     @Override
     public String getStaticLabel() {
@@ -35,6 +36,7 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
             androidEnabled.setSelected(config.isAndroidEnabled());
             getHeadlessEnabled().setSelected(config.isHeadlessEnabled());
             getInsecureCertsEnabled().setSelected(config.isInsecureCertsEnabled());
+            getIncognitoEnabled().setSelected(config.isIncognitoEnabled());
         }
     }
 
@@ -54,6 +56,7 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
             config.setAndroidEnabled(androidEnabled.isSelected());
             config.setHeadlessEnabled(getHeadlessEnabled().isSelected());
             config.setInsecureCertsEnabled(getInsecureCertsEnabled().isSelected());
+            config.setIncognitoEnabled(getIncognitoEnabled().isSelected());
         }
     }
 
@@ -64,6 +67,7 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
         androidEnabled.setSelected(false);
         getHeadlessEnabled().setSelected(false);
         getInsecureCertsEnabled().setSelected(false);
+        getIncognitoEnabled().setSelected(false);
     }
 
     @Override
@@ -99,6 +103,9 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
 
         insecureCertsEnabled = new JCheckBox("Allow Insecure Certs");
         browserPanel.add(getInsecureCertsEnabled());
+
+        incognitoEnabled = new JCheckBox("Run in Incognito mode");
+        browserPanel.add(getIncognitoEnabled());
         return browserPanel;
     }
 
@@ -118,5 +125,9 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
     
     public JCheckBox getInsecureCertsEnabled() {
         return insecureCertsEnabled;
+    }
+
+    public JCheckBox getIncognitoEnabled() {
+        return incognitoEnabled;
     }
 }

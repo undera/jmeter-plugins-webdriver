@@ -72,11 +72,19 @@ public class ChromeDriverConfigGuiTest {
     }
 
     @Test
+    public void shouldSetIncognitoEnabled() {
+        gui.getIncognitoEnabled().setSelected(true);
+        final ChromeDriverConfig testElement = (ChromeDriverConfig) gui.createTestElement();
+        assertThat(testElement.isIncognitoEnabled(), is(true));
+    }
+
+    @Test
     public void shouldResetValuesOnClearGui() {
         gui.chromeServicePath.setText("path");
         gui.androidEnabled.setSelected(true);
         gui.getHeadlessEnabled().setSelected(true);
         gui.getInsecureCertsEnabled().setSelected(true);
+        gui.getIncognitoEnabled().setSelected(true);
 
         gui.clearGui();
 
@@ -84,6 +92,7 @@ public class ChromeDriverConfigGuiTest {
         assertThat(gui.androidEnabled.isSelected(), is(false));
         assertThat(gui.getHeadlessEnabled().isSelected(), is(false));
         assertThat(gui.getInsecureCertsEnabled().isSelected(), is(false));
+        assertThat(gui.getIncognitoEnabled().isSelected(), is(false));
     }
 
     @Test
@@ -120,6 +129,15 @@ public class ChromeDriverConfigGuiTest {
         gui.configure(config);
 
         assertThat(gui.getInsecureCertsEnabled().isSelected(), is(config.isInsecureCertsEnabled()));
+    }
+
+    @Test
+    public void shouldSetIncognitoEnabledOnConfigure() {
+        ChromeDriverConfig config = new ChromeDriverConfig();
+        config.setIncognitoEnabled(true);
+        gui.configure(config);
+
+        assertThat(gui.getIncognitoEnabled().isSelected(), is(config.isIncognitoEnabled()));
     }
 
     @Test
