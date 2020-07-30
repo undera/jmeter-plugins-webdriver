@@ -214,4 +214,11 @@ public class ChromeDriverConfigTest {
         config.setIncognitoEnabled(true);
         assertThat(config.isIncognitoEnabled(), is(true));
     }
+
+    @Test
+    public void getSetNoSandboxEnabled() {
+        assertThat(config.isNoSandboxEnabled(), is(false));
+        config.setNoSandboxEnabled(true);
+        assertThat(config.isNoSandboxEnabled(), is(true));
+    }
 }

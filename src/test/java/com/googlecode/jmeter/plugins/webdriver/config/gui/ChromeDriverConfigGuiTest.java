@@ -79,12 +79,20 @@ public class ChromeDriverConfigGuiTest {
     }
 
     @Test
+    public void shouldSetNoSandboxEnabled() {
+        gui.getNoSandboxEnabled().setSelected(true);
+        final ChromeDriverConfig testElement = (ChromeDriverConfig) gui.createTestElement();
+        assertThat(testElement.isNoSandboxEnabled(), is(true));
+    }
+
+    @Test
     public void shouldResetValuesOnClearGui() {
         gui.chromeServicePath.setText("path");
         gui.androidEnabled.setSelected(true);
         gui.getHeadlessEnabled().setSelected(true);
         gui.getInsecureCertsEnabled().setSelected(true);
         gui.getIncognitoEnabled().setSelected(true);
+        gui.getNoSandboxEnabled().setSelected(true);
 
         gui.clearGui();
 
@@ -93,6 +101,7 @@ public class ChromeDriverConfigGuiTest {
         assertThat(gui.getHeadlessEnabled().isSelected(), is(false));
         assertThat(gui.getInsecureCertsEnabled().isSelected(), is(false));
         assertThat(gui.getIncognitoEnabled().isSelected(), is(false));
+        assertThat(gui.getNoSandboxEnabled().isSelected(), is(false));
     }
 
     @Test
@@ -146,4 +155,12 @@ public class ChromeDriverConfigGuiTest {
 		assertThat(gui.isProxyEnabled(), is(true));
 	}
 
+    @Test
+    public void shouldSetNoSandboxEnabledOnConfigure() {
+        ChromeDriverConfig config = new ChromeDriverConfig();
+        config.setNoSandboxEnabled(true);
+        gui.configure(config);
+
+        assertThat(gui.getNoSandboxEnabled().isSelected(), is(config.isNoSandboxEnabled()));
+    }
 }

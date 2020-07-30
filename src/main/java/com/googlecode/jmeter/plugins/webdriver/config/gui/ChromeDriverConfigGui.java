@@ -16,6 +16,7 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
     private JCheckBox headlessEnabled;
     private JCheckBox insecureCertsEnabled;
     private JCheckBox incognitoEnabled;
+    private JCheckBox noSandboxEnabled;
 
     @Override
     public String getStaticLabel() {
@@ -37,6 +38,7 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
             getHeadlessEnabled().setSelected(config.isHeadlessEnabled());
             getInsecureCertsEnabled().setSelected(config.isInsecureCertsEnabled());
             getIncognitoEnabled().setSelected(config.isIncognitoEnabled());
+            getNoSandboxEnabled().setSelected(config.isNoSandboxEnabled());
         }
     }
 
@@ -57,6 +59,7 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
             config.setHeadlessEnabled(getHeadlessEnabled().isSelected());
             config.setInsecureCertsEnabled(getInsecureCertsEnabled().isSelected());
             config.setIncognitoEnabled(getIncognitoEnabled().isSelected());
+            config.setNoSandboxEnabled(getNoSandboxEnabled().isSelected());
         }
     }
 
@@ -68,6 +71,7 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
         getHeadlessEnabled().setSelected(false);
         getInsecureCertsEnabled().setSelected(false);
         getIncognitoEnabled().setSelected(false);
+        getNoSandboxEnabled().setSelected(false);
     }
 
     @Override
@@ -106,6 +110,10 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
 
         incognitoEnabled = new JCheckBox("Run in Incognito mode");
         browserPanel.add(getIncognitoEnabled());
+
+        noSandboxEnabled = new JCheckBox("Run in No sandbox mode");
+        browserPanel.add(getNoSandboxEnabled());
+
         return browserPanel;
     }
 
@@ -129,5 +137,9 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
 
     public JCheckBox getIncognitoEnabled() {
         return incognitoEnabled;
+    }
+
+    public JCheckBox getNoSandboxEnabled() {
+        return noSandboxEnabled;
     }
 }
