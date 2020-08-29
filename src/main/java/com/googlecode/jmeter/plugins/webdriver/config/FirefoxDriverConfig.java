@@ -97,11 +97,8 @@ public class FirefoxDriverConfig extends WebDriverConfig<FirefoxDriver> {
     protected FirefoxDriver createBrowser() {
         FirefoxOptions desiredCapabilities = new FirefoxOptions(createCapabilities());
         desiredCapabilities.setCapability(FirefoxDriver.PROFILE, createProfile());
-        FirefoxBinary binary = new FirefoxBinary();
-        if (isHeadless()) {
-            binary.addCommandLineOptions("--headless");
-        }
-        return new FirefoxDriver(new GeckoDriverService.Builder().usingFirefoxBinary(binary).build(),
+        desiredCapabilities.setHeadless(isHeadless());
+        return new FirefoxDriver(new GeckoDriverService.Builder().usingFirefoxBinary(new FirefoxBinary()).build(),
                 desiredCapabilities);
     }
 
