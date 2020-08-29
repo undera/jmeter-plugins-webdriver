@@ -25,6 +25,7 @@ public class FirefoxDriverConfig extends WebDriverConfig<FirefoxDriver> {
     private static final long serialVersionUID = 100L;
     private static final String GENERAL_USERAGENT_OVERRIDE = "FirefoxDriverConfig.general.useragent.override";
     private static final String ENABLE_USERAGENT_OVERRIDE = "FirefoxDriverConfig.general.useragent.override.enabled";
+    private static final String ENABLE_HEADLESS = "FirefoxDriverConfig.general.headless.enabled";
     private static final String ENABLE_NTML = "FirefoxDriverConfig.network.negotiate-auth.allow-insecure-ntlm-v1";
     private static final String EXTENSIONS_TO_LOAD = "FirefoxDriverConfig.general.extensions";
     private static final String PREFERENCES = "FirefoxDriverConfig.general.preferences";
@@ -96,8 +97,20 @@ public class FirefoxDriverConfig extends WebDriverConfig<FirefoxDriver> {
     protected FirefoxDriver createBrowser() {
         FirefoxOptions desiredCapabilities = new FirefoxOptions(createCapabilities());
         desiredCapabilities.setCapability(FirefoxDriver.PROFILE, createProfile());
-        return new FirefoxDriver(new GeckoDriverService.Builder().usingFirefoxBinary(new FirefoxBinary()).build(),
+        FirefoxBinary binary = new FirefoxBinary();
+        if (isHeadless()) {
+            binary.addCommandLineOptions("--headless");
+        }
+        return new FirefoxDriver(new GeckoDriverService.Builder().usingFirefoxBinary(binary).build(),
                 desiredCapabilities);
+    }
+
+    public boolean isHeadless() {
+        return getPropertyAsBoolean(ENABLE_HEADLESS);
+    }
+
+    public void setHeadless(boolean headless) {
+        setProperty(ENABLE_HEADLESS, headless);
     }
 
     public void setUserAgentOverride(String userAgent) {

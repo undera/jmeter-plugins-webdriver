@@ -17,6 +17,7 @@ public class FirefoxDriverConfigGui extends WebDriverConfigGui implements ItemLi
 
     private static final long serialVersionUID = 100L;
     JTextField userAgentOverrideText;
+    JCheckBox headlessCheckbox;
     JCheckBox userAgentOverrideCheckbox;
     JCheckBox ntlmOverrideCheckbox;
     private Grid extensions;
@@ -59,6 +60,7 @@ public class FirefoxDriverConfigGui extends WebDriverConfigGui implements ItemLi
         super.configure(element);
         if (element instanceof FirefoxDriverConfig) {
             FirefoxDriverConfig config = (FirefoxDriverConfig) element;
+            headlessCheckbox.setSelected(config.isHeadless());
             userAgentOverrideCheckbox.setSelected(config.isUserAgentOverridden());
             userAgentOverrideText.setText(config.getUserAgentOverride());
             userAgentOverrideText.setEnabled(config.isUserAgentOverridden());
@@ -80,6 +82,7 @@ public class FirefoxDriverConfigGui extends WebDriverConfigGui implements ItemLi
         super.modifyTestElement(element);
         if (element instanceof FirefoxDriverConfig) {
             FirefoxDriverConfig config = (FirefoxDriverConfig) element;
+            config.setHeadless(headlessCheckbox.isSelected());
             config.setUserAgentOverridden(userAgentOverrideCheckbox.isSelected());
             config.setNtlmSetting(ntlmOverrideCheckbox.isSelected());
             if (userAgentOverrideCheckbox.isSelected()) {
@@ -92,6 +95,12 @@ public class FirefoxDriverConfigGui extends WebDriverConfigGui implements ItemLi
 
     private JPanel createProfilePanel() {
         final JPanel firefoxPanel = new VerticalPanel();
+        headlessCheckbox = new JCheckBox("Headless mode");
+        headlessCheckbox.setSelected(false);
+        headlessCheckbox.setEnabled(true);
+        headlessCheckbox.addItemListener(this);
+        firefoxPanel.add(headlessCheckbox);
+
         userAgentOverrideCheckbox = new JCheckBox("Override User Agent");
         userAgentOverrideCheckbox.setSelected(false);
         userAgentOverrideCheckbox.setEnabled(true);
@@ -122,6 +131,7 @@ public class FirefoxDriverConfigGui extends WebDriverConfigGui implements ItemLi
     @Override
     public void clearGui() {
         super.clearGui();
+        headlessCheckbox.setSelected(false);
         userAgentOverrideCheckbox.setSelected(false);
         userAgentOverrideText.setText("");
         ntlmOverrideCheckbox.setSelected(false);
