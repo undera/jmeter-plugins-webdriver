@@ -17,6 +17,9 @@ public class FirefoxDriverConfigGui extends WebDriverConfigGui implements ItemLi
 
     private static final long serialVersionUID = 100L;
     JTextField userAgentOverrideText;
+    JCheckBox legacyCheckbox;
+    JCheckBox acceptInsecureCertsCheckbox;
+    JCheckBox headlessCheckbox;
     JCheckBox userAgentOverrideCheckbox;
     JCheckBox ntlmOverrideCheckbox;
     private Grid extensions;
@@ -59,6 +62,9 @@ public class FirefoxDriverConfigGui extends WebDriverConfigGui implements ItemLi
         super.configure(element);
         if (element instanceof FirefoxDriverConfig) {
             FirefoxDriverConfig config = (FirefoxDriverConfig) element;
+            legacyCheckbox.setSelected(config.isLegacy());
+            acceptInsecureCertsCheckbox.setSelected(config.isAcceptInsecureCerts());
+            headlessCheckbox.setSelected(config.isHeadless());
             userAgentOverrideCheckbox.setSelected(config.isUserAgentOverridden());
             userAgentOverrideText.setText(config.getUserAgentOverride());
             userAgentOverrideText.setEnabled(config.isUserAgentOverridden());
@@ -80,6 +86,9 @@ public class FirefoxDriverConfigGui extends WebDriverConfigGui implements ItemLi
         super.modifyTestElement(element);
         if (element instanceof FirefoxDriverConfig) {
             FirefoxDriverConfig config = (FirefoxDriverConfig) element;
+            config.setLegacy(legacyCheckbox.isSelected());
+            config.setAcceptInsecureCerts(acceptInsecureCertsCheckbox.isSelected());
+            config.setHeadless(headlessCheckbox.isSelected());
             config.setUserAgentOverridden(userAgentOverrideCheckbox.isSelected());
             config.setNtlmSetting(ntlmOverrideCheckbox.isSelected());
             if (userAgentOverrideCheckbox.isSelected()) {
@@ -92,6 +101,21 @@ public class FirefoxDriverConfigGui extends WebDriverConfigGui implements ItemLi
 
     private JPanel createProfilePanel() {
         final JPanel firefoxPanel = new VerticalPanel();
+        legacyCheckbox = new JCheckBox("Legacy mode");
+        legacyCheckbox.setSelected(false);
+        legacyCheckbox.setEnabled(true);
+        firefoxPanel.add(legacyCheckbox);
+
+        acceptInsecureCertsCheckbox = new JCheckBox("Accept Insecure Certificates");
+        acceptInsecureCertsCheckbox.setSelected(false);
+        acceptInsecureCertsCheckbox.setEnabled(true);
+        firefoxPanel.add(acceptInsecureCertsCheckbox);
+
+        headlessCheckbox = new JCheckBox("Headless");
+        headlessCheckbox.setSelected(false);
+        headlessCheckbox.setEnabled(true);
+        firefoxPanel.add(headlessCheckbox);
+
         userAgentOverrideCheckbox = new JCheckBox("Override User Agent");
         userAgentOverrideCheckbox.setSelected(false);
         userAgentOverrideCheckbox.setEnabled(true);
@@ -122,6 +146,7 @@ public class FirefoxDriverConfigGui extends WebDriverConfigGui implements ItemLi
     @Override
     public void clearGui() {
         super.clearGui();
+        headlessCheckbox.setSelected(false);
         userAgentOverrideCheckbox.setSelected(false);
         userAgentOverrideText.setText("");
         ntlmOverrideCheckbox.setSelected(false);

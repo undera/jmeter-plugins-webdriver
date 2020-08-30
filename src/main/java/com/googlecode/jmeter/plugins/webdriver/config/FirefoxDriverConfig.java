@@ -25,6 +25,9 @@ public class FirefoxDriverConfig extends WebDriverConfig<FirefoxDriver> {
     private static final long serialVersionUID = 100L;
     private static final String GENERAL_USERAGENT_OVERRIDE = "FirefoxDriverConfig.general.useragent.override";
     private static final String ENABLE_USERAGENT_OVERRIDE = "FirefoxDriverConfig.general.useragent.override.enabled";
+    private static final String ENABLE_LEGACY = "FirefoxDriverConfig.general.legacy";
+    private static final String ENABLE_ACCEPT_INSECURE_CERTS = "FirefoxDriverConfig.general.accept-insecure-certs";
+    private static final String ENABLE_HEADLESS = "FirefoxDriverConfig.general.headless";
     private static final String ENABLE_NTML = "FirefoxDriverConfig.network.negotiate-auth.allow-insecure-ntlm-v1";
     private static final String EXTENSIONS_TO_LOAD = "FirefoxDriverConfig.general.extensions";
     private static final String PREFERENCES = "FirefoxDriverConfig.general.preferences";
@@ -96,8 +99,35 @@ public class FirefoxDriverConfig extends WebDriverConfig<FirefoxDriver> {
     protected FirefoxDriver createBrowser() {
         FirefoxOptions desiredCapabilities = new FirefoxOptions(createCapabilities());
         desiredCapabilities.setCapability(FirefoxDriver.PROFILE, createProfile());
+        desiredCapabilities.setHeadless(isHeadless());
+        desiredCapabilities.setAcceptInsecureCerts(isAcceptInsecureCerts());
+        desiredCapabilities.setLegacy(isLegacy());
         return new FirefoxDriver(new GeckoDriverService.Builder().usingFirefoxBinary(new FirefoxBinary()).build(),
                 desiredCapabilities);
+    }
+
+    public boolean isLegacy() {
+        return getPropertyAsBoolean(ENABLE_LEGACY);
+    }
+
+    public void setLegacy(boolean legacy) {
+        setProperty(ENABLE_LEGACY, legacy);
+    }
+
+    public boolean isAcceptInsecureCerts() {
+        return getPropertyAsBoolean(ENABLE_ACCEPT_INSECURE_CERTS);
+    }
+
+    public void setAcceptInsecureCerts(boolean acceptInsecureCerts) {
+        setProperty(ENABLE_ACCEPT_INSECURE_CERTS, acceptInsecureCerts);
+    }
+
+    public boolean isHeadless() {
+        return getPropertyAsBoolean(ENABLE_HEADLESS);
+    }
+
+    public void setHeadless(boolean headless) {
+        setProperty(ENABLE_HEADLESS, headless);
     }
 
     public void setUserAgentOverride(String userAgent) {
