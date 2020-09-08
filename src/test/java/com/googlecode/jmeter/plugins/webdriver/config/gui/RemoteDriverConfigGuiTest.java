@@ -1,23 +1,17 @@
 package com.googlecode.jmeter.plugins.webdriver.config.gui;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-
-import java.awt.event.FocusEvent;
-
+import com.googlecode.jmeter.plugins.webdriver.config.RemoteCapability;
+import com.googlecode.jmeter.plugins.webdriver.config.RemoteDriverConfig;
 import kg.apc.emulators.TestJMeterUtils;
-
 import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.googlecode.jmeter.plugins.webdriver.config.RemoteCapability;
-import com.googlecode.jmeter.plugins.webdriver.config.RemoteDriverConfig;
+import java.awt.event.FocusEvent;
+
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 
 public class RemoteDriverConfigGuiTest {
 
@@ -78,8 +72,20 @@ public class RemoteDriverConfigGuiTest {
 
         assertThat(gui.remoteSeleniumGridText.getText(), is(config.getSeleniumGridUrl()));
         assertThat((RemoteCapability)gui.capabilitiesComboBox.getSelectedItem(), is(config.getCapability()));
+        assertFalse(gui.getHeadlessEnabled().isSelected());
     }
-    
+
+    @Test
+    public void shouldSetHeadlessEnabledOnConfigure() {
+        RemoteDriverConfig config = new RemoteDriverConfig();
+        config.setSeleniumGridUrl("my.awesome.grid.com");
+        config.setCapability(RemoteCapability.CHROME);
+        config.setHeadlessEnabled(true);
+        gui.configure(config);
+
+        assertTrue(gui.getHeadlessEnabled().isSelected());
+    }
+
     @Test
 	public void shouldFireAMessageWindowWhenTheFocusIsLost() throws Exception {
     	gui.remoteSeleniumGridText.setText("badURL");
@@ -87,7 +93,7 @@ public class RemoteDriverConfigGuiTest {
     	gui.focusLost(focusEvent);
         assertEquals("The selenium grid URL is malformed", gui.errorMsg.getText());
 	}
-    
+
     @Test
 	public void shouldNotFireAMessageWindowWhenTheURLIsCorrect() throws Exception {
     	
