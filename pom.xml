@@ -5,6 +5,7 @@
     <groupId>kg.apc</groupId>
     <artifactId>jmeter-plugins-webdriver</artifactId>
     <version>3.4</version>
+    <packaging>jar</packaging>
 
     <name>WebDriver/Selenium</name>
     <description>WebDriver/Selenium</description>
