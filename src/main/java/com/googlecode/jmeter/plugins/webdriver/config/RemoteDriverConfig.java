@@ -32,15 +32,6 @@ public class RemoteDriverConfig extends WebDriverConfig<RemoteWebDriver> {
 			chromeOptions.addArguments("--headless");
 			capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
 		}
-		else if (getCapability().equals(CHROME)) {
-			final ChromeOptions chromeOptions = new ChromeOptions();
-			chromeOptions.addArguments("--ignore-certificate-errors");
-			chromeOptions.addArguments("--start-maximized");
-			chromeOptions.setCapability("enableVNC",true);
-			chromeOptions.setCapability("enableVideo",true);
-			chromeOptions.setCapability("enableLog",true);
-			capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
-		}
 
 		return capabilities;
 	}
