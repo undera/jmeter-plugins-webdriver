@@ -13,7 +13,7 @@ The main part of the Remote Web Driver configuration UI lies in the Remote tab.
 
 == Remote ==
 
-=== Remote Selenium Grid URL ===
+=== Remote Selenium Grid/Selenoid URL ===
 Specify the URL of the Selenium Grid. The URL must be correct, if you specify a wrong URL it will pop up a dialog message showing an error with the URL.
 
 === Capability ===
@@ -21,5 +21,10 @@ Specify which browser selects from your Selenium Grid. Currently it only selects
 
 === Headless ===
 Specify if the browser is to be run in headless mode.
+
+Following three will be required for selenoid
+==Enable VNC==
+==Enable Video==
+==Enable Log==
 
 Please see the [Roadmap] document for future plans.

@@ -19,6 +19,11 @@ public class RemoteDriverConfig extends WebDriverConfig<RemoteWebDriver> {
 	private static final String REMOTE_CAPABILITY = "RemoteDriverConfig.general.selenium.capability";
 	private static final String REMOTE_FILE_DETECTOR = "RemoteDriverConfig.general.selenium.file.detector";
 	private static final String HEADLESS_ENABLED = "RemoteDriverConfig.chrome.headless_enabled";
+	//adding options especially for selenoid
+	private static final String VNC_ENABLED = "RemoteDriverConfig.chrome.vnc_enabled";
+	private static final String VIDEO_ENABLED = "RemoteDriverConfig.chrome.video_enabled";
+	private static final String LOG_ENABLED = "RemoteDriverConfig.chrome.log_enabled";
+	private static final String BROWSER_MAXIMIZE = "RemoteDriverConfig.chrome.browser.maximize";
 
 	private static final Logger LOGGER = LoggingManager.getLoggerForClass();
 
@@ -34,11 +39,14 @@ public class RemoteDriverConfig extends WebDriverConfig<RemoteWebDriver> {
 		}
 		else if (getCapability().equals(CHROME)) {
 			final ChromeOptions chromeOptions = new ChromeOptions();
-			chromeOptions.addArguments("--ignore-certificate-errors");
-			chromeOptions.addArguments("--start-maximized");
-			chromeOptions.setCapability("enableVNC",true);
-			chromeOptions.setCapability("enableVideo",true);
-			chromeOptions.setCapability("enableLog",true);
+			if(isBrowserMaximized())
+				chromeOptions.addArguments("--start-maximized");
+			if(isLogEnabled())
+				chromeOptions.setCapability("enableLog",true);
+			if(isVideoEnabled())
+				chromeOptions.setCapability("enableVideo",true);
+			if(isVNCEnabled())
+				chromeOptions.setCapability("enableVNC",true);
 			capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
 		}
 
@@ -99,7 +107,38 @@ public class RemoteDriverConfig extends WebDriverConfig<RemoteWebDriver> {
 		return getPropertyAsBoolean(HEADLESS_ENABLED);
 	}
 
+
 	public void setHeadlessEnabled(boolean enabled) {
 		setProperty(HEADLESS_ENABLED, enabled);
+	}
+
+	public boolean isVNCEnabled() {
+		return getPropertyAsBoolean(VNC_ENABLED);
+	}
+
+	public void setVNCEnabled(boolean enabled) {
+		setProperty(VNC_ENABLED, enabled);
+	}
+
+	public boolean isVideoEnabled() {
+		return getPropertyAsBoolean(VIDEO_ENABLED);
+	}
+
+	public void setVideoEnabled(boolean enabled) {
+		setProperty(VIDEO_ENABLED, enabled);
+	}
+	public boolean isLogEnabled() {
+		return getPropertyAsBoolean(LOG_ENABLED);
+	}
+
+	public void setLogEnabled(boolean enabled) {
+		setProperty(LOG_ENABLED, enabled);
+	}
+	public boolean isBrowserMaximized() {
+		return getPropertyAsBoolean(BROWSER_MAXIMIZE);
+	}
+
+	public void setBrowserMaximize(boolean enabled) {
+		setProperty(BROWSER_MAXIMIZE, enabled);
 	}
 }
