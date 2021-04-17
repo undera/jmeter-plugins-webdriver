@@ -1,13 +1,13 @@
 package com.googlecode.jmeter.plugins.webdriver.config.gui;
 
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
+
 import com.googlecode.jmeter.plugins.webdriver.config.ChromeDriverConfig;
 import kg.apc.emulators.TestJMeterUtils;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
 
 public class ChromeDriverConfigGuiTest {
 
@@ -86,6 +86,13 @@ public class ChromeDriverConfigGuiTest {
     }
 
     @Test
+    public void shouldSetDisableDevShmUsageEnabled() {
+        gui.getDisableDevShmUsageEnabled().setSelected(true);
+        final ChromeDriverConfig testElement = (ChromeDriverConfig) gui.createTestElement();
+        assertThat(testElement.isDisableDevShmUsage(), is(true));
+    }
+
+    @Test
     public void shouldResetValuesOnClearGui() {
         gui.chromeServicePath.setText("path");
         gui.androidEnabled.setSelected(true);
@@ -93,6 +100,7 @@ public class ChromeDriverConfigGuiTest {
         gui.getInsecureCertsEnabled().setSelected(true);
         gui.getIncognitoEnabled().setSelected(true);
         gui.getNoSandboxEnabled().setSelected(true);
+        gui.getDisableDevShmUsageEnabled().setSelected(true);
 
         gui.clearGui();
 
@@ -102,6 +110,7 @@ public class ChromeDriverConfigGuiTest {
         assertThat(gui.getInsecureCertsEnabled().isSelected(), is(false));
         assertThat(gui.getIncognitoEnabled().isSelected(), is(false));
         assertThat(gui.getNoSandboxEnabled().isSelected(), is(false));
+        assertThat(gui.getDisableDevShmUsageEnabled().isSelected(), is(false));
     }
 
     @Test
@@ -150,10 +159,10 @@ public class ChromeDriverConfigGuiTest {
     }
 
     @Test
-	public void shouldEnableProxyAndExperimental() throws Exception {
-		assertThat(gui.isExperimentalEnabled(), is(true));
-		assertThat(gui.isProxyEnabled(), is(true));
-	}
+    public void shouldEnableProxyAndExperimental() throws Exception {
+        assertThat(gui.isExperimentalEnabled(), is(true));
+        assertThat(gui.isProxyEnabled(), is(true));
+    }
 
     @Test
     public void shouldSetNoSandboxEnabledOnConfigure() {
@@ -162,5 +171,14 @@ public class ChromeDriverConfigGuiTest {
         gui.configure(config);
 
         assertThat(gui.getNoSandboxEnabled().isSelected(), is(config.isNoSandboxEnabled()));
+    }
+
+    @Test
+    public void shouldSetDisableDevShmUsage() {
+        ChromeDriverConfig config = new ChromeDriverConfig();
+        config.setDisableDevShmUsage(true);
+        gui.configure(config);
+
+        assertThat(gui.getDisableDevShmUsageEnabled().isSelected(), is(config.isDisableDevShmUsage()));
     }
 }

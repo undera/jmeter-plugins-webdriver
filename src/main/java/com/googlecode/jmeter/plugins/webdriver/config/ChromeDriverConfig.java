@@ -28,6 +28,7 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
     private static final String INSECURECERTS_ENABLED = "ChromeDriverConfig.insecurecerts_enabled";
     private static final String INCOGNITO_ENABLED = "ChromeDriverConfig.incognito_enabled";
     private static final String NO_SANDBOX_ENABLED = "ChromeDriverConfig.no_sandbox_enabled";
+    private static final String DISABLE_DEV_SHM_USAGE="ChromeDriverConfig.disable_dev_shm_usage";
     private static final Map<String, ChromeDriverService> services = new ConcurrentHashMap<String, ChromeDriverService>();
 
     public void setChromeDriverPath(String path) {
@@ -44,9 +45,9 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
         LoggingPreferences logPrefs = new LoggingPreferences();
 		logPrefs.enable(LogType.BROWSER, Level.ALL);
 		capabilities.setCapability(CapabilityType.LOGGING_PREFS, logPrefs);
-        
 
-        if(isAndroidEnabled() || isHeadlessEnabled() || isIncognitoEnabled() || isNoSandboxEnabled()) {
+
+        if(isAndroidEnabled() || isHeadlessEnabled() || isIncognitoEnabled() || isNoSandboxEnabled()||isDisableDevShmUsage()) {
             //Map<String, String> chromeOptions = new HashMap<String, String>();
             //chromeOptions.put("androidPackage", "com.android.chrome");
             ChromeOptions chromeOptions = new ChromeOptions();
@@ -59,6 +60,9 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
             if (isNoSandboxEnabled()) {
                 chromeOptions.addArguments("--no-sandbox");
 
+            }
+            if (isDisableDevShmUsage()){
+                chromeOptions.addArguments("--disable-dev-shm-usage");
             }
             if (isIncognitoEnabled()) {
                 chromeOptions.addArguments("--incognito");
@@ -145,4 +149,13 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
     }
 
     public void setNoSandboxEnabled(boolean enabled) { setProperty(NO_SANDBOX_ENABLED, enabled); }
+
+    public boolean isDisableDevShmUsage(){
+        return getPropertyAsBoolean(DISABLE_DEV_SHM_USAGE);
+    }
+
+    public void setDisableDevShmUsage(boolean enabled){
+        setProperty(DISABLE_DEV_SHM_USAGE,enabled);
+    }
+
 }

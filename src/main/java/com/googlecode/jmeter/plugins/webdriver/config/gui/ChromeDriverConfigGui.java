@@ -17,6 +17,7 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
     private JCheckBox insecureCertsEnabled;
     private JCheckBox incognitoEnabled;
     private JCheckBox noSandboxEnabled;
+    private JCheckBox disableDevShmUsageEnabled;
 
     @Override
     public String getStaticLabel() {
@@ -39,6 +40,7 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
             getInsecureCertsEnabled().setSelected(config.isInsecureCertsEnabled());
             getIncognitoEnabled().setSelected(config.isIncognitoEnabled());
             getNoSandboxEnabled().setSelected(config.isNoSandboxEnabled());
+            getDisableDevShmUsageEnabled().setSelected(config.isDisableDevShmUsage());
         }
     }
 
@@ -60,6 +62,7 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
             config.setInsecureCertsEnabled(getInsecureCertsEnabled().isSelected());
             config.setIncognitoEnabled(getIncognitoEnabled().isSelected());
             config.setNoSandboxEnabled(getNoSandboxEnabled().isSelected());
+            config.setDisableDevShmUsage(getDisableDevShmUsageEnabled().isSelected());
         }
     }
 
@@ -72,6 +75,7 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
         getInsecureCertsEnabled().setSelected(false);
         getIncognitoEnabled().setSelected(false);
         getNoSandboxEnabled().setSelected(false);
+        getDisableDevShmUsageEnabled().setSelected(false);
     }
 
     @Override
@@ -114,6 +118,9 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
         noSandboxEnabled = new JCheckBox("Run in No sandbox mode");
         browserPanel.add(getNoSandboxEnabled());
 
+        disableDevShmUsageEnabled=new JCheckBox("Run in disable dev shm (if run no-gui under docker)");
+        browserPanel.add(getDisableDevShmUsageEnabled());
+
         return browserPanel;
     }
 
@@ -130,7 +137,7 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
     public JCheckBox getHeadlessEnabled() {
         return headlessEnabled;
     }
-    
+
     public JCheckBox getInsecureCertsEnabled() {
         return insecureCertsEnabled;
     }
@@ -141,5 +148,9 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
 
     public JCheckBox getNoSandboxEnabled() {
         return noSandboxEnabled;
+    }
+
+    public JCheckBox getDisableDevShmUsageEnabled(){
+        return disableDevShmUsageEnabled;
     }
 }

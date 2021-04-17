@@ -240,4 +240,11 @@ public class ChromeDriverConfigTest {
         config.setNoSandboxEnabled(true);
         assertThat(config.isNoSandboxEnabled(), is(true));
     }
+
+    @Test
+    public void getSetDisableDevShmUsageEnabled() {
+        assertThat(config.isDisableDevShmUsage(), is(false));
+        config.setDisableDevShmUsage(true);
+        assertThat(config.isNoSandboxEnabled(), is(true));
+    }
 }
