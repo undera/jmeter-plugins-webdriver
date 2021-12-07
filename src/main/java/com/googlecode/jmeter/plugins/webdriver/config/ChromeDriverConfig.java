@@ -13,7 +13,6 @@ import org.openqa.selenium.logging.LogType;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -28,6 +27,9 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
     private static final String INSECURECERTS_ENABLED = "ChromeDriverConfig.insecurecerts_enabled";
     private static final String INCOGNITO_ENABLED = "ChromeDriverConfig.incognito_enabled";
     private static final String NO_SANDBOX_ENABLED = "ChromeDriverConfig.no_sandbox_enabled";
+    private static final String ADDITIONAL_ARGS = "ChromeDriverConfig.additional_args";
+    private static final String BINARY_PATH = "ChromeDriverConfig.binary_path";
+
     private static final Map<String, ChromeDriverService> services = new ConcurrentHashMap<String, ChromeDriverService>();
 
     public void setChromeDriverPath(String path) {
@@ -38,6 +40,14 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
         return getPropertyAsString(CHROME_SERVICE_PATH);
     }
 
+    public void setBinaryPath(String binaryPath) {
+        setProperty(BINARY_PATH, binaryPath);
+    }
+
+    public String getBinaryPath() {
+        return getPropertyAsString(BINARY_PATH);
+    }
+
     Capabilities createCapabilities() {
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability(CapabilityType.PROXY, createProxy());
@@ -45,8 +55,9 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
 		logPrefs.enable(LogType.BROWSER, Level.ALL);
 		capabilities.setCapability(CapabilityType.LOGGING_PREFS, logPrefs);
         
-
-        if(isAndroidEnabled() || isHeadlessEnabled() || isIncognitoEnabled() || isNoSandboxEnabled()) {
+        final String additionalArgs = trimmed(getAdditionalArgs());
+        final String binaryPath = trimmed(getBinaryPath());
+        if(isAndroidEnabled() || isHeadlessEnabled() || isIncognitoEnabled() || isNoSandboxEnabled() || (null != additionalArgs && !additionalArgs.isEmpty()) || (null != binaryPath && !binaryPath.isEmpty())) {
             //Map<String, String> chromeOptions = new HashMap<String, String>();
             //chromeOptions.put("androidPackage", "com.android.chrome");
             ChromeOptions chromeOptions = new ChromeOptions();
@@ -63,6 +74,12 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
             if (isIncognitoEnabled()) {
                 chromeOptions.addArguments("--incognito");
             }
+            if(null != additionalArgs && !additionalArgs.isEmpty()) {
+                chromeOptions.addArguments(additionalArgs.split("\\s+"));
+            }
+            if(null != binaryPath && !binaryPath.isEmpty()) {
+                chromeOptions.setBinary(binaryPath);
+            }
             capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
         }
 
@@ -71,6 +88,10 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
         }
 
         return capabilities;
+    }
+
+    private String trimmed(String str) {
+        return null == str ? null : str.trim();
     }
 
     Map<String, ChromeDriverService> getServices() {
@@ -145,4 +166,13 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
     }
 
     public void setNoSandboxEnabled(boolean enabled) { setProperty(NO_SANDBOX_ENABLED, enabled); }
+
+    public String getAdditionalArgs() {
+        return getPropertyAsString(ADDITIONAL_ARGS);
+    }
+
+    public void setAdditionalArgs(String additionalArgs) {
+        setProperty(ADDITIONAL_ARGS, additionalArgs);
+    }
+
 }

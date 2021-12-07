@@ -86,22 +86,33 @@ public class ChromeDriverConfigGuiTest {
     }
 
     @Test
+    public void shouldSetAdditionalArgs() {
+        gui.additionalArgs.setText("additionalArgs");
+        final ChromeDriverConfig testElement = (ChromeDriverConfig) gui.createTestElement();
+        assertThat(testElement.getAdditionalArgs(), is("additionalArgs"));
+    }
+
+    @Test
     public void shouldResetValuesOnClearGui() {
         gui.chromeServicePath.setText("path");
+        gui.binaryPath.setText("path/binary");
         gui.androidEnabled.setSelected(true);
         gui.getHeadlessEnabled().setSelected(true);
         gui.getInsecureCertsEnabled().setSelected(true);
         gui.getIncognitoEnabled().setSelected(true);
         gui.getNoSandboxEnabled().setSelected(true);
+        gui.additionalArgs.setText("additional");
 
         gui.clearGui();
 
+        assertThat(gui.chromeServicePath.getText(), is(""));
         assertThat(gui.chromeServicePath.getText(), is(""));
         assertThat(gui.androidEnabled.isSelected(), is(false));
         assertThat(gui.getHeadlessEnabled().isSelected(), is(false));
         assertThat(gui.getInsecureCertsEnabled().isSelected(), is(false));
         assertThat(gui.getIncognitoEnabled().isSelected(), is(false));
         assertThat(gui.getNoSandboxEnabled().isSelected(), is(false));
+        assertThat(gui.additionalArgs.getText(), is(""));
     }
 
     @Test
@@ -111,6 +122,15 @@ public class ChromeDriverConfigGuiTest {
         gui.configure(config);
 
         assertThat(gui.chromeServicePath.getText(), is(config.getChromeDriverPath()));
+    }
+
+    @Test
+    public void shouldSetBinaryPathOnConfigure() {
+        ChromeDriverConfig config = new ChromeDriverConfig();
+        config.setBinaryPath("chromedriver.binary_path");
+        gui.configure(config);
+
+        assertThat(gui.binaryPath.getText(), is(config.getBinaryPath()));
     }
 
     @Test
@@ -163,4 +183,14 @@ public class ChromeDriverConfigGuiTest {
 
         assertThat(gui.getNoSandboxEnabled().isSelected(), is(config.isNoSandboxEnabled()));
     }
+
+    @Test
+    public void shouldSetAdditionalArgsOnConfigure() {
+        ChromeDriverConfig config = new ChromeDriverConfig();
+        config.setAdditionalArgs("chromedriver.additional_args");
+        gui.configure(config);
+
+        assertThat(gui.additionalArgs.getText(), is(config.getAdditionalArgs()));
+    }
+
 }

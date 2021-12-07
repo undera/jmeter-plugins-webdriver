@@ -207,6 +207,12 @@ public class ChromeDriverConfigTest {
     }
 
     @Test
+    public void getSetBinaryPath() {
+        config.setBinaryPath("some/path");
+        assertThat(config.getBinaryPath(), is("some/path"));
+    }
+
+    @Test
     public void getSetAndroidEnabled() {
         assertThat(config.isAndroidEnabled(), is(false));
         config.setAndroidEnabled(true);
@@ -239,5 +245,11 @@ public class ChromeDriverConfigTest {
         assertThat(config.isNoSandboxEnabled(), is(false));
         config.setNoSandboxEnabled(true);
         assertThat(config.isNoSandboxEnabled(), is(true));
+    }
+
+    @Test
+    public void getSetAdditionalArgs() {
+        config.setAdditionalArgs("additional args");
+        assertThat(config.getAdditionalArgs(), is("additional args"));
     }
 }
