@@ -28,6 +28,7 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
     private static final String INSECURECERTS_ENABLED = "ChromeDriverConfig.insecurecerts_enabled";
     private static final String INCOGNITO_ENABLED = "ChromeDriverConfig.incognito_enabled";
     private static final String NO_SANDBOX_ENABLED = "ChromeDriverConfig.no_sandbox_enabled";
+    private static final String ADDITIONAL_ARGS = "ChromeDriverConfig.additional_args";
     private static final Map<String, ChromeDriverService> services = new ConcurrentHashMap<String, ChromeDriverService>();
 
     public void setChromeDriverPath(String path) {
@@ -45,8 +46,8 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
 		logPrefs.enable(LogType.BROWSER, Level.ALL);
 		capabilities.setCapability(CapabilityType.LOGGING_PREFS, logPrefs);
         
-
-        if(isAndroidEnabled() || isHeadlessEnabled() || isIncognitoEnabled() || isNoSandboxEnabled()) {
+        final String additionalArgs = trimmed(getAdditionalArgs());
+        if(isAndroidEnabled() || isHeadlessEnabled() || isIncognitoEnabled() || isNoSandboxEnabled() || (null != additionalArgs && !additionalArgs.isEmpty())) {
             //Map<String, String> chromeOptions = new HashMap<String, String>();
             //chromeOptions.put("androidPackage", "com.android.chrome");
             ChromeOptions chromeOptions = new ChromeOptions();
@@ -63,6 +64,9 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
             if (isIncognitoEnabled()) {
                 chromeOptions.addArguments("--incognito");
             }
+            if(null != additionalArgs && !additionalArgs.isEmpty()) {
+                chromeOptions.addArguments(additionalArgs.split("\\s+"));
+            }
             capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
         }
 
@@ -71,6 +75,10 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
         }
 
         return capabilities;
+    }
+
+    private String trimmed(String str) {
+        return null == str ? null : str.trim();
     }
 
     Map<String, ChromeDriverService> getServices() {
@@ -145,4 +153,13 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
     }
 
     public void setNoSandboxEnabled(boolean enabled) { setProperty(NO_SANDBOX_ENABLED, enabled); }
+
+    public String getAdditionalArgs() {
+        return getPropertyAsString(ADDITIONAL_ARGS);
+    }
+
+    public void setAdditionalArgs(String additionalArgs) {
+        setProperty(ADDITIONAL_ARGS, additionalArgs);
+    }
+
 }

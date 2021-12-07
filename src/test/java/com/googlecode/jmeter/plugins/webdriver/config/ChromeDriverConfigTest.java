@@ -240,4 +240,10 @@ public class ChromeDriverConfigTest {
         config.setNoSandboxEnabled(true);
         assertThat(config.isNoSandboxEnabled(), is(true));
     }
+
+    @Test
+    public void getSetAdditionalArgs() {
+        config.setAdditionalArgs("additional args");
+        assertThat(config.getAdditionalArgs(), is("additional args"));
+    }
 }
