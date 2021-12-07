@@ -18,6 +18,7 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
     private JCheckBox incognitoEnabled;
     private JCheckBox noSandboxEnabled;
     JTextField additionalArgs;
+    JTextField binaryPath;
 
     @Override
     public String getStaticLabel() {
@@ -41,6 +42,7 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
             getIncognitoEnabled().setSelected(config.isIncognitoEnabled());
             getNoSandboxEnabled().setSelected(config.isNoSandboxEnabled());
             additionalArgs.setText(config.getAdditionalArgs());
+            binaryPath.setText(config.getBinaryPath());
         }
     }
 
@@ -63,6 +65,7 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
             config.setIncognitoEnabled(getIncognitoEnabled().isSelected());
             config.setNoSandboxEnabled(getNoSandboxEnabled().isSelected());
             config.setAdditionalArgs(additionalArgs.getText());
+            config.setBinaryPath(binaryPath.getText());
         }
     }
 
@@ -76,6 +79,7 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
         getIncognitoEnabled().setSelected(false);
         getNoSandboxEnabled().setSelected(false);
         additionalArgs.setText("");
+        binaryPath.setText("");
     }
 
     @Override
@@ -102,6 +106,13 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
         chromeServicePath = new JTextField();
         chromeServicePanel.add(chromeServicePath);
         browserPanel.add(chromeServicePanel);
+
+        final JPanel binaryPathPanel = new HorizontalPanel();
+        final JLabel binaryPathLabel = new JLabel("Binary path");
+        binaryPath = new JTextField();
+        binaryPathPanel.add(binaryPathLabel);
+        binaryPathPanel.add(binaryPath);
+        browserPanel.add(binaryPathPanel);
 
         androidEnabled = new JCheckBox("Use Chrome on Android");
         browserPanel.add(androidEnabled);

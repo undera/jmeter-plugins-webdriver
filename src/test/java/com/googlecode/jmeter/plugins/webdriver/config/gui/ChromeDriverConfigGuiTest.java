@@ -95,6 +95,7 @@ public class ChromeDriverConfigGuiTest {
     @Test
     public void shouldResetValuesOnClearGui() {
         gui.chromeServicePath.setText("path");
+        gui.binaryPath.setText("path/binary");
         gui.androidEnabled.setSelected(true);
         gui.getHeadlessEnabled().setSelected(true);
         gui.getInsecureCertsEnabled().setSelected(true);
@@ -104,6 +105,7 @@ public class ChromeDriverConfigGuiTest {
 
         gui.clearGui();
 
+        assertThat(gui.chromeServicePath.getText(), is(""));
         assertThat(gui.chromeServicePath.getText(), is(""));
         assertThat(gui.androidEnabled.isSelected(), is(false));
         assertThat(gui.getHeadlessEnabled().isSelected(), is(false));
@@ -120,6 +122,15 @@ public class ChromeDriverConfigGuiTest {
         gui.configure(config);
 
         assertThat(gui.chromeServicePath.getText(), is(config.getChromeDriverPath()));
+    }
+
+    @Test
+    public void shouldSetBinaryPathOnConfigure() {
+        ChromeDriverConfig config = new ChromeDriverConfig();
+        config.setBinaryPath("chromedriver.binary_path");
+        gui.configure(config);
+
+        assertThat(gui.binaryPath.getText(), is(config.getBinaryPath()));
     }
 
     @Test
