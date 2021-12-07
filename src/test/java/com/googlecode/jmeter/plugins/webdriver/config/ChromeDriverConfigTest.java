@@ -207,6 +207,12 @@ public class ChromeDriverConfigTest {
     }
 
     @Test
+    public void getSetBinaryPath() {
+        config.setBinaryPath("some/path");
+        assertThat(config.getBinaryPath(), is("some/path"));
+    }
+
+    @Test
     public void getSetAndroidEnabled() {
         assertThat(config.isAndroidEnabled(), is(false));
         config.setAndroidEnabled(true);
