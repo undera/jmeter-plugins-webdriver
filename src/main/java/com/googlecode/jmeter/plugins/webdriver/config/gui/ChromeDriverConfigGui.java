@@ -17,6 +17,7 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
     private JCheckBox insecureCertsEnabled;
     private JCheckBox incognitoEnabled;
     private JCheckBox noSandboxEnabled;
+    JTextField additionalArgs;
 
     @Override
     public String getStaticLabel() {
@@ -39,6 +40,7 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
             getInsecureCertsEnabled().setSelected(config.isInsecureCertsEnabled());
             getIncognitoEnabled().setSelected(config.isIncognitoEnabled());
             getNoSandboxEnabled().setSelected(config.isNoSandboxEnabled());
+            additionalArgs.setText(config.getAdditionalArgs());
         }
     }
 
@@ -60,6 +62,7 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
             config.setInsecureCertsEnabled(getInsecureCertsEnabled().isSelected());
             config.setIncognitoEnabled(getIncognitoEnabled().isSelected());
             config.setNoSandboxEnabled(getNoSandboxEnabled().isSelected());
+            config.setAdditionalArgs(additionalArgs.getText());
         }
     }
 
@@ -72,6 +75,7 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
         getInsecureCertsEnabled().setSelected(false);
         getIncognitoEnabled().setSelected(false);
         getNoSandboxEnabled().setSelected(false);
+        additionalArgs.setText("");
     }
 
     @Override
@@ -91,10 +95,10 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
 
     private JPanel createServicePanel() {
         final JPanel browserPanel = new VerticalPanel();
+
         final JPanel chromeServicePanel = new HorizontalPanel();
         final JLabel chromeDriverServiceLabel = new JLabel("Path to Chrome Driver");
         chromeServicePanel.add(chromeDriverServiceLabel);
-
         chromeServicePath = new JTextField();
         chromeServicePanel.add(chromeServicePath);
         browserPanel.add(chromeServicePanel);
@@ -113,6 +117,13 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
 
         noSandboxEnabled = new JCheckBox("Run in No sandbox mode");
         browserPanel.add(getNoSandboxEnabled());
+
+        final JPanel additionalArgsPanel = new HorizontalPanel();
+        final JLabel additionalArgsLabel = new JLabel("Additional arguments");
+        additionalArgs = new JTextField();
+        additionalArgsPanel.add(additionalArgsLabel);
+        additionalArgsPanel.add(additionalArgs);
+        browserPanel.add(additionalArgsPanel);
 
         return browserPanel;
     }
