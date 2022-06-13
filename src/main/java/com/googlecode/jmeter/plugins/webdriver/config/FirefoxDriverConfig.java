@@ -98,10 +98,10 @@ public class FirefoxDriverConfig extends WebDriverConfig<FirefoxDriver> {
     @Override
     protected FirefoxDriver createBrowser() {
         FirefoxOptions desiredCapabilities = new FirefoxOptions(createCapabilities());
-        desiredCapabilities.setCapability(FirefoxDriver.PROFILE, createProfile());
+        desiredCapabilities.setCapability(FirefoxDriver.Capability.PROFILE, createProfile());
         desiredCapabilities.setHeadless(isHeadless());
         desiredCapabilities.setAcceptInsecureCerts(isAcceptInsecureCerts());
-        desiredCapabilities.setLegacy(isLegacy());
+        desiredCapabilities.setCapability(FirefoxDriver.Capability.MARIONETTE, isLegacy());
         return new FirefoxDriver(new GeckoDriverService.Builder().usingFirefoxBinary(new FirefoxBinary()).build(),
                 desiredCapabilities);
     }
