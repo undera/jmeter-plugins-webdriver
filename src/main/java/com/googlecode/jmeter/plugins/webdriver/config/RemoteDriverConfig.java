@@ -5,140 +5,224 @@ import org.apache.jorphan.logging.LoggingManager;
 import org.apache.log.Logger;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.*;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.FileDetector;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.UselessFileDetector;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import static com.googlecode.jmeter.plugins.webdriver.config.RemoteCapability.CHROME;
-
 public class RemoteDriverConfig extends WebDriverConfig<RemoteWebDriver> {
 
-	private static final long serialVersionUID = 100L;
-	private static final String REMOTE_SELENIUM_GRID_URL = "RemoteDriverConfig.general.selenium.grid.url";
-	private static final String REMOTE_CAPABILITY = "RemoteDriverConfig.general.selenium.capability";
-	private static final String REMOTE_FILE_DETECTOR = "RemoteDriverConfig.general.selenium.file.detector";
-	private static final String HEADLESS_ENABLED = "RemoteDriverConfig.chrome.headless_enabled";
-	//adding options especially for selenoid
-	private static final String VNC_ENABLED = "RemoteDriverConfig.chrome.vnc_enabled";
-	private static final String VIDEO_ENABLED = "RemoteDriverConfig.chrome.video_enabled";
-	private static final String LOG_ENABLED = "RemoteDriverConfig.chrome.log_enabled";
-	private static final String BROWSER_MAXIMIZE = "RemoteDriverConfig.chrome.browser.maximize";
+    private static final long serialVersionUID = 100L;
+    private static final String REMOTE_SELENIUM_GRID_URL = "RemoteDriverConfig.general.selenium.grid.url";
+    private static final String REMOTE_CAPABILITY = "RemoteDriverConfig.general.selenium.capability";
+    private static final String REMOTE_FILE_DETECTOR = "RemoteDriverConfig.general.selenium.file.detector";
+    private static final String HEADLESS_ENABLED = "RemoteDriverConfig.chrome.headless_enabled";
+    private static final String VNC_ENABLED = "RemoteDriverConfig.chrome.vnc_enabled";
+    private static final String VIDEO_ENABLED = "RemoteDriverConfig.chrome.video_enabled";
+    private static final String LOG_ENABLED = "RemoteDriverConfig.chrome.log_enabled";
+    private static final String BROWSER_MAXIMIZE = "RemoteDriverConfig.chrome.browser.maximize";
+    private static final Logger LOGGER = LoggingManager.getLoggerForClass();
+    private static final String BROWSER_LANGUAGE = "RemoteDriverConfig.chrome.browser.language";
+    private String browserLanguage = "";
 
-	private static final Logger LOGGER = LoggingManager.getLoggerForClass();
+    public RemoteDriverConfig() {
+    }
 
-	Capabilities createCapabilities() {
-		DesiredCapabilities capabilities = RemoteDesiredCapabilitiesFactory.build(getCapability());
-		capabilities.setCapability(CapabilityType.PROXY, createProxy());
-		capabilities.setJavascriptEnabled(true);
+    public RemoteDriverConfig(String browserLanguage) {
+        this.setBrowserLanguage(browserLanguage);
+    }
 
-		if (getCapability().equals(CHROME) && isHeadlessEnabled()) {
-			final ChromeOptions chromeOptions = new ChromeOptions();
-			chromeOptions.addArguments("--headless");
-			capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
-		}
-		else if (getCapability().equals(CHROME)) {
-			final ChromeOptions chromeOptions = new ChromeOptions();
-			if(isBrowserMaximized())
-				chromeOptions.addArguments("--start-maximized");
-			if(isLogEnabled())
-				chromeOptions.setCapability("enableLog",true);
-			if(isVideoEnabled())
-				chromeOptions.setCapability("enableVideo",true);
-			if(isVNCEnabled())
-				chromeOptions.setCapability("enableVNC",true);
-			capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
-		}
+    Capabilities createCapabilities() {
+        DesiredCapabilities capabilities = RemoteDesiredCapabilitiesFactory.build(this.getCapability());
+        capabilities.setCapability("proxy", this.createProxy());
+        capabilities.setJavascriptEnabled(true);
 
-		return capabilities;
-	}
+        String browserLanguage = this.getBrowserLanguage();
 
-	@Override
-	protected RemoteWebDriver createBrowser() {
-		try {
-			RemoteWebDriver driver = new RemoteWebDriver(new URL(getSeleniumGridUrl()), createCapabilities());
-			driver.setFileDetector(createFileDetector());
-			LOGGER.debug("Created web driver with " + createFileDetector().getClass().getName());
-			return driver;
-		} catch (MalformedURLException e) {
-			throw new RuntimeException(e);
-		}
-	}
+        //chrome
+        if (this.getCapability().equals(RemoteCapability.CHROME)) {
+            return createChrome(capabilities, browserLanguage, this.isHeadlessEnabled());
+        } else if (this.getCapability().equals(RemoteCapability.FIREFOX)) {
+            return createFireFox(capabilities, browserLanguage, this.isHeadlessEnabled());
+        }
 
-	public void setSeleniumGridUrl(String seleniumUrl) {
-		setProperty(REMOTE_SELENIUM_GRID_URL, seleniumUrl);
-	}
+        //其他不做处理
+        return capabilities;
+    }
 
-	public String getSeleniumGridUrl() {
-		return getPropertyAsString(REMOTE_SELENIUM_GRID_URL);
-	}
+    private Capabilities createFireFox(DesiredCapabilities capabilities, String language, boolean headlessEnabled) {
+        FirefoxOptions firefoxOptions = new FirefoxOptions();
+        FirefoxProfile profile = new FirefoxProfile();
+        firefoxOptions.setProfile(profile);
 
-	public RemoteCapability getCapability(){
-		return RemoteCapability.valueOf(getPropertyAsString(REMOTE_CAPABILITY));
-	}
+        //配置浏览器语言
+        if (StringUtils.isNotBlank(language)) {
+            firefoxOptions.addArguments(String.format("--lang=%s", language));
+        }
+        //开启无头模式
+        if (headlessEnabled) {
+            firefoxOptions.addArguments(new String[]{"--headless"});
+            capabilities.setCapability(FirefoxOptions.FIREFOX_OPTIONS, firefoxOptions);
+            return capabilities;
+        }
 
-	public void setCapability(RemoteCapability selectedCapability) {
-		setProperty(REMOTE_CAPABILITY, selectedCapability.name());
-	}
+        //非无头模式下的配置
+        if (this.isBrowserMaximized()) {
+            firefoxOptions.addArguments(new String[]{"--start-maximized"});
+        }
 
-	public FileDetectorOption getFileDetectorOption() {
-		String fileDetectorString = getPropertyAsString(REMOTE_FILE_DETECTOR);
-		if (StringUtils.isBlank(fileDetectorString)) {
-			LOGGER.warn("No remote file detector configured, reverting to default of useless file detector");
-			return FileDetectorOption.USELESS;
-		}
-		return FileDetectorOption.valueOf(fileDetectorString);
-	}
+        if (this.isLogEnabled()) {
+            firefoxOptions.setCapability("enableLog", true);
+        }
 
-	public void setFileDetectorOption(FileDetectorOption fileDetectorOption) {
-		setProperty(REMOTE_FILE_DETECTOR, fileDetectorOption.name());
-	}
+        if (this.isVideoEnabled()) {
+            firefoxOptions.setCapability("enableVideo", true);
+        }
 
-	protected FileDetector createFileDetector() {
-		try {
-			return getFileDetectorOption().getClazz().newInstance();
-		} catch (Exception e) {
-			LOGGER.warn("Cannot create a file detector of type " + getFileDetectorOption().getClazz().getCanonicalName() + ", reverting to default of useless file detector");
-			return new UselessFileDetector();
-		}
-	}
+        if (this.isVNCEnabled()) {
+            firefoxOptions.setCapability("enableVNC", true);
+        }
 
-	public boolean isHeadlessEnabled() {
-		return getPropertyAsBoolean(HEADLESS_ENABLED);
-	}
+        capabilities.setCapability(FirefoxOptions.FIREFOX_OPTIONS, firefoxOptions);
+        return capabilities;
+    }
 
+    private Capabilities createChrome(DesiredCapabilities capabilities, String language, boolean headlessEnabled) {
+        ChromeOptions chromeOptions = new ChromeOptions();
+        //设置浏览器语言
+        if (StringUtils.isNotBlank(language)) {
+            chromeOptions.addArguments(String.format("--lang=%s", language));
+        }
+        //开启无头模式
+        if (headlessEnabled) {
+            chromeOptions.addArguments(new String[]{"--headless"});
+            capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
+            return capabilities;
+        }
 
-	public void setHeadlessEnabled(boolean enabled) {
-		setProperty(HEADLESS_ENABLED, enabled);
-	}
+        //非无头模式下的配置
+        if (this.isBrowserMaximized()) {
+            chromeOptions.addArguments(new String[]{"--start-maximized"});
+        }
 
-	public boolean isVNCEnabled() {
-		return getPropertyAsBoolean(VNC_ENABLED);
-	}
+        if (this.isLogEnabled()) {
+            chromeOptions.setCapability("enableLog", true);
+        }
 
-	public void setVNCEnabled(boolean enabled) {
-		setProperty(VNC_ENABLED, enabled);
-	}
+        if (this.isVideoEnabled()) {
+            chromeOptions.setCapability("enableVideo", true);
+        }
 
-	public boolean isVideoEnabled() {
-		return getPropertyAsBoolean(VIDEO_ENABLED);
-	}
+        if (this.isVNCEnabled()) {
+            chromeOptions.setCapability("enableVNC", true);
+        }
 
-	public void setVideoEnabled(boolean enabled) {
-		setProperty(VIDEO_ENABLED, enabled);
-	}
-	public boolean isLogEnabled() {
-		return getPropertyAsBoolean(LOG_ENABLED);
-	}
+        capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
+        return capabilities;
+    }
 
-	public void setLogEnabled(boolean enabled) {
-		setProperty(LOG_ENABLED, enabled);
-	}
-	public boolean isBrowserMaximized() {
-		return getPropertyAsBoolean(BROWSER_MAXIMIZE);
-	}
+    @Override
+    protected RemoteWebDriver createBrowser() {
+        try {
+            RemoteWebDriver driver = new RemoteWebDriver(new URL(this.getSeleniumGridUrl()), this.createCapabilities());
+            driver.setFileDetector(this.createFileDetector());
+            LOGGER.debug("Created web driver with " + this.createFileDetector().getClass().getName());
+            return driver;
+        } catch (MalformedURLException var2) {
+            throw new RuntimeException(var2);
+        }
+    }
 
-	public void setBrowserMaximize(boolean enabled) {
-		setProperty(BROWSER_MAXIMIZE, enabled);
-	}
+    public void setBrowserLanguage(String language) {
+        this.setProperty(BROWSER_LANGUAGE, language);
+    }
+
+    public String getBrowserLanguage() {
+        return this.getPropertyAsString(BROWSER_LANGUAGE);
+    }
+
+    public void setSeleniumGridUrl(String seleniumUrl) {
+        this.setProperty("RemoteDriverConfig.general.selenium.grid.url", seleniumUrl);
+    }
+
+    public String getSeleniumGridUrl() {
+        return this.getPropertyAsString("RemoteDriverConfig.general.selenium.grid.url");
+    }
+
+    public RemoteCapability getCapability() {
+        return RemoteCapability.valueOf(this.getPropertyAsString("RemoteDriverConfig.general.selenium.capability"));
+    }
+
+    public void setCapability(RemoteCapability selectedCapability) {
+        this.setProperty("RemoteDriverConfig.general.selenium.capability", selectedCapability.name());
+    }
+
+    public FileDetectorOption getFileDetectorOption() {
+        String fileDetectorString = this.getPropertyAsString("RemoteDriverConfig.general.selenium.file.detector");
+        if (StringUtils.isBlank(fileDetectorString)) {
+            LOGGER.warn("No remote file detector configured, reverting to default of useless file detector");
+            return FileDetectorOption.USELESS;
+        } else {
+            return FileDetectorOption.valueOf(fileDetectorString);
+        }
+    }
+
+    public void setFileDetectorOption(FileDetectorOption fileDetectorOption) {
+        this.setProperty("RemoteDriverConfig.general.selenium.file.detector", fileDetectorOption.name());
+    }
+
+    protected FileDetector createFileDetector() {
+        try {
+            return (FileDetector) this.getFileDetectorOption().getClazz().newInstance();
+        } catch (Exception var2) {
+            LOGGER.warn("Cannot create a file detector of type " + this.getFileDetectorOption().getClazz().getCanonicalName() + ", reverting to default of useless file detector");
+            return new UselessFileDetector();
+        }
+    }
+
+    public boolean isHeadlessEnabled() {
+        return this.getPropertyAsBoolean("RemoteDriverConfig.chrome.headless_enabled");
+    }
+
+    public void setHeadlessEnabled(boolean enabled) {
+        this.setProperty("RemoteDriverConfig.chrome.headless_enabled", enabled);
+    }
+
+    public boolean isVNCEnabled() {
+        return this.getPropertyAsBoolean("RemoteDriverConfig.chrome.vnc_enabled");
+    }
+
+    public void setVNCEnabled(boolean enabled) {
+        this.setProperty("RemoteDriverConfig.chrome.vnc_enabled", enabled);
+    }
+
+    public boolean isVideoEnabled() {
+        return this.getPropertyAsBoolean("RemoteDriverConfig.chrome.video_enabled");
+    }
+
+    public void setVideoEnabled(boolean enabled) {
+        this.setProperty("RemoteDriverConfig.chrome.video_enabled", enabled);
+    }
+
+    public boolean isLogEnabled() {
+        return this.getPropertyAsBoolean("RemoteDriverConfig.chrome.log_enabled");
+    }
+
+    public void setLogEnabled(boolean enabled) {
+        this.setProperty("RemoteDriverConfig.chrome.log_enabled", enabled);
+    }
+
+    @Override
+    public boolean isBrowserMaximized() {
+        return this.getPropertyAsBoolean("RemoteDriverConfig.chrome.browser.maximize");
+    }
+
+    public void setBrowserMaximize(boolean enabled) {
+        this.setProperty("RemoteDriverConfig.chrome.browser.maximize", enabled);
+    }
 }
