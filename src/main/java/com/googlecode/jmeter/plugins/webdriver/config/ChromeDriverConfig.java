@@ -1,26 +1,24 @@
 package com.googlecode.jmeter.plugins.webdriver.config;
 
-import org.apache.jorphan.logging.LoggingManager;
-import org.apache.log.Logger;
-import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeDriverService;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.logging.LoggingPreferences;
-import org.openqa.selenium.logging.LogType;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeDriverService;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.logging.LogType;
+import org.openqa.selenium.logging.LoggingPreferences;
+import org.openqa.selenium.remote.CapabilityType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
 
     private static final long serialVersionUID = 100L;
-    private static final Logger LOGGER = LoggingManager.getLoggerForClass();
+	private static final Logger LOGGER = LoggerFactory.getLogger(ChromeDriverConfig.class);
     private static final String CHROME_SERVICE_PATH = "ChromeDriverConfig.chromedriver_path";
     private static final String ANDROID_ENABLED = "ChromeDriverConfig.android_enabled";
     private static final String HEADLESS_ENABLED = "ChromeDriverConfig.headless_enabled";
@@ -48,12 +46,12 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
         return getPropertyAsString(BINARY_PATH);
     }
 
-    Capabilities createCapabilities() {
-        DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setCapability(CapabilityType.PROXY, createProxy());
+    ChromeOptions createOptions() {
+    	ChromeOptions options = new ChromeOptions();
+    	options.setCapability(CapabilityType.PROXY, createProxy());
         LoggingPreferences logPrefs = new LoggingPreferences();
 		logPrefs.enable(LogType.BROWSER, Level.ALL);
-		capabilities.setCapability(CapabilityType.LOGGING_PREFS, logPrefs);
+		options.setCapability(ChromeOptions.LOGGING_PREFS, logPrefs);
         
         final String additionalArgs = trimmed(getAdditionalArgs());
         final String binaryPath = trimmed(getBinaryPath());
@@ -80,14 +78,14 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
             if(null != binaryPath && !binaryPath.isEmpty()) {
                 chromeOptions.setBinary(binaryPath);
             }
-            capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
+            options.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
         }
 
         if(isInsecureCertsEnabled()) {
-              capabilities.setCapability("acceptInsecureCerts", true);
+        	options.setCapability("acceptInsecureCerts", true);
         }
 
-        return capabilities;
+        return options;
     }
 
     private String trimmed(String str) {
@@ -101,7 +99,7 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
     @Override
     protected ChromeDriver createBrowser() {
         final ChromeDriverService service = getThreadService();
-        return service != null ? new ChromeDriver(service, createCapabilities()) : null;
+        return service != null ? new ChromeDriver(service, createOptions()) : null;
     }
 
     @Override

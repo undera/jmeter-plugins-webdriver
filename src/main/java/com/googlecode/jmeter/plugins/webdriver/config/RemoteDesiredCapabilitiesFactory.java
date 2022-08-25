@@ -8,22 +8,19 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 public class RemoteDesiredCapabilitiesFactory {
   public static DesiredCapabilities build(RemoteCapability capability){
-	  DesiredCapabilities desiredCapabilities;
+	  DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
 	  if(RemoteCapability.CHROME.equals(capability)){
 		  ChromeOptions options = new ChromeOptions();
-	      desiredCapabilities = DesiredCapabilities.chrome();
+		  desiredCapabilities.setBrowserName("chrome");
 	      desiredCapabilities.setCapability(ChromeOptions.CAPABILITY, options);
 		  return desiredCapabilities;
 	  } else if (RemoteCapability.FIREFOX.equals(capability)){
 		  FirefoxProfile profile = new FirefoxProfile();
-		  desiredCapabilities = DesiredCapabilities.firefox();
-		  desiredCapabilities.setCapability(FirefoxDriver.PROFILE, profile);
+		  desiredCapabilities.setBrowserName("firefox");
+		  desiredCapabilities.setCapability(FirefoxDriver.Capability.PROFILE, profile);
 		  return desiredCapabilities;
 	  } else if (RemoteCapability.INTERNET_EXPLORER.equals(capability)){
-		  desiredCapabilities = DesiredCapabilities.internetExplorer();
-		  return desiredCapabilities;
-	  } else if (RemoteCapability.PHANTOMJS.equals(capability)){
-		  desiredCapabilities = DesiredCapabilities.phantomjs();
+		  desiredCapabilities.setBrowserName("internetExplorer");
 		  return desiredCapabilities;
 	  }
 	  throw new IllegalArgumentException("No such capability");

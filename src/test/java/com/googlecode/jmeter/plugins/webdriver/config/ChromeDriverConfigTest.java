@@ -144,24 +144,26 @@ public class ChromeDriverConfigTest {
 
     @Test
     public void shouldHaveProxyInCapability() {
-        final Capabilities capabilities = config.createCapabilities();
-        assertThat(capabilities.getCapability(CapabilityType.PROXY), is(notNullValue()));
+        final ChromeOptions options = config.createOptions();
+        assertThat(options.getCapability(CapabilityType.PROXY), is(notNullValue()));
     }
 
     @Test
     public void shouldNotHaveChromeOptionsWhenAndroidIsNotEnabled() {
         config.setAndroidEnabled(false);
-        final Capabilities capabilities = config.createCapabilities();
-        assertThat(capabilities.getCapability(ChromeOptions.CAPABILITY), is(nullValue()));
+        final ChromeOptions options = config.createOptions();
+        assertThat(options.getCapability(ChromeOptions.CAPABILITY), is(nullValue()));
     }
 
     @Test
     public void shouldHaveChromeOptionsWhenRemoteIsEnabled() {
         config.setHeadlessEnabled(true);
-        final Capabilities capabilities = config.createCapabilities();
-        TreeMap capability = (TreeMap) capabilities.getCapability(ChromeOptions.CAPABILITY);
+        final ChromeOptions options = config.createOptions();
+        @SuppressWarnings("rawtypes")
+		TreeMap capability = (TreeMap) options.getCapability(ChromeOptions.CAPABILITY);
         assertThat(capability, is(notNullValue()));
-        List<String> args = (List<String>) capability.get("args");
+        @SuppressWarnings("unchecked")
+		List<String> args = (List<String>) capability.get("args");
         assertThat(args, is(notNullValue()));
         assertEquals(1, args.size());
         assertEquals("--headless", args.get(0));
@@ -170,30 +172,31 @@ public class ChromeDriverConfigTest {
     @Test
     public void shouldNotHaveChromeOptionsWhenRemoteIsNotEnabled() {
         config.setAndroidEnabled(false);
-        final Capabilities capabilities = config.createCapabilities();
-        assertThat(capabilities.getCapability(ChromeOptions.CAPABILITY), is(nullValue()));
+        final ChromeOptions options = config.createOptions();
+        assertThat(options.getCapability(ChromeOptions.CAPABILITY), is(nullValue()));
     }
 
     @Test
     public void shouldHaveInsecureCertsWhenInsecureCertsIsEnabled() {
         config.setInsecureCertsEnabled(true);
-        final Capabilities capabilities = config.createCapabilities();
-        assertThat((Boolean) capabilities.getCapability("acceptInsecureCerts"), is(true));
+        final ChromeOptions options = config.createOptions();
+        assertThat((Boolean) options.getCapability("acceptInsecureCerts"), is(true));
     }
 
     @Test
     public void shouldNotHaveInsecureCertsWhenInsecureCertsIsNotEnabled() {
         config.setInsecureCertsEnabled(false);
-        final Capabilities capabilities = config.createCapabilities();
-        assertThat(capabilities.getCapability("acceptInsecureCerts"), is(nullValue()));
+        final ChromeOptions options = config.createOptions();
+        assertThat(options.getCapability("acceptInsecureCerts"), is(nullValue()));
     }
 
-    @Test
+    @SuppressWarnings("unchecked")
+	@Test
     public void shouldHaveAndroidConfigWhenAndroidIsEnabled() {
         config.setAndroidEnabled(true);
 
-        final Capabilities capabilities = config.createCapabilities();
-        Map<String, Object> options = (Map<String, Object>) capabilities.getCapability(ChromeOptions.CAPABILITY);
+        final ChromeOptions chromeOptions = config.createOptions();
+		Map<String, Object> options = (Map<String, Object>) chromeOptions.getCapability(ChromeOptions.CAPABILITY);
         assertThat("ChromeOption expected", options, is(notNullValue()));
 
         final String androidConfig = (String) options.get("androidPackage");

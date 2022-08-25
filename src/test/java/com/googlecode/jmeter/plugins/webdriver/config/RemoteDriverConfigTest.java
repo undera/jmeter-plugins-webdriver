@@ -58,8 +58,6 @@ public class RemoteDriverConfigTest {
 		assertThat(config.getCapability(), is(RemoteCapability.FIREFOX));
 		config.setCapability(RemoteCapability.INTERNET_EXPLORER);
 		assertThat(config.getCapability(), is(RemoteCapability.INTERNET_EXPLORER));
-		config.setCapability(RemoteCapability.PHANTOMJS);
-		assertThat(config.getCapability(), is(RemoteCapability.PHANTOMJS));
 	}
 
     @Test
@@ -97,16 +95,17 @@ public class RemoteDriverConfigTest {
         final Capabilities capabilities = config.createCapabilities();
         assertThat(capabilities.getCapability(CapabilityType.PROXY), is(notNullValue()));
         assertThat(capabilities.getCapability(ChromeOptions.CAPABILITY), is(notNullValue()));
-        assertThat(capabilities.isJavascriptEnabled(), is(true));
     }
 
     @Test
     public void shouldHaveHeadlessInChromeOptionsWhenEnabled() {
         config.setHeadlessEnabled(true);
         final Capabilities capabilities = config.createCapabilities();
-        TreeMap capability = (TreeMap) capabilities.getCapability(ChromeOptions.CAPABILITY);
+        @SuppressWarnings("rawtypes")
+		TreeMap capability = (TreeMap) capabilities.getCapability(ChromeOptions.CAPABILITY);
         assertThat(capability, is(notNullValue()));
-        List<String> args = (List<String>) capability.get("args");
+        @SuppressWarnings("unchecked")
+		List<String> args = (List<String>) capability.get("args");
         assertThat(args, is(notNullValue()));
         assertEquals(1, args.size());
         assertEquals("--headless", args.get(0));
@@ -116,9 +115,11 @@ public class RemoteDriverConfigTest {
     public void shouldNotHaveHeadlessInChromeOptionsWhenDisabled() {
         config.setHeadlessEnabled(false);
         final Capabilities capabilities = config.createCapabilities();
-        TreeMap capability = (TreeMap) capabilities.getCapability(ChromeOptions.CAPABILITY);
+        @SuppressWarnings("rawtypes")
+		TreeMap capability = (TreeMap) capabilities.getCapability(ChromeOptions.CAPABILITY);
         assertThat(capability, is(notNullValue()));
-        List<String> args = (List<String>) capability.get("args");
+        @SuppressWarnings("unchecked")
+		List<String> args = (List<String>) capability.get("args");
         assertThat(args, is(notNullValue()));
         assertEquals(0, args.size());
     }

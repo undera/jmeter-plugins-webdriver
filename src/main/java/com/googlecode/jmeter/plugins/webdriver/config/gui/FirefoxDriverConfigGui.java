@@ -62,7 +62,6 @@ public class FirefoxDriverConfigGui extends WebDriverConfigGui implements ItemLi
         super.configure(element);
         if (element instanceof FirefoxDriverConfig) {
             FirefoxDriverConfig config = (FirefoxDriverConfig) element;
-            legacyCheckbox.setSelected(config.isLegacy());
             acceptInsecureCertsCheckbox.setSelected(config.isAcceptInsecureCerts());
             headlessCheckbox.setSelected(config.isHeadless());
             userAgentOverrideCheckbox.setSelected(config.isUserAgentOverridden());
@@ -86,7 +85,6 @@ public class FirefoxDriverConfigGui extends WebDriverConfigGui implements ItemLi
         super.modifyTestElement(element);
         if (element instanceof FirefoxDriverConfig) {
             FirefoxDriverConfig config = (FirefoxDriverConfig) element;
-            config.setLegacy(legacyCheckbox.isSelected());
             config.setAcceptInsecureCerts(acceptInsecureCertsCheckbox.isSelected());
             config.setHeadless(headlessCheckbox.isSelected());
             config.setUserAgentOverridden(userAgentOverrideCheckbox.isSelected());

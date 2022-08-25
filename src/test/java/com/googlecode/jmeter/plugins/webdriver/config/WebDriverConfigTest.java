@@ -38,10 +38,11 @@ public class WebDriverConfigTest {
 
     private ProxyFactory proxyFactory;
     private WebDriver browser;
-    private WebDriverConfig config;
+    private WebDriverConfig<WebDriver> config;
     private JMeterVariables variables;
 
-    @Before
+    @SuppressWarnings("unchecked")
+	@Before
     public void createConfig() {
         proxyFactory = mock(ProxyFactory.class);
         browser = getBrowserMock();
@@ -297,12 +298,12 @@ public class WebDriverConfigTest {
         final WebDriver secondBrowser = getBrowserMock();
 
         Thread firstThread = new Thread() {
-            public void run() {
+			public void run() {
                 config.setThreadBrowser(firstBrowser);
             }
         };
         Thread secondThread = new Thread() {
-            public void run() {
+			public void run() {
                 config.setThreadBrowser(secondBrowser);
             }
         };
@@ -452,7 +453,8 @@ public class WebDriverConfigTest {
         assertThat(config.isRecreateBrowserOnIterationStart(), is(false));
     }
 
-    @Test
+    @SuppressWarnings("unchecked")
+	@Test
     public void shouldRecreateBrowserOnEachIterationStart() {
         final WebDriver firstBrowser = getBrowserMock();
         final WebDriver secondBrowser = getBrowserMock();
@@ -475,7 +477,8 @@ public class WebDriverConfigTest {
         return browser;
     }
 
-    @Test
+    @SuppressWarnings("unchecked")
+	@Test
     public void shouldNotRecreateBrowserOnEachIterationStartWhenDevModeIsEnabled() {
         final WebDriver browser = getBrowserMock();
         this.config = new WebDriverConfigImpl(proxyFactory, browser);
@@ -501,9 +504,10 @@ public class WebDriverConfigTest {
         assertThat(config.isDevMode(), is(false));
     }
 
-    private static class WebDriverConfigImpl extends WebDriverConfig {
-
-        final List<WebDriver> browsers = new CopyOnWriteArrayList<WebDriver>();
+    @SuppressWarnings("rawtypes")
+	private static class WebDriverConfigImpl extends WebDriverConfig {
+		private static final long serialVersionUID = 100L;
+		final List<WebDriver> browsers = new CopyOnWriteArrayList<WebDriver>();
 
         /**
          * @param proxyFactory mock ProxyFactory to use

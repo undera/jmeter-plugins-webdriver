@@ -1,15 +1,18 @@
 package com.googlecode.jmeter.plugins.webdriver.sampler;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 import org.apache.jmeter.samplers.SampleResult;
 import org.apache.jorphan.logging.LoggingManager;
-import org.apache.log.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.openqa.selenium.WebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import com.googlecode.jmeter.plugins.webdriver.config.ChromeDriverConfig;
 
 public class WebDriverScriptableTest {
     private WebDriverScriptable scriptable;
@@ -53,7 +56,7 @@ public class WebDriverScriptableTest {
 
     @Test
     public void shouldAssignLog() {
-        final Logger logger = LoggingManager.getLoggerForClass();
+    	final Logger logger = LoggerFactory.getLogger(WebDriverScriptableTest.class);
         scriptable.setLog(logger);
         assertThat(scriptable.getLog(), is(logger));
     }

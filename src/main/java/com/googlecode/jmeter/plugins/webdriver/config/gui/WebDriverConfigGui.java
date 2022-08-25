@@ -84,7 +84,7 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements It
     public void configure(TestElement element) {
         super.configure(element);
         if (element instanceof WebDriverConfig) {
-            WebDriverConfig webDriverConfig = (WebDriverConfig) element;
+            WebDriverConfig<?> webDriverConfig = (WebDriverConfig<?>) element;
             if (isProxyEnabled()) {
                 switch (webDriverConfig.getProxyType()) {
                     case DIRECT:
@@ -127,7 +127,7 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements It
     public void modifyTestElement(TestElement element) {
         configureTestElement(element);
         if (element instanceof WebDriverConfig) {
-            WebDriverConfig webDriverConfig = (WebDriverConfig) element;
+            WebDriverConfig<?> webDriverConfig = (WebDriverConfig<?>) element;
             if (isProxyEnabled()) {
                 if (directProxy.isSelected()) {
                     webDriverConfig.setProxyType(ProxyType.DIRECT);

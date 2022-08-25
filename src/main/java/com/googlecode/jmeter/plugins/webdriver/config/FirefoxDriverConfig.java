@@ -2,40 +2,39 @@ package com.googlecode.jmeter.plugins.webdriver.config;
 
 import java.io.File;
 import java.util.ArrayList;
-import kg.apc.jmeter.JMeterPluginsUtils;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jmeter.gui.util.PowerTableModel;
 import org.apache.jmeter.testelement.property.CollectionProperty;
 import org.apache.jmeter.testelement.property.JMeterProperty;
 import org.apache.jmeter.testelement.property.NullProperty;
-import org.apache.jorphan.logging.LoggingManager;
-import org.apache.log.Logger;
-import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.firefox.GeckoDriverService;
 import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import kg.apc.jmeter.JMeterPluginsUtils;
 
 public class FirefoxDriverConfig extends WebDriverConfig<FirefoxDriver> {
-    private static final Logger log = LoggingManager.getLoggerForClass();
+	private static final Logger log = LoggerFactory.getLogger(FirefoxDriverConfig.class);
 
     private static final long serialVersionUID = 100L;
     private static final String GENERAL_USERAGENT_OVERRIDE = "FirefoxDriverConfig.general.useragent.override";
     private static final String ENABLE_USERAGENT_OVERRIDE = "FirefoxDriverConfig.general.useragent.override.enabled";
-    private static final String ENABLE_LEGACY = "FirefoxDriverConfig.general.legacy";
     private static final String ENABLE_ACCEPT_INSECURE_CERTS = "FirefoxDriverConfig.general.accept-insecure-certs";
     private static final String ENABLE_HEADLESS = "FirefoxDriverConfig.general.headless";
     private static final String ENABLE_NTML = "FirefoxDriverConfig.network.negotiate-auth.allow-insecure-ntlm-v1";
     private static final String EXTENSIONS_TO_LOAD = "FirefoxDriverConfig.general.extensions";
     private static final String PREFERENCES = "FirefoxDriverConfig.general.preferences";
 
-    Capabilities createCapabilities() {
-        DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setCapability(CapabilityType.PROXY, createProxy());
-        return capabilities;
+    FirefoxOptions createOptions() {
+    	FirefoxOptions options = new FirefoxOptions();
+    	options.setCapability(CapabilityType.PROXY, createProxy());
+        return options;
     }
 
     FirefoxProfile createProfile() {
@@ -97,21 +96,12 @@ public class FirefoxDriverConfig extends WebDriverConfig<FirefoxDriver> {
 
     @Override
     protected FirefoxDriver createBrowser() {
-        FirefoxOptions desiredCapabilities = new FirefoxOptions(createCapabilities());
-        desiredCapabilities.setCapability(FirefoxDriver.PROFILE, createProfile());
+        FirefoxOptions desiredCapabilities = new FirefoxOptions(createOptions());
+        desiredCapabilities.setCapability(FirefoxDriver.Capability.PROFILE, createProfile());
         desiredCapabilities.setHeadless(isHeadless());
         desiredCapabilities.setAcceptInsecureCerts(isAcceptInsecureCerts());
-        desiredCapabilities.setLegacy(isLegacy());
         return new FirefoxDriver(new GeckoDriverService.Builder().usingFirefoxBinary(new FirefoxBinary()).build(),
                 desiredCapabilities);
-    }
-
-    public boolean isLegacy() {
-        return getPropertyAsBoolean(ENABLE_LEGACY);
-    }
-
-    public void setLegacy(boolean legacy) {
-        setProperty(ENABLE_LEGACY, legacy);
     }
 
     public boolean isAcceptInsecureCerts() {

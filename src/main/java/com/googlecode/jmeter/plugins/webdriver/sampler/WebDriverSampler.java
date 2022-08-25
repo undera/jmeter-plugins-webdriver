@@ -15,8 +15,8 @@ import org.apache.jmeter.samplers.SampleResult;
 import org.apache.jmeter.threads.JMeterContext;
 import org.apache.jmeter.threads.JMeterContextService;
 import org.apache.jmeter.util.JMeterUtils;
-import org.apache.jorphan.logging.LoggingManager;
-import org.apache.log.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.openqa.selenium.WebDriver;
 
 import com.googlecode.jmeter.plugins.webdriver.config.WebDriverConfig;
@@ -33,7 +33,7 @@ public class WebDriverSampler extends AbstractSampler {
     private static final long serialVersionUID = 100L;
     public static final String SCRIPT = "WebDriverSampler.script";
     public static final String PARAMETERS = "WebDriverSampler.parameters";
-    private static final Logger LOGGER = LoggingManager.getLoggerForClass();
+	private static final Logger LOGGER = LoggerFactory.getLogger(WebDriverSampler.class);
     public static final String DEFAULT_ENGINE = "javascript";
     public static final String SCRIPT_LANGUAGE = "WebDriverSampler.language";
     private final transient ScriptEngineManager scriptEngineManager;
@@ -43,7 +43,8 @@ public class WebDriverSampler extends AbstractSampler {
             "WDS.browser.get('http://jmeter-plugins.org')\n" +
             "WDS.sampleResult.sampleEnd()\n";
 
-    public WebDriverSampler() {
+    @SuppressWarnings("unchecked")
+	public WebDriverSampler() {
         Class<SampleResult> srClass;
         this.scriptEngineManager = new ScriptEngineManager();
         String className = JMeterUtils.getPropDefault("webdriver.sampleresult_class", SampleResult.class.getCanonicalName());
@@ -56,7 +57,8 @@ public class WebDriverSampler extends AbstractSampler {
         sampleResultClass = srClass;
     }
 
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public SampleResult sample(Entry e) {
         if (getWebDriver() == null) {
             throw new IllegalArgumentException("Browser has not been configured.  Please ensure at least 1 WebDriverConfig is created for a ThreadGroup.");

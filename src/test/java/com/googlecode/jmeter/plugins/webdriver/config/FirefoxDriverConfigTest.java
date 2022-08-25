@@ -8,7 +8,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.GeckoDriverService;
@@ -86,7 +85,7 @@ public class FirefoxDriverConfigTest {
 
     @Test
     public void shouldHaveProxyInCapability() {
-        final Capabilities capabilities = config.createCapabilities();
-        assertThat(capabilities.getCapability(CapabilityType.PROXY), is(notNullValue()));
+        final FirefoxOptions options = config.createOptions();
+        assertThat(options.getCapability(CapabilityType.PROXY), is(notNullValue()));
     }
 }

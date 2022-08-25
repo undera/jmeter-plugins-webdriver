@@ -14,7 +14,7 @@ public class RemoteDesiredCapabilitiesFactoryTest {
 	@Test
 	public void shouldReturnFirefoxDriverWhenFirefoxCapabilityIsPassed() throws Exception {
 		DesiredCapabilities capabilities = RemoteDesiredCapabilitiesFactory.build(RemoteCapability.FIREFOX);
-		assertThat(capabilities.getCapability(FirefoxDriver.PROFILE), is(notNullValue()));
+		assertThat(capabilities.getCapability(FirefoxDriver.Capability.PROFILE), is(notNullValue()));
 		assertThat(capabilities.getBrowserName(), is("firefox"));
 	}
 
@@ -29,12 +29,6 @@ public class RemoteDesiredCapabilitiesFactoryTest {
 	public void shouldReturnInternetExplorerDriverWhenInternetExplorerCapabilityIsPassed() throws Exception {
 		DesiredCapabilities capabilities = RemoteDesiredCapabilitiesFactory.build(RemoteCapability.INTERNET_EXPLORER);
 		assertThat(capabilities.getBrowserName(), is("internet explorer"));
-	}
-
-	@Test
-	public void shouldReturnPhantomJSDriverWhenPhantomJSCapabilityIsPassed() throws Exception {
-		DesiredCapabilities capabilities = RemoteDesiredCapabilitiesFactory.build(RemoteCapability.PHANTOMJS);
-		assertThat(capabilities.getBrowserName(), is("phantomjs"));
 	}
 
 	@Test(expected = IllegalArgumentException.class)

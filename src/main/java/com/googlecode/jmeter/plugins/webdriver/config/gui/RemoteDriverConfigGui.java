@@ -20,7 +20,7 @@ public class RemoteDriverConfigGui extends WebDriverConfigGui implements ItemLis
 
   private static final long serialVersionUID = 100L;
   JTextField remoteSeleniumGridText;
-  JComboBox capabilitiesComboBox;
+  JComboBox<?> capabilitiesComboBox;
   JCheckBox headlessEnabled;
   JCheckBox vncEnabled;
   JCheckBox videoEnabled;
@@ -28,7 +28,7 @@ public class RemoteDriverConfigGui extends WebDriverConfigGui implements ItemLis
   JCheckBox maxBrowser;
   JLabel errorMsg;
 
-  private JComboBox fileDetectorsComboBox;
+  private JComboBox<?> fileDetectorsComboBox;
 
   @Override
   public String getStaticLabel() {
@@ -134,7 +134,7 @@ public class RemoteDriverConfigGui extends WebDriverConfigGui implements ItemLis
     remoteSeleniumGridText.addFocusListener(this);
 
     capabilitiesLabel.setText("Capability");
-    capabilitiesComboBox = new JComboBox(RemoteCapability.values());
+    capabilitiesComboBox = new JComboBox<Object>(RemoteCapability.values());
 
     headlessEnabledLabel.setText("Headless");
     headlessEnabled = new JCheckBox("Use Chrome headless mode");
@@ -152,7 +152,7 @@ public class RemoteDriverConfigGui extends WebDriverConfigGui implements ItemLis
     maxBrowser = new JCheckBox("Run browser in maximized window");
 
     fileDetectorLabel.setText("File detector");
-    fileDetectorsComboBox = new JComboBox(FileDetectorOption.values());
+    fileDetectorsComboBox = new JComboBox<Object>(FileDetectorOption.values());
 
     remotePanel.add(remoteUrlLabel);
     remotePanel.add(remoteSeleniumGridText);

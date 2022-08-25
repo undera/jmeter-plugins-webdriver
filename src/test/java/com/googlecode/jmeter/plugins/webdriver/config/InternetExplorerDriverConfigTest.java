@@ -2,6 +2,7 @@ package com.googlecode.jmeter.plugins.webdriver.config;
 
 import org.apache.jmeter.threads.JMeterContextService;
 import org.apache.jmeter.threads.JMeterVariables;
+import org.hamcrest.CoreMatchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerDriverService;
+import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.remote.CapabilityType;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -20,7 +22,6 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.matchers.JUnitMatchers.hasItem;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.verifyNew;
@@ -78,7 +79,7 @@ public class InternetExplorerDriverConfigTest {
         verifyNew(InternetExplorerDriver.class, times(1)).withArguments(isA(InternetExplorerDriverService.class), isA(Capabilities.class));
         verify(mockServiceBuilder, times(1)).build();
         assertThat(config.getServices().size(), is(1));
-        assertThat(config.getServices().values(), hasItem(mockService));
+        assertThat(config.getServices().values(), CoreMatchers.hasItem(mockService));
     }
 
     @Test
@@ -141,7 +142,7 @@ public class InternetExplorerDriverConfigTest {
 
     @Test
     public void shouldHaveProxyInCapability() {
-        final Capabilities capabilities = config.createCapabilities();
-        assertThat(capabilities.getCapability(CapabilityType.PROXY), is(notNullValue()));
+        final InternetExplorerOptions options = config.createOptions();
+        assertThat(options.getCapability(CapabilityType.PROXY), is(notNullValue()));
     }
 }

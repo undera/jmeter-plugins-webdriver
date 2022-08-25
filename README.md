@@ -7,5 +7,4 @@ Selenium/WebDriver testing ability. It's good to start with [2-minute tutorial](
   * [Firefox Config](FirefoxDriverConfig.wiki)
   * [HTMLUnit Config](HtmlUnitDriverConfig.wiki)
   * [Remote WebDriver Config](RemoteDriverConfig.wiki)
-  * [PhantomJS Config](PhantomJSDriverConfig.wiki)
   * [Internet Explorer Config](InternetExplorerConfig.wiki)

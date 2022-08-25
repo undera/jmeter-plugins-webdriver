@@ -1,7 +1,7 @@
 = InternetExplorer Driver Config =
 
 == Introduction ==
-Add this configuration to enable browser based performance testing using InternetExplorer.  This document covers the various configuration options available on the InternetExplorer browser.  For an overview of performing client sider performance testing, refer to the [WebDriverTutorial Web Driver Tutorial].
+Add this configuration to enable browser based performance testing using InternetExplorer 11 (IE) mode in Microsoft Edge.  This document covers the various configuration options available on the InternetExplorer browser.  For an overview of performing client sider performance testing, refer to the [WebDriverTutorial Web Driver Tutorial].
 
 Different browsers have different levels of setup complexity.  In the overall scheme of things, using a InternetExplorer Browser is considered to have a *medium level* of setup complexity. 
 
@@ -55,7 +55,7 @@ For networks that have a proxy configuration server (PAC), and its name and the 
 
 == InternetExplorer ==
 For Web Driver controls to work against InternetExplorer, it is important to:
-  # [http://selenium-release.storage.googleapis.com/index.html Download the InternetExplorer driver] for your Operating System.
+  # [https://www.selenium.dev/downloads/ Download the InternetExplorer driver] for your Operating System. Make sure that the version of IEDriver that you download is 4.0.0.0 or greater.
   # Unzip the binary to a specific location
   # Specify the InternetExplorer binary in the input field in this tab.
 

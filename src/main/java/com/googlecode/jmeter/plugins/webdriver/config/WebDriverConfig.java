@@ -1,9 +1,5 @@
 package com.googlecode.jmeter.plugins.webdriver.config;
 
-import com.googlecode.jmeter.plugins.webdriver.proxy.ProxyFactory;
-import com.googlecode.jmeter.plugins.webdriver.proxy.ProxyHostPort;
-import com.googlecode.jmeter.plugins.webdriver.proxy.ProxyType;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -11,17 +7,20 @@ import org.apache.jmeter.config.ConfigTestElement;
 import org.apache.jmeter.engine.event.LoopIterationEvent;
 import org.apache.jmeter.engine.event.LoopIterationListener;
 import org.apache.jmeter.testelement.ThreadListener;
-import org.apache.jorphan.logging.LoggingManager;
-import org.apache.log.Logger;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.googlecode.jmeter.plugins.webdriver.proxy.ProxyFactory;
+import com.googlecode.jmeter.plugins.webdriver.proxy.ProxyHostPort;
+import com.googlecode.jmeter.plugins.webdriver.proxy.ProxyType;
 
 public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestElement implements LoopIterationListener, ThreadListener {
 
     private static final long serialVersionUID = 100L;
-    private static final Logger LOGGER = LoggingManager.getLoggerForClass();
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(WebDriverConfig.class);
 
     /**
      * This is the key used to store a WebDriver instance in the {@link org.apache.jmeter.threads.JMeterVariables} object.
@@ -274,7 +273,8 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
         }
     }
 
-    protected T getThreadBrowser() {
+    @SuppressWarnings("unchecked")
+	protected T getThreadBrowser() {
         return (T) webdrivers.get(currentThreadName());
     }
 
@@ -300,7 +300,8 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
         }
     }
 
-    protected T removeThreadBrowser() {
+    @SuppressWarnings("unchecked")
+	protected T removeThreadBrowser() {
         return (T) webdrivers.remove(currentThreadName());
     }
 

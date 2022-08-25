@@ -1,22 +1,22 @@
 package com.googlecode.jmeter.plugins.webdriver.config;
 
-import org.apache.jorphan.logging.LoggingManager;
-import org.apache.log.Logger;
-import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.ie.InternetExplorerDriverService;
-import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.ie.InternetExplorerDriverService;
+import org.openqa.selenium.ie.InternetExplorerOptions;
+import org.openqa.selenium.remote.CapabilityType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class InternetExplorerDriverConfig extends WebDriverConfig<InternetExplorerDriver> {
 
     private static final long serialVersionUID = 100L;
-    private static final Logger LOGGER = LoggingManager.getLoggerForClass();
+	private static final Logger LOGGER = LoggerFactory.getLogger(InternetExplorerDriverConfig.class);
+
     private static final String IE_SERVICE_PATH = "InternetExplorerDriverConfig.iedriver_path";
     private static final Map<String, InternetExplorerDriverService> services = new ConcurrentHashMap<String, InternetExplorerDriverService>();
 
@@ -28,11 +28,13 @@ public class InternetExplorerDriverConfig extends WebDriverConfig<InternetExplor
         return getPropertyAsString(IE_SERVICE_PATH);
     }
 
-    Capabilities createCapabilities() {
-        DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setCapability(CapabilityType.PROXY, createProxy());
-        capabilities.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION, true);
-        return capabilities;
+    InternetExplorerOptions createOptions() {
+    	InternetExplorerOptions options = new InternetExplorerOptions();
+    	options.setCapability(CapabilityType.PROXY, createProxy());
+    	options.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION, true);
+    	// Setting to launch Microsoft Edge in IE mode with the IEDriver
+    	options.attachToEdgeChrome();
+        return options;
     }
 
     Map<String, InternetExplorerDriverService> getServices() {
@@ -42,7 +44,7 @@ public class InternetExplorerDriverConfig extends WebDriverConfig<InternetExplor
     @Override
     protected InternetExplorerDriver createBrowser() {
         final InternetExplorerDriverService service = getThreadService();
-        return service != null ? new InternetExplorerDriver(service, createCapabilities()) : null;
+        return service != null ? new InternetExplorerDriver(service, createOptions()) : null;
     }
 
     @Override
@@ -64,7 +66,7 @@ public class InternetExplorerDriverConfig extends WebDriverConfig<InternetExplor
             service.start();
             services.put(currentThreadName(), service);
         } catch (IOException e) {
-            LOGGER.error("Failed to start chrome service");
+            LOGGER.error("Failed to start IE service");
             service = null;
         }
         return service;

@@ -1,16 +1,20 @@
 package com.googlecode.jmeter.plugins.webdriver.config;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.jorphan.logging.LoggingManager;
-import org.apache.log.Logger;
-import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.*;
+import static com.googlecode.jmeter.plugins.webdriver.config.RemoteCapability.CHROME;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import static com.googlecode.jmeter.plugins.webdriver.config.RemoteCapability.CHROME;
+import org.apache.commons.lang3.StringUtils;
+import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.FileDetector;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.UselessFileDetector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RemoteDriverConfig extends WebDriverConfig<RemoteWebDriver> {
 
@@ -25,12 +29,11 @@ public class RemoteDriverConfig extends WebDriverConfig<RemoteWebDriver> {
 	private static final String LOG_ENABLED = "RemoteDriverConfig.chrome.log_enabled";
 	private static final String BROWSER_MAXIMIZE = "RemoteDriverConfig.chrome.browser.maximize";
 
-	private static final Logger LOGGER = LoggingManager.getLoggerForClass();
+	private static final Logger LOGGER = LoggerFactory.getLogger(RemoteDriverConfig.class);
 
 	Capabilities createCapabilities() {
 		DesiredCapabilities capabilities = RemoteDesiredCapabilitiesFactory.build(getCapability());
 		capabilities.setCapability(CapabilityType.PROXY, createProxy());
-		capabilities.setJavascriptEnabled(true);
 
 		if (getCapability().equals(CHROME) && isHeadlessEnabled()) {
 			final ChromeOptions chromeOptions = new ChromeOptions();
@@ -94,6 +97,7 @@ public class RemoteDriverConfig extends WebDriverConfig<RemoteWebDriver> {
 		setProperty(REMOTE_FILE_DETECTOR, fileDetectorOption.name());
 	}
 
+	@SuppressWarnings("deprecation")
 	protected FileDetector createFileDetector() {
 		try {
 			return getFileDetectorOption().getClazz().newInstance();

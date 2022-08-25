@@ -4,7 +4,8 @@ import com.googlecode.jmeter.plugins.webdriver.config.WebDriverConfig;
 import org.apache.jmeter.samplers.SampleResult;
 import org.apache.jmeter.threads.JMeterContextService;
 import org.apache.jmeter.threads.JMeterVariables;
-import org.apache.log.Logger;
+import org.slf4j.Logger;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
