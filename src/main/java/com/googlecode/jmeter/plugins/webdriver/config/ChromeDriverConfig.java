@@ -49,6 +49,7 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
     ChromeOptions createOptions() {
     	ChromeOptions options = new ChromeOptions();
     	options.setCapability(CapabilityType.PROXY, createProxy());
+
         LoggingPreferences logPrefs = new LoggingPreferences();
 		logPrefs.enable(LogType.BROWSER, Level.ALL);
 		options.setCapability(ChromeOptions.LOGGING_PREFS, logPrefs);
@@ -99,7 +100,8 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
     @Override
     protected ChromeDriver createBrowser() {
         final ChromeDriverService service = getThreadService();
-        return service != null ? new ChromeDriver(service, createOptions()) : null;
+        ChromeOptions options = createOptions();
+        return service != null ? new ChromeDriver(service, options) : null;
     }
 
     @Override
@@ -124,6 +126,7 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
             LOGGER.error("Failed to start chrome service");
             service = null;
         }
+
         return service;
     }
 
