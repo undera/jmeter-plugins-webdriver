@@ -55,6 +55,11 @@ This is a comma separated list of all host(s) and/or IP Address(es) that will by
 For networks that have a proxy configuration server (PAC), and its name and the location of the PAC file is known, please use this option.  The usual configuration for this is {{{http://proxy-server/proxy.pac}}}
 
 == Firefox ==
+For Web Driver controls to work against Firefox, it is important to:
+  # [https://github.com/mozilla/geckodriver/releases Download the geckodriver driver] for your Operating System.
+  # Unzip the binary to a specific location
+  # Specify the path to the geckodriver.exe in the "Path to Firefox Driver" field in this tab.
+
 The Firefox browser allows its user agent to be overridden. To do so, check the 'Override User Agent' checkbox and then paste in the user agent string to use. The UserAgentString.com site has an [http://www.useragentstring.com/pages/useragentstring.php extensive list of user agent strings].
 
 There is also an option to enable NTLM
