@@ -20,9 +20,11 @@ import org.slf4j.LoggerFactory;
 import kg.apc.jmeter.JMeterPluginsUtils;
 
 public class FirefoxDriverConfig extends WebDriverConfig<FirefoxDriver> {
-	private static final Logger log = LoggerFactory.getLogger(FirefoxDriverConfig.class);
 
     private static final long serialVersionUID = 100L;
+    private static final Logger log = LoggerFactory.getLogger(FirefoxDriverConfig.class);
+    
+    private static final String FIREFOX_SERVICE_PATH = "FirefoxDriverConfig.firefoxdriver_path";
     private static final String GENERAL_USERAGENT_OVERRIDE = "FirefoxDriverConfig.general.useragent.override";
     private static final String ENABLE_USERAGENT_OVERRIDE = "FirefoxDriverConfig.general.useragent.override.enabled";
     private static final String ENABLE_ACCEPT_INSECURE_CERTS = "FirefoxDriverConfig.general.accept-insecure-certs";
@@ -31,6 +33,14 @@ public class FirefoxDriverConfig extends WebDriverConfig<FirefoxDriver> {
     private static final String EXTENSIONS_TO_LOAD = "FirefoxDriverConfig.general.extensions";
     private static final String PREFERENCES = "FirefoxDriverConfig.general.preferences";
 
+    public void setFirefoxDriverPath(String path) {
+        setProperty(FIREFOX_SERVICE_PATH, path);
+    }
+
+    public String getFirefoxDriverPath() {
+        return getPropertyAsString(FIREFOX_SERVICE_PATH);
+    }
+    
     FirefoxOptions createOptions() {
     	FirefoxOptions options = new FirefoxOptions();
     	options.setCapability(CapabilityType.PROXY, createProxy());
@@ -100,8 +110,7 @@ public class FirefoxDriverConfig extends WebDriverConfig<FirefoxDriver> {
         desiredCapabilities.setCapability(FirefoxDriver.Capability.PROFILE, createProfile());
         desiredCapabilities.setHeadless(isHeadless());
         desiredCapabilities.setAcceptInsecureCerts(isAcceptInsecureCerts());
-        return new FirefoxDriver(new GeckoDriverService.Builder().usingFirefoxBinary(new FirefoxBinary()).build(),
-                desiredCapabilities);
+        return new FirefoxDriver(new GeckoDriverService.Builder().usingDriverExecutable(new File(getFirefoxDriverPath())).build(), desiredCapabilities);
     }
 
     public boolean isAcceptInsecureCerts() {
