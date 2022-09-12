@@ -157,7 +157,7 @@ public class FirefoxDriverConfigGui extends WebDriverConfigGui implements ItemLi
     @Override
     public void clearGui() {
         super.clearGui();
-        firefoxServicePath.setText("");
+        firefoxServicePath.setText("path to geckodriver.exe");
         headlessCheckbox.setSelected(false);
         userAgentOverrideCheckbox.setSelected(false);
         userAgentOverrideText.setText("");

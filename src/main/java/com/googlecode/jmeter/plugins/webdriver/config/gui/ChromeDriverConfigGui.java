@@ -72,7 +72,7 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
     @Override
     public void clearGui() {
         super.clearGui();
-        chromeServicePath.setText("");
+        chromeServicePath.setText("path to chromedriver.exe");
         androidEnabled.setSelected(false);
         getHeadlessEnabled().setSelected(false);
         getInsecureCertsEnabled().setSelected(false);

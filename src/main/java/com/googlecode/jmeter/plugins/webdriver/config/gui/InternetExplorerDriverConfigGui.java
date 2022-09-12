@@ -16,6 +16,7 @@ public class InternetExplorerDriverConfigGui extends WebDriverConfigGui {
 
     private static final long serialVersionUID = 100L;
     JTextField ieServicePath;
+    JTextField msEdgePath;
 
     @Override
     public String getStaticLabel() {
@@ -33,6 +34,7 @@ public class InternetExplorerDriverConfigGui extends WebDriverConfigGui {
         if(element instanceof InternetExplorerDriverConfig) {
             InternetExplorerDriverConfig config = (InternetExplorerDriverConfig)element;
             ieServicePath.setText(config.getInternetExplorerDriverPath());
+            msEdgePath.setText(config.getMsEdgeDriverPath());
         }
     }
 
@@ -49,13 +51,15 @@ public class InternetExplorerDriverConfigGui extends WebDriverConfigGui {
         if(element instanceof InternetExplorerDriverConfig) {
             InternetExplorerDriverConfig config = (InternetExplorerDriverConfig)element;
             config.setInternetExplorerDriverPath(ieServicePath.getText());
+            config.setMsEdgeDriverPath(msEdgePath.getText());
         }
     }
 
     @Override
     public void clearGui() {
         super.clearGui();
-        ieServicePath.setText("");
+        ieServicePath.setText("path to IEDriverServer.exe");
+        msEdgePath.setText("path to msedge.exe");
     }
 
     @Override
@@ -78,10 +82,16 @@ public class InternetExplorerDriverConfigGui extends WebDriverConfigGui {
         final JPanel ieServicePanel = new HorizontalPanel();
         final JLabel ieDriverServiceLabel = new JLabel("Path to Internet Explorer Driver");
         ieServicePanel.add(ieDriverServiceLabel);
+        final JPanel edgeServicePanel = new HorizontalPanel();
+        final JLabel edgeDriverServiceLabel = new JLabel("Path to Edge Executable");
+        edgeServicePanel.add(edgeDriverServiceLabel);
 
         ieServicePath = new JTextField();
         ieServicePanel.add(ieServicePath);
+        msEdgePath = new JTextField();
+        edgeServicePanel.add(msEdgePath);
         browserPanel.add(ieServicePanel);
+        browserPanel.add(edgeServicePanel);
         return browserPanel;
     }
 

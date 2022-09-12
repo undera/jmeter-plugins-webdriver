@@ -18,22 +18,35 @@ public class InternetExplorerDriverConfig extends WebDriverConfig<InternetExplor
 	private static final Logger LOGGER = LoggerFactory.getLogger(InternetExplorerDriverConfig.class);
 
     private static final String IE_SERVICE_PATH = "InternetExplorerDriverConfig.iedriver_path";
+    private static final String EDGE_SERVICE_PATH = "InternetExplorerDriverConfig.edgedriver_path";
     private static final Map<String, InternetExplorerDriverService> services = new ConcurrentHashMap<String, InternetExplorerDriverService>();
 
     public void setInternetExplorerDriverPath(String path) {
         setProperty(IE_SERVICE_PATH, path);
     }
 
+    public void setMsEdgeDriverPath(String path) {
+        setProperty(EDGE_SERVICE_PATH, path);
+    }
+
     public String getInternetExplorerDriverPath() {
         return getPropertyAsString(IE_SERVICE_PATH);
+    }
+
+    public String getMsEdgeDriverPath() {
+        return getPropertyAsString(EDGE_SERVICE_PATH);
     }
 
     InternetExplorerOptions createOptions() {
     	InternetExplorerOptions options = new InternetExplorerOptions();
     	options.setCapability(CapabilityType.PROXY, createProxy());
     	options.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION, true);
-    	// Setting to launch Microsoft Edge in IE mode with the IEDriver
+    	// Settings to launch Microsoft Edge in IE mode
     	options.attachToEdgeChrome();
+        options.withEdgeExecutablePath(getMsEdgeDriverPath());
+    	options.ignoreZoomSettings();
+    	// Set an initial valid page otherwise IeDriver hangs on page load...
+    	options.withInitialBrowserUrl("http://www.bing.com");
         return options;
     }
 
@@ -44,7 +57,8 @@ public class InternetExplorerDriverConfig extends WebDriverConfig<InternetExplor
     @Override
     protected InternetExplorerDriver createBrowser() {
         final InternetExplorerDriverService service = getThreadService();
-        return service != null ? new InternetExplorerDriver(service, createOptions()) : null;
+    	InternetExplorerOptions ieOptions = createOptions();
+        return service != null ? new InternetExplorerDriver(service, ieOptions) : null;
     }
 
     @Override
