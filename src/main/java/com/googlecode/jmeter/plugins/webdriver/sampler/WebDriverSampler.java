@@ -1,5 +1,6 @@
 package com.googlecode.jmeter.plugins.webdriver.sampler;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
 import javax.script.Bindings;
@@ -43,7 +44,6 @@ public class WebDriverSampler extends AbstractSampler {
             "WDS.browser.get('http://jmeter-plugins.org')\n" +
             "WDS.sampleResult.sampleEnd()\n";
 
-    @SuppressWarnings("unchecked")
 	public WebDriverSampler() {
         Class<SampleResult> srClass;
         this.scriptEngineManager = new ScriptEngineManager();
@@ -57,23 +57,34 @@ public class WebDriverSampler extends AbstractSampler {
         sampleResultClass = srClass;
     }
 
-    @SuppressWarnings("deprecation")
 	@Override
     public SampleResult sample(Entry e) {
         if (getWebDriver() == null) {
             throw new IllegalArgumentException("Browser has not been configured.  Please ensure at least 1 WebDriverConfig is created for a ThreadGroup.");
         }
 
-        SampleResult res;
+        SampleResult res = null;
         try {
-            res = sampleResultClass.newInstance();
+            res = sampleResultClass.getDeclaredConstructor().newInstance();
         } catch (InstantiationException e1) {
             LOGGER.warn("Class " + sampleResultClass + " failed to instantiate, defaulted to " + SampleResult.class.getCanonicalName(), e1);
             res = new SampleResult();
         } catch (IllegalAccessException e1) {
             LOGGER.warn("Class " + sampleResultClass + " failed to instantiate, defaulted to " + SampleResult.class.getCanonicalName(), e1);
             res = new SampleResult();
-        }
+        } catch (IllegalArgumentException e1) {
+            LOGGER.warn("Class " + sampleResultClass + " failed to instantiate, defaulted to " + SampleResult.class.getCanonicalName(), e1);
+            res = new SampleResult();
+		} catch (InvocationTargetException e1) {
+            LOGGER.warn("Class " + sampleResultClass + " failed to instantiate, defaulted to " + SampleResult.class.getCanonicalName(), e1);
+            res = new SampleResult();
+		} catch (NoSuchMethodException e1) {
+            LOGGER.warn("Class " + sampleResultClass + " failed to instantiate, defaulted to " + SampleResult.class.getCanonicalName(), e1);
+            res = new SampleResult();
+		} catch (SecurityException e1) {
+            LOGGER.warn("Class " + sampleResultClass + " failed to instantiate, defaulted to " + SampleResult.class.getCanonicalName(), e1);
+            res = new SampleResult();
+		}
         res.setSampleLabel(getName());
         res.setSamplerData(toString());
         res.setDataType(SampleResult.TEXT);

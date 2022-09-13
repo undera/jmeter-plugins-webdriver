@@ -54,10 +54,11 @@ This is a comma separated list of all host(s) and/or IP Address(es) that will by
 For networks that have a proxy configuration server (PAC), and its name and the location of the PAC file is known, please use this option.  The usual configuration for this is http://proxy-server/proxy.pac
 
 == InternetExplorer ==
-For Web Driver controls to work against InternetExplorer, it is important to:
+For Web Driver controls to work against InternetExplorer in Edge, it is important to:
   # [https://www.selenium.dev/downloads/ Download the InternetExplorer driver] for your Operating System. Make sure that the version of IEDriver that you download is 4.0.0.0 or greater.
   # Unzip the binary to a specific location
-  # Specify the InternetExplorer binary in the input field in this tab.
+  # Specify the InternetExplorerDriver binary in the input field in this tab.
+  # Specify the Microsoft Edge binary in the other input field of this tab.
 
 [/img/wiki/web-driver/internetexplorer-driver-tab.png]
 

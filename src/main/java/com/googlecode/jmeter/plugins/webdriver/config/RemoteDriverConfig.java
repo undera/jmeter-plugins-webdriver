@@ -97,10 +97,9 @@ public class RemoteDriverConfig extends WebDriverConfig<RemoteWebDriver> {
 		setProperty(REMOTE_FILE_DETECTOR, fileDetectorOption.name());
 	}
 
-	@SuppressWarnings("deprecation")
 	protected FileDetector createFileDetector() {
 		try {
-			return getFileDetectorOption().getClazz().newInstance();
+			return getFileDetectorOption().getClazz().getDeclaredConstructor().newInstance();
 		} catch (Exception e) {
 			LOGGER.warn("Cannot create a file detector of type " + getFileDetectorOption().getClazz().getCanonicalName() + ", reverting to default of useless file detector");
 			return new UselessFileDetector();

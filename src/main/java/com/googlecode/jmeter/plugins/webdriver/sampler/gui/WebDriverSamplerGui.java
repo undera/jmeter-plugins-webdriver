@@ -122,7 +122,6 @@ public class WebDriverSamplerGui extends AbstractSamplerGui {
         languages.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                @SuppressWarnings("unchecked")
 				JComboBox<String> source = (JComboBox<String>) actionEvent.getSource();
                 String ctype = (String)source.getSelectedItem();
                 setScriptContentType(ctype);
