@@ -17,6 +17,7 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
     private JCheckBox insecureCertsEnabled;
     private JCheckBox incognitoEnabled;
     private JCheckBox noSandboxEnabled;
+    private JCheckBox disableDevShmUsageEnabled;
     JTextField additionalArgs;
     JTextField binaryPath;
 
@@ -41,6 +42,7 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
             getInsecureCertsEnabled().setSelected(config.isInsecureCertsEnabled());
             getIncognitoEnabled().setSelected(config.isIncognitoEnabled());
             getNoSandboxEnabled().setSelected(config.isNoSandboxEnabled());
+            getDisableDevShmUsageEnabled().setSelected(config.isDisableDevShmUsage());
             additionalArgs.setText(config.getAdditionalArgs());
             binaryPath.setText(config.getBinaryPath());
         }
@@ -64,6 +66,7 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
             config.setInsecureCertsEnabled(getInsecureCertsEnabled().isSelected());
             config.setIncognitoEnabled(getIncognitoEnabled().isSelected());
             config.setNoSandboxEnabled(getNoSandboxEnabled().isSelected());
+            config.setDisableDevShmUsage(getDisableDevShmUsageEnabled().isSelected());
             config.setAdditionalArgs(additionalArgs.getText());
             config.setBinaryPath(binaryPath.getText());
         }
@@ -129,6 +132,9 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
         noSandboxEnabled = new JCheckBox("Run in No sandbox mode");
         browserPanel.add(getNoSandboxEnabled());
 
+        disableDevShmUsageEnabled=new JCheckBox("Run in disable dev shm (if run no-gui under docker)");
+        browserPanel.add(getDisableDevShmUsageEnabled());
+
         final JPanel additionalArgsPanel = new HorizontalPanel();
         final JLabel additionalArgsLabel = new JLabel("Additional arguments");
         additionalArgs = new JTextField();
@@ -163,5 +169,9 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
 
     public JCheckBox getNoSandboxEnabled() {
         return noSandboxEnabled;
+    }
+
+    public JCheckBox getDisableDevShmUsageEnabled(){
+        return disableDevShmUsageEnabled;
     }
 }

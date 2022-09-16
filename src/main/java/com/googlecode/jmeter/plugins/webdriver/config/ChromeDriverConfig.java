@@ -27,6 +27,7 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
     private static final String NO_SANDBOX_ENABLED = "ChromeDriverConfig.no_sandbox_enabled";
     private static final String ADDITIONAL_ARGS = "ChromeDriverConfig.additional_args";
     private static final String BINARY_PATH = "ChromeDriverConfig.binary_path";
+    private static final String DISABLE_DEV_SHM_USAGE="ChromeDriverConfig.disable_dev_shm_usage";
 
     private static final Map<String, ChromeDriverService> services = new ConcurrentHashMap<String, ChromeDriverService>();
 
@@ -56,7 +57,7 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
         
         final String additionalArgs = trimmed(getAdditionalArgs());
         final String binaryPath = trimmed(getBinaryPath());
-        if(isAndroidEnabled() || isHeadlessEnabled() || isIncognitoEnabled() || isNoSandboxEnabled() || (null != additionalArgs && !additionalArgs.isEmpty()) || (null != binaryPath && !binaryPath.isEmpty())) {
+        if(isAndroidEnabled() || isHeadlessEnabled() || isIncognitoEnabled() || isNoSandboxEnabled() || (null != additionalArgs && !additionalArgs.isEmpty()) || (null != binaryPath && !binaryPath.isEmpty()) || isDisableDevShmUsage()) {
             //Map<String, String> chromeOptions = new HashMap<String, String>();
             //chromeOptions.put("androidPackage", "com.android.chrome");
             ChromeOptions chromeOptions = new ChromeOptions();
@@ -70,7 +71,9 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
             }
             if (isNoSandboxEnabled()) {
                 chromeOptions.addArguments("--no-sandbox");
-
+            }
+            if (isDisableDevShmUsage()){
+                chromeOptions.addArguments("--disable-dev-shm-usage");
             }
             if (isIncognitoEnabled()) {
                 chromeOptions.addArguments("--incognito");
@@ -176,6 +179,14 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
 
     public void setAdditionalArgs(String additionalArgs) {
         setProperty(ADDITIONAL_ARGS, additionalArgs);
+    }
+
+    public boolean isDisableDevShmUsage(){
+        return getPropertyAsBoolean(DISABLE_DEV_SHM_USAGE);
+    }
+
+    public void setDisableDevShmUsage(boolean enabled){
+        setProperty(DISABLE_DEV_SHM_USAGE,enabled);
     }
 
 }
