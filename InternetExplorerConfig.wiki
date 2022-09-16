@@ -16,6 +16,7 @@ The main part of the InternetExplorer configuration UI lies in the tabs:
   # InternetExplorer
   # Experimental
 
+Upon start-up, IE will load "http://wwww.bing.com". So ensure the browser can access this url otherwise the driver will fail.
 
 == Proxy ==
 The default configuration (Use system proxy) is suitable for most.  However, if you operate within a corporate network (that use http proxies), then this section may be important to you.

@@ -1,6 +1,7 @@
 package com.googlecode.jmeter.plugins.webdriver.config;
 
 import static com.googlecode.jmeter.plugins.webdriver.config.RemoteCapability.CHROME;
+import static com.googlecode.jmeter.plugins.webdriver.config.RemoteCapability.INTERNET_EXPLORER;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -8,6 +9,7 @@ import java.net.URL;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.FileDetector;
@@ -21,6 +23,7 @@ public class RemoteDriverConfig extends WebDriverConfig<RemoteWebDriver> {
 	private static final long serialVersionUID = 100L;
 	private static final String REMOTE_SELENIUM_GRID_URL = "RemoteDriverConfig.general.selenium.grid.url";
 	private static final String REMOTE_CAPABILITY = "RemoteDriverConfig.general.selenium.capability";
+	private static final String EDGE_SERVICE_PATH = "RemoteDriverConfig.ie.edgedriver_path";
 	private static final String REMOTE_FILE_DETECTOR = "RemoteDriverConfig.general.selenium.file.detector";
 	private static final String HEADLESS_ENABLED = "RemoteDriverConfig.chrome.headless_enabled";
 	//adding options especially for selenoid
@@ -52,7 +55,16 @@ public class RemoteDriverConfig extends WebDriverConfig<RemoteWebDriver> {
 				chromeOptions.setCapability("enableVNC",true);
 			capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
 		}
-
+		else if (getCapability().equals(INTERNET_EXPLORER)) {
+			// Settings to launch Microsoft Edge in IE mode
+			InternetExplorerOptions ieOptions = new InternetExplorerOptions();
+			ieOptions.attachToEdgeChrome();
+			ieOptions.withEdgeExecutablePath(getMsEdgeDriverPath());
+			ieOptions.ignoreZoomSettings();
+			// Set an initial valid page otherwise IeDriver hangs on page load...
+			ieOptions.withInitialBrowserUrl("http://www.bing.com");
+			capabilities.merge(ieOptions);
+		}
 		return capabilities;
 	}
 
@@ -83,6 +95,14 @@ public class RemoteDriverConfig extends WebDriverConfig<RemoteWebDriver> {
 	public void setCapability(RemoteCapability selectedCapability) {
 		setProperty(REMOTE_CAPABILITY, selectedCapability.name());
 	}
+
+    public void setMsEdgeDriverPath(String path) {
+        setProperty(EDGE_SERVICE_PATH, path);
+    }
+
+    public String getMsEdgeDriverPath() {
+        return getPropertyAsString(EDGE_SERVICE_PATH);
+    }
 
 	public FileDetectorOption getFileDetectorOption() {
 		String fileDetectorString = getPropertyAsString(REMOTE_FILE_DETECTOR);

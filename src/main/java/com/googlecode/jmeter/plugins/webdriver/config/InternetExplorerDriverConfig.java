@@ -25,12 +25,12 @@ public class InternetExplorerDriverConfig extends WebDriverConfig<InternetExplor
         setProperty(IE_SERVICE_PATH, path);
     }
 
-    public void setMsEdgeDriverPath(String path) {
-        setProperty(EDGE_SERVICE_PATH, path);
-    }
-
     public String getInternetExplorerDriverPath() {
         return getPropertyAsString(IE_SERVICE_PATH);
+    }
+
+    public void setMsEdgeDriverPath(String path) {
+        setProperty(EDGE_SERVICE_PATH, path);
     }
 
     public String getMsEdgeDriverPath() {
