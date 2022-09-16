@@ -65,6 +65,8 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
             }
             if (isHeadlessEnabled()) {
                 chromeOptions.addArguments("--headless");
+                //Adding the options to whitelist all IPs to allow the WebDriverSampler to call ChromeDriver from Docker in headless mode
+                chromeOptions.addArguments("--whitelisted-ips");
             }
             if (isNoSandboxEnabled()) {
                 chromeOptions.addArguments("--no-sandbox");
