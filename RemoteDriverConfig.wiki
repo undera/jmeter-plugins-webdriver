@@ -19,7 +19,7 @@ Specify the URL of the Selenium Grid. The URL must be correct, if you specify a 
 === Capability ===
 Specify which browser selects from your Selenium Grid. Currently it only selects the browser matching the browserName. So if you are running three concurrent users it will spin three browser instances in a selenium grid node.
 
-For Internet Explorer, the system will ask your Selenium Grid to launch Microsoft Edge in InternetExplorer 11 (IE) mode. So be sure to specify the remote server's path to msedge.exe appropriately.
+For Internet Explorer, the system will ask your Selenium Grid to launch Microsoft Edge in InternetExplorer 11 (IE) mode. If the default path to msedge.exe on the remote server is not good, then change it appropriately.
 Upon start-up, IE will load "http://wwww.bing.com". So ensure the remote server can access this url otherwise the driver will fail.
 
 === Headless ===

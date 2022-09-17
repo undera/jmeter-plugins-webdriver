@@ -59,7 +59,7 @@ For Web Driver controls to work against InternetExplorer in Edge, it is importan
   # [https://www.selenium.dev/downloads/ Download the InternetExplorer driver] for your Operating System. Make sure that the version of IEDriver that you download is 4.0.0.0 or greater.
   # Unzip the binary to a specific location
   # Specify the InternetExplorerDriver binary in the input field in this tab.
-  # Specify the Microsoft Edge binary in the other input field of this tab.
+  # In the second field, if the default path to the Microsoft Edge binary is not good, change it accordingly.
 
 [/img/wiki/web-driver/internetexplorer-driver-tab.png]
 

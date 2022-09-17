@@ -59,7 +59,7 @@ public class InternetExplorerDriverConfigGui extends WebDriverConfigGui {
     public void clearGui() {
         super.clearGui();
         ieServicePath.setText("path to IEDriverServer.exe");
-        msEdgePath.setText("path to msedge.exe");
+        msEdgePath.setText("C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe");
     }
 
     @Override

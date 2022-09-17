@@ -142,7 +142,7 @@ public class RemoteDriverConfigGui extends WebDriverConfigGui implements ItemLis
     capabilitiesLabel.setText("Capability");
     capabilitiesComboBox = new JComboBox<Object>(RemoteCapability.values());
     
-    edgeLabel.setText("Path to Edge Executable on Remote");
+    edgeLabel.setText("For IE only, path to Edge executable on Remote");
     edgePanel.add(edgeLabel);
     msEdgePath = new JTextField();
     edgePanel.add(msEdgePath);
@@ -196,7 +196,7 @@ public class RemoteDriverConfigGui extends WebDriverConfigGui implements ItemLis
     super.clearGui();
     remoteSeleniumGridText.setText(StringUtils.EMPTY);
     capabilitiesComboBox.setSelectedIndex(2);
-    msEdgePath.setText("path to msedge.exe on remote");
+    msEdgePath.setText("C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe");
     fileDetectorsComboBox.setSelectedIndex(1);
     headlessEnabled.setSelected(false);
     vncEnabled.setSelected(false);
