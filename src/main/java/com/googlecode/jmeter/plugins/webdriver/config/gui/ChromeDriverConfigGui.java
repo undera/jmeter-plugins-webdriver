@@ -1,12 +1,17 @@
 package com.googlecode.jmeter.plugins.webdriver.config.gui;
 
-import com.googlecode.jmeter.plugins.webdriver.config.ChromeDriverConfig;
-import kg.apc.jmeter.JMeterPluginsUtils;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
 import org.apache.jmeter.gui.util.HorizontalPanel;
 import org.apache.jmeter.gui.util.VerticalPanel;
 import org.apache.jmeter.testelement.TestElement;
 
-import javax.swing.*;
+import com.googlecode.jmeter.plugins.webdriver.config.ChromeDriverConfig;
+
+import kg.apc.jmeter.JMeterPluginsUtils;
 
 public class ChromeDriverConfigGui extends WebDriverConfigGui {
 
@@ -81,6 +86,7 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
         getInsecureCertsEnabled().setSelected(false);
         getIncognitoEnabled().setSelected(false);
         getNoSandboxEnabled().setSelected(false);
+        getDisableDevShmUsageEnabled().setSelected(false);
         additionalArgs.setText("");
         binaryPath.setText("");
     }

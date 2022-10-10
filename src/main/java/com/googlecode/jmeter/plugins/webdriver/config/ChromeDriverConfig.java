@@ -58,39 +58,34 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
         final String additionalArgs = trimmed(getAdditionalArgs());
         final String binaryPath = trimmed(getBinaryPath());
         if(isAndroidEnabled() || isHeadlessEnabled() || isIncognitoEnabled() || isNoSandboxEnabled() || (null != additionalArgs && !additionalArgs.isEmpty()) || (null != binaryPath && !binaryPath.isEmpty()) || isDisableDevShmUsage()) {
-            //Map<String, String> chromeOptions = new HashMap<String, String>();
-            //chromeOptions.put("androidPackage", "com.android.chrome");
-            ChromeOptions chromeOptions = new ChromeOptions();
             if (isAndroidEnabled()) {
-                chromeOptions.setExperimentalOption("androidPackage", "com.android.chrome");
+                options.setExperimentalOption("androidPackage", "com.android.chrome");
             }
             if (isHeadlessEnabled()) {
-                chromeOptions.addArguments("--headless");
+                options.addArguments("--headless");
                 //Adding the options to whitelist all IPs to allow the WebDriverSampler to call ChromeDriver from Docker in headless mode
-                chromeOptions.addArguments("--whitelisted-ips");
+                options.addArguments("--whitelisted-ips");
             }
             if (isNoSandboxEnabled()) {
-                chromeOptions.addArguments("--no-sandbox");
+                options.addArguments("--no-sandbox");
             }
             if (isDisableDevShmUsage()){
-                chromeOptions.addArguments("--disable-dev-shm-usage");
+                options.addArguments("--disable-dev-shm-usage");
             }
             if (isIncognitoEnabled()) {
-                chromeOptions.addArguments("--incognito");
+                options.addArguments("--incognito");
             }
             if(null != additionalArgs && !additionalArgs.isEmpty()) {
-                chromeOptions.addArguments(additionalArgs.split("\\s+"));
+                options.addArguments(additionalArgs.split("\\s+"));
             }
             if(null != binaryPath && !binaryPath.isEmpty()) {
-                chromeOptions.setBinary(binaryPath);
+                options.setBinary(binaryPath);
             }
-            options.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
         }
 
         if(isInsecureCertsEnabled()) {
         	options.setCapability("acceptInsecureCerts", true);
         }
-
         return options;
     }
 
