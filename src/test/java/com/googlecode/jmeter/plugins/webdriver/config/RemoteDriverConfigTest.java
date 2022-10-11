@@ -1,5 +1,26 @@
 package com.googlecode.jmeter.plugins.webdriver.config;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.times;
+import static org.powermock.api.mockito.PowerMockito.verifyNew;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.URL;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.jmeter.threads.JMeterContextService;
 import org.apache.jmeter.threads.JMeterVariables;
 import org.junit.After;
@@ -13,25 +34,15 @@ import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.LocalFileDetector;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.UselessFileDetector;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.io.*;
-import java.net.URL;
-import java.util.List;
-import java.util.TreeMap;
-
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.times;
-import static org.powermock.api.mockito.PowerMockito.verifyNew;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
+@PowerMockIgnore("javax.management.*")
 @PrepareForTest(RemoteDriverConfig.class)
+
 public class RemoteDriverConfigTest {
 
     private RemoteDriverConfig config;
@@ -101,10 +112,10 @@ public class RemoteDriverConfigTest {
     public void shouldHaveHeadlessInChromeOptionsWhenEnabled() {
         config.setHeadlessEnabled(true);
         final Capabilities capabilities = config.createCapabilities();
-        @SuppressWarnings("rawtypes")
-		TreeMap capability = (TreeMap) capabilities.getCapability(ChromeOptions.CAPABILITY);
+		@SuppressWarnings("unchecked")
+		Map<String,Object> capability = (Map<String,Object>) capabilities.getCapability(ChromeOptions.CAPABILITY);
         assertThat(capability, is(notNullValue()));
-        @SuppressWarnings("unchecked")
+		@SuppressWarnings("unchecked")
 		List<String> args = (List<String>) capability.get("args");
         assertThat(args, is(notNullValue()));
         assertEquals(1, args.size());
@@ -115,10 +126,10 @@ public class RemoteDriverConfigTest {
     public void shouldNotHaveHeadlessInChromeOptionsWhenDisabled() {
         config.setHeadlessEnabled(false);
         final Capabilities capabilities = config.createCapabilities();
-        @SuppressWarnings("rawtypes")
-		TreeMap capability = (TreeMap) capabilities.getCapability(ChromeOptions.CAPABILITY);
+		@SuppressWarnings("unchecked")
+		Map<String,Object> capability = (Map<String,Object>) capabilities.getCapability(ChromeOptions.CAPABILITY);
         assertThat(capability, is(notNullValue()));
-        @SuppressWarnings("unchecked")
+		@SuppressWarnings("unchecked")
 		List<String> args = (List<String>) capability.get("args");
         assertThat(args, is(notNullValue()));
         assertEquals(0, args.size());
@@ -157,4 +168,5 @@ public class RemoteDriverConfigTest {
     		assertThat(unit.getMessage(), is("java.net.MalformedURLException: no protocol: BadURL"));
     	}
 	}
+
 }
