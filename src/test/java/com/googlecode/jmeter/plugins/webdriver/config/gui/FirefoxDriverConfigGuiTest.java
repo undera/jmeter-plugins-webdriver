@@ -68,6 +68,7 @@ public class FirefoxDriverConfigGuiTest {
 
         assertThat(gui.userAgentOverrideText.getText(), is(""));
         assertThat(gui.userAgentOverrideCheckbox.isSelected(), is(false));
+        assertThat(gui.firefoxServicePath.getText(), is("path to geckodriver.exe"));
     }
 
     @Test
@@ -86,4 +87,5 @@ public class FirefoxDriverConfigGuiTest {
 		assertThat(gui.isExperimentalEnabled(), is(true));
 		assertThat(gui.isProxyEnabled(), is(true));
 	}
+
 }

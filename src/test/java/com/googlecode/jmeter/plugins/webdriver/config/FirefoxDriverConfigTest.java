@@ -1,5 +1,19 @@
 package com.googlecode.jmeter.plugins.webdriver.config;
 
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.times;
+import static org.powermock.api.mockito.PowerMockito.verifyNew;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import org.apache.jmeter.threads.JMeterContextService;
 import org.apache.jmeter.threads.JMeterVariables;
 import org.junit.After;
@@ -9,6 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxDriverService;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.GeckoDriverService;
 import org.openqa.selenium.remote.CapabilityType;
@@ -18,19 +33,10 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-import java.io.*;
-
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.times;
-import static org.powermock.api.mockito.PowerMockito.verifyNew;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
-
 @RunWith(PowerMockRunner.class)
+@PowerMockIgnore({"javax.management.*","javax.net.ssl.*"})
 @PrepareForTest(FirefoxDriverConfig.class)
-@PowerMockIgnore("javax.net.ssl.*")
+
 public class FirefoxDriverConfigTest {
 
     private FirefoxDriverConfig config;
@@ -71,10 +77,13 @@ public class FirefoxDriverConfigTest {
 
     @Test
     public void shouldCreateFirefox() throws Exception {
+        // Set the path to GeckoDriver executable on your machine
+        config.setFirefoxDriverPath("Path_of_GeckoDriver_Driver");
         FirefoxDriver mockFirefoxDriver = Mockito.mock(FirefoxDriver.class);
         whenNew(FirefoxDriver.class)
-            .withParameterTypes(GeckoDriverService.class, FirefoxOptions.class)
+            .withParameterTypes(FirefoxDriverService.class, FirefoxOptions.class)
             .withArguments(isA(GeckoDriverService.class), isA(FirefoxOptions.class))
+
             .thenReturn(mockFirefoxDriver);
 
         final FirefoxDriver browser = config.createBrowser();
@@ -88,4 +97,5 @@ public class FirefoxDriverConfigTest {
         final FirefoxOptions options = config.createOptions();
         assertThat(options.getCapability(CapabilityType.PROXY), is(notNullValue()));
     }
+
 }

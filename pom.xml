@@ -61,6 +61,7 @@
 						--add-opens java.base/java.lang.reflect=ALL-UNNAMED
 						--add-opens java.base/java.util=ALL-UNNAMED
 						--add-opens java.base/java.util.concurrent=ALL-UNNAMED
+						--add-opens=java.base/sun.security.jca=ALL-UNNAMED
 					</argLine>
 				</configuration>
 			</plugin>

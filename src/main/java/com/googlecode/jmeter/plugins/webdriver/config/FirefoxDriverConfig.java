@@ -105,11 +105,11 @@ public class FirefoxDriverConfig extends WebDriverConfig<FirefoxDriver> {
 
     @Override
     protected FirefoxDriver createBrowser() {
-        FirefoxOptions desiredCapabilities = new FirefoxOptions(createOptions());
-        desiredCapabilities.setCapability(FirefoxDriver.Capability.PROFILE, createProfile());
-        desiredCapabilities.setHeadless(isHeadless());
-        desiredCapabilities.setAcceptInsecureCerts(isAcceptInsecureCerts());
-        return new FirefoxDriver(new GeckoDriverService.Builder().usingDriverExecutable(new File(getFirefoxDriverPath())).build(), desiredCapabilities);
+        FirefoxOptions options = new FirefoxOptions(createOptions());
+        options.setCapability(FirefoxDriver.Capability.PROFILE, createProfile());
+        options.setHeadless(isHeadless());
+        options.setAcceptInsecureCerts(isAcceptInsecureCerts());
+        return new FirefoxDriver(new GeckoDriverService.Builder().usingDriverExecutable(new File(getFirefoxDriverPath())).build(), options);
     }
 
     public boolean isAcceptInsecureCerts() {
