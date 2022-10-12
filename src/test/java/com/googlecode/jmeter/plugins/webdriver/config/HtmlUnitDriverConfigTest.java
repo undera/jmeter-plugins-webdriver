@@ -81,5 +81,4 @@ public class HtmlUnitDriverConfigTest {
         final Capabilities capabilities = config.createCapabilities();
         assertThat(capabilities.getCapability(CapabilityType.PROXY), is(notNullValue()));
     }
-
 }

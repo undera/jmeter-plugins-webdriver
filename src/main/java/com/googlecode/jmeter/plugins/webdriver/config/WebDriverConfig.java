@@ -273,7 +273,7 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
         }
     }
 
-	protected T getThreadBrowser() {
+    protected T getThreadBrowser() {
         return (T) webdrivers.get(currentThreadName());
     }
 
@@ -299,7 +299,7 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
         }
     }
 
-	protected T removeThreadBrowser() {
+    protected T removeThreadBrowser() {
         return (T) webdrivers.remove(currentThreadName());
     }
 

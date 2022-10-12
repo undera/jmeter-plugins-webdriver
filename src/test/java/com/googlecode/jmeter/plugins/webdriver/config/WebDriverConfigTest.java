@@ -509,7 +509,6 @@ public class WebDriverConfigTest {
          * @param proxyFactory mock ProxyFactory to use
          * @param browsers     the list of browsers (in order) to return when createBrowser() method is invoked.
          */
-
         public WebDriverConfigImpl(ProxyFactory proxyFactory, WebDriver... browsers) {
             super(proxyFactory);
             this.browsers.addAll(Arrays.asList(browsers));

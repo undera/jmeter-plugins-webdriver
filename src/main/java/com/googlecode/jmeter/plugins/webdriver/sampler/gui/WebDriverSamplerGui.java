@@ -122,7 +122,7 @@ public class WebDriverSamplerGui extends AbstractSamplerGui {
         languages.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-				JComboBox<String> source = (JComboBox<String>) actionEvent.getSource();
+                JComboBox<String> source = (JComboBox<String>) actionEvent.getSource();
                 String ctype = (String)source.getSelectedItem();
                 setScriptContentType(ctype);
             }

@@ -38,155 +38,155 @@ public class WebDriverConfigGuiTest {
         assertThat(gui, is(CoreMatchers.instanceOf(JMeterGUIComponent.class)));
     }
 
-	@Test
+    @Test
     public void shouldCreateSystemProxyByDefault() {
         final WebDriverConfig testElement = (WebDriverConfig) gui.createTestElement();
         assertThat(testElement.getProxyType(), is(ProxyType.SYSTEM));
     }
 
-	@Test
+    @Test
     public void shouldCreateSystemProxy() {
         gui.systemProxy.setSelected(true);
         final WebDriverConfig testElement = (WebDriverConfig) gui.createTestElement();
         assertThat(testElement.getProxyType(), is(ProxyType.SYSTEM));
     }
 
-	@Test
+    @Test
     public void shouldCreateNoProxy() {
         gui.directProxy.setSelected(true);
         final WebDriverConfig testElement = (WebDriverConfig) gui.createTestElement();
         assertThat(testElement.getProxyType(), is(ProxyType.DIRECT));
     }
 
-	@Test
+    @Test
     public void shouldCreateManualProxy() {
         gui.manualProxy.setSelected(true);
         final WebDriverConfig testElement = (WebDriverConfig) gui.createTestElement();
         assertThat(testElement.getProxyType(), is(ProxyType.MANUAL));
     }
 
-	@Test
+    @Test
     public void shouldCreateProxyPacProxy() {
         gui.pacUrlProxy.setSelected(true);
         final WebDriverConfig testElement = (WebDriverConfig) gui.createTestElement();
         assertThat(testElement.getProxyType(), is(ProxyType.PROXY_PAC));
     }
 
-	@Test
+    @Test
     public void shouldCreateAutoDectetProxy() {
         gui.autoDetectProxy.setSelected(true);
         final WebDriverConfig testElement = (WebDriverConfig) gui.createTestElement();
         assertThat(testElement.getProxyType(), is(ProxyType.AUTO_DETECT));
     }
 
-	@Test
+    @Test
     public void shouldSetPacUrl() {
         gui.pacUrl.setText("http://pac.url");
         final WebDriverConfig testElement = (WebDriverConfig) gui.createTestElement();
         assertThat(testElement.getProxyPacUrl(), is("http://pac.url"));
     }
 
-	@Test
+    @Test
     public void shouldSetHttpHost() {
         gui.httpProxyHost.setText("host");
         final WebDriverConfig testElement = (WebDriverConfig) gui.createTestElement();
         assertThat(testElement.getHttpHost(), is("host"));
     }
 
-	@Test
+    @Test
     public void shouldSetHttpPort() {
         gui.httpProxyPort.setText("123");
         final WebDriverConfig testElement = (WebDriverConfig) gui.createTestElement();
         assertThat(testElement.getHttpPort(), is(123));
     }
 
-	@Test
+    @Test
     public void shouldSetHttpPortTo8080ByDefault() {
         final WebDriverConfig testElement = (WebDriverConfig) gui.createTestElement();
         assertThat(testElement.getHttpPort(), is(8080));
     }
 
-	@Test
+    @Test
     public void shouldUseHttpSettingsForAllProtocolsByDefault() {
         final WebDriverConfig testElement = (WebDriverConfig) gui.createTestElement();
         assertThat(testElement.isUseHttpSettingsForAllProtocols(), is(true));
     }
 
-	@Test
+    @Test
     public void shouldBeAbleToDisableHttpSettingsForAllProtocols() {
         gui.useHttpSettingsForAllProtocols.setSelected(false);
         final WebDriverConfig testElement = (WebDriverConfig) gui.createTestElement();
         assertThat(testElement.isUseHttpSettingsForAllProtocols(), is(false));
     }
 
-	@Test
+    @Test
     public void shouldSetHttpsHost() {
         gui.httpsProxyHost.setText("host");
         final WebDriverConfig testElement = (WebDriverConfig) gui.createTestElement();
         assertThat(testElement.getHttpsHost(), is("host"));
     }
 
-	@Test
+    @Test
     public void shouldSetHttpsPort() {
         gui.httpsProxyPort.setText("123");
         final WebDriverConfig testElement = (WebDriverConfig) gui.createTestElement();
         assertThat(testElement.getHttpsPort(), is(123));
     }
 
-	@Test
+    @Test
     public void shouldSetHttpsPortTo8080ByDefault() {
         final WebDriverConfig testElement = (WebDriverConfig) gui.createTestElement();
         assertThat(testElement.getHttpsPort(), is(8080));
     }
 
-	@Test
+    @Test
     public void shouldSetFtpHost() {
         gui.ftpProxyHost.setText("host");
         final WebDriverConfig testElement = (WebDriverConfig) gui.createTestElement();
         assertThat(testElement.getFtpHost(), is("host"));
     }
 
-	@Test
+    @Test
     public void shouldSetFtpPort() {
         gui.ftpProxyPort.setText("123");
         final WebDriverConfig testElement = (WebDriverConfig) gui.createTestElement();
         assertThat(testElement.getFtpPort(), is(123));
     }
 
-	@Test
+    @Test
     public void shouldSetFtpPortTo8080ByDefault() {
         final WebDriverConfig testElement = (WebDriverConfig) gui.createTestElement();
         assertThat(testElement.getFtpPort(), is(8080));
     }
 
-	@Test
+    @Test
     public void shouldSetSocksHost() {
         gui.socksProxyHost.setText("host");
         final WebDriverConfig testElement = (WebDriverConfig) gui.createTestElement();
         assertThat(testElement.getSocksHost(), is("host"));
     }
 
-	@Test
+    @Test
     public void shouldSetSocksPort() {
         gui.socksProxyPort.setText("123");
         final WebDriverConfig testElement = (WebDriverConfig) gui.createTestElement();
         assertThat(testElement.getSocksPort(), is(123));
     }
 
-	@Test
+    @Test
     public void shouldSetSocksPortTo8080ByDefault() {
         final WebDriverConfig testElement = (WebDriverConfig) gui.createTestElement();
         assertThat(testElement.getSocksPort(), is(8080));
     }
 
-	@Test
+    @Test
     public void shouldSetNoProxyList() {
         gui.noProxyList.setText("somehost,otherhost");
         final WebDriverConfig testElement = (WebDriverConfig) gui.createTestElement();
         assertThat(testElement.getNoProxyHost(), is("somehost,otherhost"));
     }
 
-	@Test
+    @Test
     public void shouldSetLocalhostInNoProxyListByDefault() {
         final WebDriverConfig testElement = (WebDriverConfig) gui.createTestElement();
         assertThat(testElement.getNoProxyHost(), is("localhost"));
@@ -223,7 +223,7 @@ public class WebDriverConfigGuiTest {
         assertThat(gui.noProxyList.getText(), is("localhost"));
     }
 
-	@Test
+    @Test
     public void shouldSetValuesOnConfigure() {
         WebDriverConfig config = new WebDriverConfigImpl();
         config.setProxyType(ProxyType.AUTO_DETECT);
@@ -255,7 +255,7 @@ public class WebDriverConfigGuiTest {
         assertThat(gui.noProxyList.getText(), is(config.getNoProxyHost()));
     }
 
-	@Test
+    @Test
     public void shouldSetExperimentalValuesOnConfigure() {
         WebDriverConfig config = new WebDriverConfigImpl();
         config.setRecreateBrowserOnIterationStart(true);
@@ -265,7 +265,7 @@ public class WebDriverConfigGuiTest {
         assertThat(gui.recreateBrowserOnIterationStart.isSelected(), is(true));
     }
 
-	@Test
+    @Test
     public void shouldSetNoProxyOnConfigure() {
         WebDriverConfig config = new WebDriverConfigImpl();
         config.setProxyType(ProxyType.DIRECT);
@@ -274,7 +274,7 @@ public class WebDriverConfigGuiTest {
         assertThat(gui.directProxy.isSelected(), is(true));
     }
 
-	@Test
+    @Test
     public void shouldSetAutoDetectProxyOnConfigure() {
         WebDriverConfig config = new WebDriverConfigImpl();
         config.setProxyType(ProxyType.AUTO_DETECT);
@@ -283,7 +283,7 @@ public class WebDriverConfigGuiTest {
         assertThat(gui.autoDetectProxy.isSelected(), is(true));
     }
 
-	@Test
+    @Test
     public void shouldSetManualProxyOnConfigure() {
         WebDriverConfig config = new WebDriverConfigImpl();
         config.setProxyType(ProxyType.MANUAL);
@@ -292,7 +292,7 @@ public class WebDriverConfigGuiTest {
         assertThat(gui.manualProxy.isSelected(), is(true));
     }
 
-	@Test
+    @Test
     public void shouldSetPacUrlProxyOnConfigure() {
         WebDriverConfig config = new WebDriverConfigImpl();
         config.setProxyType(ProxyType.PROXY_PAC);
@@ -301,7 +301,7 @@ public class WebDriverConfigGuiTest {
         assertThat(gui.pacUrlProxy.isSelected(), is(true));
     }
 
-	@Test
+    @Test
     public void shouldSetSystemProxyOnConfigure() {
         WebDriverConfig config = new WebDriverConfigImpl();
         config.setProxyType(ProxyType.SYSTEM);
@@ -437,7 +437,7 @@ public class WebDriverConfigGuiTest {
     private static class WebDriverConfigGuiImpl extends WebDriverConfigGui {
 		private static final long serialVersionUID = 100L;
 
-		public WebDriverConfigGuiImpl() {
+        public WebDriverConfigGuiImpl() {
             setLayout(new BorderLayout(0, 5));
             add(createProxyPanel(), BorderLayout.CENTER);
         }

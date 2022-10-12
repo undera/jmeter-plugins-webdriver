@@ -44,7 +44,7 @@ public class WebDriverSampler extends AbstractSampler {
             "WDS.browser.get('http://jmeter-plugins.org')\n" +
             "WDS.sampleResult.sampleEnd()\n";
 
-	public WebDriverSampler() {
+    public WebDriverSampler() {
         Class<SampleResult> srClass;
         this.scriptEngineManager = new ScriptEngineManager();
         String className = JMeterUtils.getPropDefault("webdriver.sampleresult_class", SampleResult.class.getCanonicalName());
@@ -57,7 +57,7 @@ public class WebDriverSampler extends AbstractSampler {
         sampleResultClass = srClass;
     }
 
-	@Override
+    @Override
     public SampleResult sample(Entry e) {
         if (getWebDriver() == null) {
             throw new IllegalArgumentException("Browser has not been configured.  Please ensure at least 1 WebDriverConfig is created for a ThreadGroup.");

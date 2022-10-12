@@ -168,5 +168,4 @@ public class RemoteDriverConfigTest {
     		assertThat(unit.getMessage(), is("java.net.MalformedURLException: no protocol: BadURL"));
     	}
 	}
-
 }

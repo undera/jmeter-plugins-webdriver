@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
 
     private static final long serialVersionUID = 100L;
-	private static final Logger LOGGER = LoggerFactory.getLogger(ChromeDriverConfig.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChromeDriverConfig.class);
     private static final String CHROME_SERVICE_PATH = "ChromeDriverConfig.chromedriver_path";
     private static final String ANDROID_ENABLED = "ChromeDriverConfig.android_enabled";
     private static final String HEADLESS_ENABLED = "ChromeDriverConfig.headless_enabled";
@@ -48,45 +48,45 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
     }
 
     ChromeOptions createOptions() {
-    	ChromeOptions options = new ChromeOptions();
-    	options.setCapability(CapabilityType.PROXY, createProxy());
+    	ChromeOptions chromeOptions = new ChromeOptions();
+    	chromeOptions.setCapability(CapabilityType.PROXY, createProxy());
 
         LoggingPreferences logPrefs = new LoggingPreferences();
 		logPrefs.enable(LogType.BROWSER, Level.ALL);
-		options.setCapability(ChromeOptions.LOGGING_PREFS, logPrefs);
+		chromeOptions.setCapability(ChromeOptions.LOGGING_PREFS, logPrefs);
         
         final String additionalArgs = trimmed(getAdditionalArgs());
         final String binaryPath = trimmed(getBinaryPath());
         if(isAndroidEnabled() || isHeadlessEnabled() || isIncognitoEnabled() || isNoSandboxEnabled() || (null != additionalArgs && !additionalArgs.isEmpty()) || (null != binaryPath && !binaryPath.isEmpty()) || isDisableDevShmUsage()) {
             if (isAndroidEnabled()) {
-                options.setExperimentalOption("androidPackage", "com.android.chrome");
+            	chromeOptions.setExperimentalOption("androidPackage", "com.android.chrome");
             }
             if (isHeadlessEnabled()) {
-                options.addArguments("--headless");
+            	chromeOptions.addArguments("--headless");
                 //Adding the options to whitelist all IPs to allow the WebDriverSampler to call ChromeDriver from Docker in headless mode
-                options.addArguments("--whitelisted-ips");
+            	chromeOptions.addArguments("--whitelisted-ips");
             }
             if (isNoSandboxEnabled()) {
-                options.addArguments("--no-sandbox");
+            	chromeOptions.addArguments("--no-sandbox");
             }
             if (isDisableDevShmUsage()){
-                options.addArguments("--disable-dev-shm-usage");
+            	chromeOptions.addArguments("--disable-dev-shm-usage");
             }
             if (isIncognitoEnabled()) {
-                options.addArguments("--incognito");
+            	chromeOptions.addArguments("--incognito");
             }
             if(null != additionalArgs && !additionalArgs.isEmpty()) {
-                options.addArguments(additionalArgs.split("\\s+"));
+            	chromeOptions.addArguments(additionalArgs.split("\\s+"));
             }
             if(null != binaryPath && !binaryPath.isEmpty()) {
-                options.setBinary(binaryPath);
+            	chromeOptions.setBinary(binaryPath);
             }
         }
 
         if(isInsecureCertsEnabled()) {
-        	options.setCapability("acceptInsecureCerts", true);
+        	chromeOptions.setCapability("acceptInsecureCerts", true);
         }
-        return options;
+        return chromeOptions;
     }
 
     private String trimmed(String str) {
@@ -126,7 +126,6 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
             LOGGER.error("Failed to start chrome service");
             service = null;
         }
-
         return service;
     }
 
@@ -183,5 +182,4 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
     public void setDisableDevShmUsage(boolean enabled){
         setProperty(DISABLE_DEV_SHM_USAGE,enabled);
     }
-
 }

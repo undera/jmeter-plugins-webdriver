@@ -165,10 +165,10 @@ public class ChromeDriverConfigTest {
     public void shouldNotHaveChromeOptionsWhenAndroidIsNotEnabled() {
         config.setAndroidEnabled(false);
         final ChromeOptions options = config.createOptions();
-		org.hamcrest.MatcherAssert.assertThat(options.getCapability(ChromeOptions.CAPABILITY), Matchers.hasToString("{args=[], extensions=[]}"));
+        org.hamcrest.MatcherAssert.assertThat(options.getCapability(ChromeOptions.CAPABILITY), Matchers.hasToString("{args=[], extensions=[]}"));
     }
 
-	@Test
+    @Test
     public void shouldHaveChromeOptionsWhenRemoteIsEnabled() {
         config.setHeadlessEnabled(true);
         final ChromeOptions options = config.createOptions();
@@ -187,7 +187,7 @@ public class ChromeDriverConfigTest {
     public void shouldNotHaveChromeOptionsWhenRemoteIsNotEnabled() {
         config.setAndroidEnabled(false);
         final ChromeOptions options = config.createOptions();
-		org.hamcrest.MatcherAssert.assertThat(options.getCapability(ChromeOptions.CAPABILITY), Matchers.hasToString("{args=[], extensions=[]}"));
+        org.hamcrest.MatcherAssert.assertThat(options.getCapability(ChromeOptions.CAPABILITY), Matchers.hasToString("{args=[], extensions=[]}"));
     }
 
     @Test
@@ -204,7 +204,7 @@ public class ChromeDriverConfigTest {
         assertThat(options.getCapability("acceptInsecureCerts"), is(nullValue()));
     }
 
-	@Test
+    @Test
     public void shouldHaveAndroidConfigWhenAndroidIsEnabled() {
         config.setAndroidEnabled(true);
 
@@ -276,5 +276,4 @@ public class ChromeDriverConfigTest {
         config.setDisableDevShmUsage(true);
         assertThat(config.isDisableDevShmUsage(), is(true));
     }
-
 }
