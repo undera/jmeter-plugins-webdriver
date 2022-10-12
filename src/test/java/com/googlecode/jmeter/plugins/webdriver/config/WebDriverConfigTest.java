@@ -38,11 +38,10 @@ public class WebDriverConfigTest {
 
     private ProxyFactory proxyFactory;
     private WebDriver browser;
-    private WebDriverConfig<WebDriver> config;
+    private WebDriverConfig config;
     private JMeterVariables variables;
 
-    @SuppressWarnings("unchecked")
-	@Before
+    @Before
     public void createConfig() {
         proxyFactory = mock(ProxyFactory.class);
         browser = getBrowserMock();
@@ -298,12 +297,12 @@ public class WebDriverConfigTest {
         final WebDriver secondBrowser = getBrowserMock();
 
         Thread firstThread = new Thread() {
-			public void run() {
+            public void run() {
                 config.setThreadBrowser(firstBrowser);
             }
         };
         Thread secondThread = new Thread() {
-			public void run() {
+            public void run() {
                 config.setThreadBrowser(secondBrowser);
             }
         };
@@ -453,8 +452,7 @@ public class WebDriverConfigTest {
         assertThat(config.isRecreateBrowserOnIterationStart(), is(false));
     }
 
-    @SuppressWarnings("unchecked")
-	@Test
+    @Test
     public void shouldRecreateBrowserOnEachIterationStart() {
         final WebDriver firstBrowser = getBrowserMock();
         final WebDriver secondBrowser = getBrowserMock();
@@ -477,8 +475,7 @@ public class WebDriverConfigTest {
         return browser;
     }
 
-    @SuppressWarnings("unchecked")
-	@Test
+    @Test
     public void shouldNotRecreateBrowserOnEachIterationStartWhenDevModeIsEnabled() {
         final WebDriver browser = getBrowserMock();
         this.config = new WebDriverConfigImpl(proxyFactory, browser);
@@ -504,15 +501,15 @@ public class WebDriverConfigTest {
         assertThat(config.isDevMode(), is(false));
     }
 
-    @SuppressWarnings("rawtypes")
-	private static class WebDriverConfigImpl extends WebDriverConfig {
-		private static final long serialVersionUID = 100L;
-		final List<WebDriver> browsers = new CopyOnWriteArrayList<WebDriver>();
+    private static class WebDriverConfigImpl extends WebDriverConfig {
+
+        final List<WebDriver> browsers = new CopyOnWriteArrayList<WebDriver>();
 
         /**
          * @param proxyFactory mock ProxyFactory to use
          * @param browsers     the list of browsers (in order) to return when createBrowser() method is invoked.
          */
+
         public WebDriverConfigImpl(ProxyFactory proxyFactory, WebDriver... browsers) {
             super(proxyFactory);
             this.browsers.addAll(Arrays.asList(browsers));

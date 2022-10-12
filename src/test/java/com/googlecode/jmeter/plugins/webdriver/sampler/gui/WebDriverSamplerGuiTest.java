@@ -64,7 +64,7 @@ public class WebDriverSamplerGuiTest {
 
         assertThat(gui.script.getText(), is(WebDriverSampler.defaultScript));
         assertThat(gui.parameters.getText(), is(""));
-        assertThat((String) gui.languages.getSelectedItem(), is(WebDriverSampler.DEFAULT_ENGINE));
+        assertThat((String) gui.languages.getSelectedItem(), is("beanshell"));
     }
 
     @Test

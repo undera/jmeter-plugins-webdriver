@@ -38,14 +38,12 @@ public class WebDriverConfigGuiTest {
         assertThat(gui, is(CoreMatchers.instanceOf(JMeterGUIComponent.class)));
     }
 
-    @SuppressWarnings("rawtypes")
 	@Test
     public void shouldCreateSystemProxyByDefault() {
         final WebDriverConfig testElement = (WebDriverConfig) gui.createTestElement();
         assertThat(testElement.getProxyType(), is(ProxyType.SYSTEM));
     }
 
-    @SuppressWarnings("rawtypes")
 	@Test
     public void shouldCreateSystemProxy() {
         gui.systemProxy.setSelected(true);
@@ -53,7 +51,6 @@ public class WebDriverConfigGuiTest {
         assertThat(testElement.getProxyType(), is(ProxyType.SYSTEM));
     }
 
-    @SuppressWarnings("rawtypes")
 	@Test
     public void shouldCreateNoProxy() {
         gui.directProxy.setSelected(true);
@@ -61,7 +58,6 @@ public class WebDriverConfigGuiTest {
         assertThat(testElement.getProxyType(), is(ProxyType.DIRECT));
     }
 
-    @SuppressWarnings("rawtypes")
 	@Test
     public void shouldCreateManualProxy() {
         gui.manualProxy.setSelected(true);
@@ -69,7 +65,6 @@ public class WebDriverConfigGuiTest {
         assertThat(testElement.getProxyType(), is(ProxyType.MANUAL));
     }
 
-    @SuppressWarnings("rawtypes")
 	@Test
     public void shouldCreateProxyPacProxy() {
         gui.pacUrlProxy.setSelected(true);
@@ -77,7 +72,6 @@ public class WebDriverConfigGuiTest {
         assertThat(testElement.getProxyType(), is(ProxyType.PROXY_PAC));
     }
 
-    @SuppressWarnings("rawtypes")
 	@Test
     public void shouldCreateAutoDectetProxy() {
         gui.autoDetectProxy.setSelected(true);
@@ -85,7 +79,6 @@ public class WebDriverConfigGuiTest {
         assertThat(testElement.getProxyType(), is(ProxyType.AUTO_DETECT));
     }
 
-    @SuppressWarnings("rawtypes")
 	@Test
     public void shouldSetPacUrl() {
         gui.pacUrl.setText("http://pac.url");
@@ -93,7 +86,6 @@ public class WebDriverConfigGuiTest {
         assertThat(testElement.getProxyPacUrl(), is("http://pac.url"));
     }
 
-    @SuppressWarnings("rawtypes")
 	@Test
     public void shouldSetHttpHost() {
         gui.httpProxyHost.setText("host");
@@ -101,7 +93,6 @@ public class WebDriverConfigGuiTest {
         assertThat(testElement.getHttpHost(), is("host"));
     }
 
-    @SuppressWarnings("rawtypes")
 	@Test
     public void shouldSetHttpPort() {
         gui.httpProxyPort.setText("123");
@@ -109,21 +100,18 @@ public class WebDriverConfigGuiTest {
         assertThat(testElement.getHttpPort(), is(123));
     }
 
-    @SuppressWarnings("rawtypes")
 	@Test
     public void shouldSetHttpPortTo8080ByDefault() {
         final WebDriverConfig testElement = (WebDriverConfig) gui.createTestElement();
         assertThat(testElement.getHttpPort(), is(8080));
     }
 
-    @SuppressWarnings("rawtypes")
 	@Test
     public void shouldUseHttpSettingsForAllProtocolsByDefault() {
         final WebDriverConfig testElement = (WebDriverConfig) gui.createTestElement();
         assertThat(testElement.isUseHttpSettingsForAllProtocols(), is(true));
     }
 
-    @SuppressWarnings("rawtypes")
 	@Test
     public void shouldBeAbleToDisableHttpSettingsForAllProtocols() {
         gui.useHttpSettingsForAllProtocols.setSelected(false);
@@ -131,7 +119,6 @@ public class WebDriverConfigGuiTest {
         assertThat(testElement.isUseHttpSettingsForAllProtocols(), is(false));
     }
 
-    @SuppressWarnings("rawtypes")
 	@Test
     public void shouldSetHttpsHost() {
         gui.httpsProxyHost.setText("host");
@@ -139,7 +126,6 @@ public class WebDriverConfigGuiTest {
         assertThat(testElement.getHttpsHost(), is("host"));
     }
 
-    @SuppressWarnings("rawtypes")
 	@Test
     public void shouldSetHttpsPort() {
         gui.httpsProxyPort.setText("123");
@@ -147,14 +133,12 @@ public class WebDriverConfigGuiTest {
         assertThat(testElement.getHttpsPort(), is(123));
     }
 
-    @SuppressWarnings("rawtypes")
 	@Test
     public void shouldSetHttpsPortTo8080ByDefault() {
         final WebDriverConfig testElement = (WebDriverConfig) gui.createTestElement();
         assertThat(testElement.getHttpsPort(), is(8080));
     }
 
-    @SuppressWarnings("rawtypes")
 	@Test
     public void shouldSetFtpHost() {
         gui.ftpProxyHost.setText("host");
@@ -162,7 +146,6 @@ public class WebDriverConfigGuiTest {
         assertThat(testElement.getFtpHost(), is("host"));
     }
 
-    @SuppressWarnings("rawtypes")
 	@Test
     public void shouldSetFtpPort() {
         gui.ftpProxyPort.setText("123");
@@ -170,14 +153,12 @@ public class WebDriverConfigGuiTest {
         assertThat(testElement.getFtpPort(), is(123));
     }
 
-    @SuppressWarnings("rawtypes")
 	@Test
     public void shouldSetFtpPortTo8080ByDefault() {
         final WebDriverConfig testElement = (WebDriverConfig) gui.createTestElement();
         assertThat(testElement.getFtpPort(), is(8080));
     }
 
-    @SuppressWarnings("rawtypes")
 	@Test
     public void shouldSetSocksHost() {
         gui.socksProxyHost.setText("host");
@@ -185,7 +166,6 @@ public class WebDriverConfigGuiTest {
         assertThat(testElement.getSocksHost(), is("host"));
     }
 
-    @SuppressWarnings("rawtypes")
 	@Test
     public void shouldSetSocksPort() {
         gui.socksProxyPort.setText("123");
@@ -193,14 +173,12 @@ public class WebDriverConfigGuiTest {
         assertThat(testElement.getSocksPort(), is(123));
     }
 
-    @SuppressWarnings("rawtypes")
 	@Test
     public void shouldSetSocksPortTo8080ByDefault() {
         final WebDriverConfig testElement = (WebDriverConfig) gui.createTestElement();
         assertThat(testElement.getSocksPort(), is(8080));
     }
 
-    @SuppressWarnings("rawtypes")
 	@Test
     public void shouldSetNoProxyList() {
         gui.noProxyList.setText("somehost,otherhost");
@@ -208,7 +186,6 @@ public class WebDriverConfigGuiTest {
         assertThat(testElement.getNoProxyHost(), is("somehost,otherhost"));
     }
 
-    @SuppressWarnings("rawtypes")
 	@Test
     public void shouldSetLocalhostInNoProxyListByDefault() {
         final WebDriverConfig testElement = (WebDriverConfig) gui.createTestElement();
@@ -246,7 +223,6 @@ public class WebDriverConfigGuiTest {
         assertThat(gui.noProxyList.getText(), is("localhost"));
     }
 
-    @SuppressWarnings("rawtypes")
 	@Test
     public void shouldSetValuesOnConfigure() {
         WebDriverConfig config = new WebDriverConfigImpl();
@@ -279,7 +255,6 @@ public class WebDriverConfigGuiTest {
         assertThat(gui.noProxyList.getText(), is(config.getNoProxyHost()));
     }
 
-    @SuppressWarnings("rawtypes")
 	@Test
     public void shouldSetExperimentalValuesOnConfigure() {
         WebDriverConfig config = new WebDriverConfigImpl();
@@ -290,7 +265,6 @@ public class WebDriverConfigGuiTest {
         assertThat(gui.recreateBrowserOnIterationStart.isSelected(), is(true));
     }
 
-    @SuppressWarnings("rawtypes")
 	@Test
     public void shouldSetNoProxyOnConfigure() {
         WebDriverConfig config = new WebDriverConfigImpl();
@@ -300,7 +274,6 @@ public class WebDriverConfigGuiTest {
         assertThat(gui.directProxy.isSelected(), is(true));
     }
 
-    @SuppressWarnings("rawtypes")
 	@Test
     public void shouldSetAutoDetectProxyOnConfigure() {
         WebDriverConfig config = new WebDriverConfigImpl();
@@ -310,7 +283,6 @@ public class WebDriverConfigGuiTest {
         assertThat(gui.autoDetectProxy.isSelected(), is(true));
     }
 
-    @SuppressWarnings("rawtypes")
 	@Test
     public void shouldSetManualProxyOnConfigure() {
         WebDriverConfig config = new WebDriverConfigImpl();
@@ -320,7 +292,6 @@ public class WebDriverConfigGuiTest {
         assertThat(gui.manualProxy.isSelected(), is(true));
     }
 
-    @SuppressWarnings("rawtypes")
 	@Test
     public void shouldSetPacUrlProxyOnConfigure() {
         WebDriverConfig config = new WebDriverConfigImpl();
@@ -330,7 +301,6 @@ public class WebDriverConfigGuiTest {
         assertThat(gui.pacUrlProxy.isSelected(), is(true));
     }
 
-    @SuppressWarnings("rawtypes")
 	@Test
     public void shouldSetSystemProxyOnConfigure() {
         WebDriverConfig config = new WebDriverConfigImpl();
@@ -448,7 +418,6 @@ public class WebDriverConfigGuiTest {
         assertThat(gui.noProxyList.isEnabled(), is(false));
     }
 
-    @SuppressWarnings("rawtypes")
 	@Test
     public void shouldSetRecreateBrowser() {
         gui.recreateBrowserOnIterationStart.setSelected(true);
@@ -456,7 +425,6 @@ public class WebDriverConfigGuiTest {
         assertThat(testElement.isRecreateBrowserOnIterationStart(), is(true));
     }
 
-    @SuppressWarnings("rawtypes")
 	@Test
     public void shouldSetDevMode() {
         gui.devMode.setSelected(true);
@@ -512,7 +480,6 @@ public class WebDriverConfigGuiTest {
 		}
     }
 
-    @SuppressWarnings("rawtypes")
 	private static class WebDriverConfigImpl extends WebDriverConfig {
 		private static final long serialVersionUID = 100L;
 

@@ -20,6 +20,7 @@ import java.net.URL;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
@@ -40,6 +41,7 @@ public class WebDriverSamplerTest {
         variables.putObject(WebDriverConfig.BROWSER, browser);
         JMeterContextService.getContext().setVariables(variables);
         sampler = new WebDriverSampler();
+        sampler.setScriptLanguage("groovy");
     }
 
     @Test
@@ -140,7 +142,7 @@ public class WebDriverSamplerTest {
         final SampleResult sampleResult = sampler.sample(null);
 
         assertThat(sampleResult.isResponseCodeOK(), is(false));
-        assertThat(sampleResult.getResponseMessage(), containsString("ReferenceError"));
+        assertThat(sampleResult.getResponseMessage(), containsString("No such property: x for class: Script1"));
         assertThat(sampleResult.isSuccessful(), is(false));
 
         verify(browser, never()).getPageSource();
