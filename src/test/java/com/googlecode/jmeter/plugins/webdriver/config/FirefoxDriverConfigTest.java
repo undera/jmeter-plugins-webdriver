@@ -77,8 +77,8 @@ public class FirefoxDriverConfigTest {
 
     @Test
     public void shouldCreateFirefox() throws Exception {
-        // Set the path to GeckoDriver executable on your machine
-        config.setFirefoxDriverPath("Path_of_GeckoDriver_Driver");
+    	String geckoDriverPath = System.getProperty("user.dir") + "\\src\\test\\resources\\geckodriver.exe";
+        config.setFirefoxDriverPath(geckoDriverPath);
         FirefoxDriver mockFirefoxDriver = Mockito.mock(FirefoxDriver.class);
         whenNew(FirefoxDriver.class)
             .withParameterTypes(FirefoxDriverService.class, FirefoxOptions.class)
