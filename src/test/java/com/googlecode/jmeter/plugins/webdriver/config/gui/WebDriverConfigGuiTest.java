@@ -479,8 +479,8 @@ public class WebDriverConfigGuiTest {
 		}
     }
 
-	private static class WebDriverConfigImpl extends WebDriverConfig {
-		@Override
+    private static class WebDriverConfigImpl extends WebDriverConfig {
+        @Override
         protected WebDriver createBrowser() {
             return null;
         }
