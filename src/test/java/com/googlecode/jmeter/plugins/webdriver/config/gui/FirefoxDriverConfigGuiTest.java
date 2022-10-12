@@ -87,5 +87,4 @@ public class FirefoxDriverConfigGuiTest {
 		assertThat(gui.isExperimentalEnabled(), is(true));
 		assertThat(gui.isProxyEnabled(), is(true));
 	}
-
 }

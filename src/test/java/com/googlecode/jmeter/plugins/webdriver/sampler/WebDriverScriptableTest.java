@@ -56,7 +56,7 @@ public class WebDriverScriptableTest {
 
     @Test
     public void shouldAssignLog() {
-    	final Logger logger = LoggerFactory.getLogger(WebDriverScriptableTest.class);
+        final Logger logger = LoggerFactory.getLogger(WebDriverScriptableTest.class);
         scriptable.setLog(logger);
         assertThat(scriptable.getLog(), is(logger));
     }

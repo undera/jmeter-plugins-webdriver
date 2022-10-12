@@ -213,5 +213,4 @@ public class ChromeDriverConfigGuiTest {
 
         assertThat(gui.getDisableDevShmUsageEnabled().isSelected(), is(config.isDisableDevShmUsage()));
     }
-
 }

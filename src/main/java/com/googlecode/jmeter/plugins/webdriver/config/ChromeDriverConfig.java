@@ -59,33 +59,34 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
         final String binaryPath = trimmed(getBinaryPath());
         if(isAndroidEnabled() || isHeadlessEnabled() || isIncognitoEnabled() || isNoSandboxEnabled() || (null != additionalArgs && !additionalArgs.isEmpty()) || (null != binaryPath && !binaryPath.isEmpty()) || isDisableDevShmUsage()) {
             if (isAndroidEnabled()) {
-            	chromeOptions.setExperimentalOption("androidPackage", "com.android.chrome");
+                chromeOptions.setExperimentalOption("androidPackage", "com.android.chrome");
             }
             if (isHeadlessEnabled()) {
-            	chromeOptions.addArguments("--headless");
+                chromeOptions.addArguments("--headless");
                 //Adding the options to whitelist all IPs to allow the WebDriverSampler to call ChromeDriver from Docker in headless mode
-            	chromeOptions.addArguments("--whitelisted-ips");
+                chromeOptions.addArguments("--whitelisted-ips");
             }
             if (isNoSandboxEnabled()) {
-            	chromeOptions.addArguments("--no-sandbox");
+                chromeOptions.addArguments("--no-sandbox");
             }
             if (isDisableDevShmUsage()){
-            	chromeOptions.addArguments("--disable-dev-shm-usage");
+                chromeOptions.addArguments("--disable-dev-shm-usage");
             }
             if (isIncognitoEnabled()) {
-            	chromeOptions.addArguments("--incognito");
+                chromeOptions.addArguments("--incognito");
             }
             if(null != additionalArgs && !additionalArgs.isEmpty()) {
-            	chromeOptions.addArguments(additionalArgs.split("\\s+"));
+                chromeOptions.addArguments(additionalArgs.split("\\s+"));
             }
             if(null != binaryPath && !binaryPath.isEmpty()) {
-            	chromeOptions.setBinary(binaryPath);
+                chromeOptions.setBinary(binaryPath);
             }
         }
 
         if(isInsecureCertsEnabled()) {
         	chromeOptions.setCapability("acceptInsecureCerts", true);
         }
+
         return chromeOptions;
     }
 

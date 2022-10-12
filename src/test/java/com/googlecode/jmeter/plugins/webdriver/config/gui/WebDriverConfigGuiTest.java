@@ -418,14 +418,14 @@ public class WebDriverConfigGuiTest {
         assertThat(gui.noProxyList.isEnabled(), is(false));
     }
 
-	@Test
+    @Test
     public void shouldSetRecreateBrowser() {
         gui.recreateBrowserOnIterationStart.setSelected(true);
         final WebDriverConfig testElement = (WebDriverConfig) gui.createTestElement();
         assertThat(testElement.isRecreateBrowserOnIterationStart(), is(true));
     }
 
-	@Test
+    @Test
     public void shouldSetDevMode() {
         gui.devMode.setSelected(true);
         final WebDriverConfig testElement = (WebDriverConfig) gui.createTestElement();
@@ -435,7 +435,6 @@ public class WebDriverConfigGuiTest {
 
 
     private static class WebDriverConfigGuiImpl extends WebDriverConfigGui {
-		private static final long serialVersionUID = 100L;
 
         public WebDriverConfigGuiImpl() {
             setLayout(new BorderLayout(0, 5));
@@ -481,8 +480,6 @@ public class WebDriverConfigGuiTest {
     }
 
 	private static class WebDriverConfigImpl extends WebDriverConfig {
-		private static final long serialVersionUID = 100L;
-
 		@Override
         protected WebDriver createBrowser() {
             return null;
