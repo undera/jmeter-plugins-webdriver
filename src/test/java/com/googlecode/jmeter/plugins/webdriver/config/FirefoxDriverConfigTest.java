@@ -4,12 +4,16 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.verifyNew;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -21,7 +25,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxDriverService;
 import org.openqa.selenium.firefox.FirefoxOptions;
@@ -76,20 +79,23 @@ public class FirefoxDriverConfigTest {
     }
 
     @Test
-    public void shouldCreateFirefox() throws Exception {
-    	String geckoDriverPath = System.getProperty("user.dir") + "\\src\\test\\resources\\geckodriver.exe";
-        config.setFirefoxDriverPath(geckoDriverPath);
-        FirefoxDriver mockFirefoxDriver = Mockito.mock(FirefoxDriver.class);
-        whenNew(FirefoxDriver.class)
-            .withParameterTypes(FirefoxDriverService.class, FirefoxOptions.class)
-            .withArguments(isA(GeckoDriverService.class), isA(FirefoxOptions.class))
-
-            .thenReturn(mockFirefoxDriver);
+    public void shouldCreateFirefoxAndStartService() throws Exception {
+        config.enableUnitTests();
+        FirefoxDriver mockFirefoxDriver = mock(FirefoxDriver.class);
+        whenNew(FirefoxDriver.class).withParameterTypes(FirefoxDriverService.class, FirefoxOptions.class).withArguments(isA(FirefoxDriverService.class), isA(FirefoxOptions.class)).thenReturn(mockFirefoxDriver);
+        @SuppressWarnings("rawtypes")
+        FirefoxDriverService.Builder mockServiceBuilder = mock(FirefoxDriverService.Builder.class);
+        whenNew(FirefoxDriverService.Builder.class).withNoArguments().thenReturn(mockServiceBuilder);
+        when(mockServiceBuilder.usingDriverExecutable(isA(File.class))).thenReturn(mockServiceBuilder);
+        FirefoxDriverService mockService = mock(GeckoDriverService.class);
+        when(mockServiceBuilder.build()).thenReturn(mockService);
 
         final FirefoxDriver browser = config.createBrowser();
 
         assertThat(browser, is(mockFirefoxDriver));
-        verifyNew(FirefoxDriver.class, times(1)).withArguments(isA(GeckoDriverService.class), isA(FirefoxOptions.class));
+        verifyNew(FirefoxDriver.class, times(1)).withArguments(isA(FirefoxDriverService.class), isA(FirefoxOptions.class));
+        verify(mockServiceBuilder, times(0)).build();
+        assertThat(config.getServices().size(), is(1));
     }
 
     @Test
