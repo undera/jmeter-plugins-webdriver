@@ -159,7 +159,7 @@ public class RemoteDriverConfigGui extends WebDriverConfigGui implements ItemLis
     logEnabledLabel.setText("Chrome: Log");
     logEnabled = new JCheckBox("Enable Log capturing");
 
-    browserMaxLabel.setText("Chrome: Browser");
+    browserMaxLabel.setText("Browser");
     maxBrowser = new JCheckBox("Run browser in maximized window");
 
     fileDetectorLabel.setText("File detector");
