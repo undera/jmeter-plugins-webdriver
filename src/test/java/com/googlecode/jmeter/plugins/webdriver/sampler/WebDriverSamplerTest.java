@@ -20,7 +20,6 @@ import java.net.URL;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
@@ -138,6 +137,8 @@ public class WebDriverSamplerTest {
 
     @Test
     public void shouldReturnFailureSampleResultWhenEvalScriptIsInvalid() {
+        // This test throws a compile ERROR: please ignore the error as it is done on purpose
+        System.out.println("shouldReturnFailureSampleResultWhenEvalScriptIsInvalid: will throw ERROR on purpose...");
         sampler.setScript("x.methodThatDoesNotExist();");
         final SampleResult sampleResult = sampler.sample(null);
 

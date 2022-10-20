@@ -22,7 +22,6 @@ import org.apache.jmeter.threads.JMeterContextService;
 import org.apache.jmeter.threads.JMeterVariables;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -34,8 +33,6 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
-
 @RunWith(PowerMockRunner.class)
 @PowerMockIgnore({"javax.management.*","javax.net.ssl.*"})
 @PrepareForTest(FirefoxDriverConfig.class)
@@ -45,11 +42,6 @@ public class FirefoxDriverConfigTest {
     private FirefoxDriverConfig config;
     private JMeterVariables variables;
 
-    @BeforeClass
-    public static void setupClass() {
-        WebDriverManager.firefoxdriver().setup();
-    }
-    
     @Before
     public void createConfig() {
         config = new FirefoxDriverConfig();

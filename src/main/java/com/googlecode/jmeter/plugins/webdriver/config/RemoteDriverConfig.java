@@ -1,6 +1,7 @@
 package com.googlecode.jmeter.plugins.webdriver.config;
 
 import static com.googlecode.jmeter.plugins.webdriver.config.RemoteCapability.CHROME;
+import static com.googlecode.jmeter.plugins.webdriver.config.RemoteCapability.FIREFOX;
 import static com.googlecode.jmeter.plugins.webdriver.config.RemoteCapability.INTERNET_EXPLORER;
 
 import java.net.MalformedURLException;
@@ -9,7 +10,12 @@ import java.net.URL;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.chromium.ChromiumOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerOptions;
+import org.openqa.selenium.remote.AbstractDriverOptions;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.FileDetector;
@@ -35,37 +41,41 @@ public class RemoteDriverConfig extends WebDriverConfig<RemoteWebDriver> {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RemoteDriverConfig.class);
 
 	Capabilities createCapabilities() {
-		DesiredCapabilities capabilities = RemoteDesiredCapabilitiesFactory.build(getCapability());
-		capabilities.setCapability(CapabilityType.PROXY, createProxy());
-
-		if (getCapability().equals(CHROME) && isHeadlessEnabled()) {
-			final ChromeOptions chromeOptions = new ChromeOptions();
-			chromeOptions.addArguments("--headless");
-			capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
-		}
-		else if (getCapability().equals(CHROME)) {
-			final ChromeOptions chromeOptions = new ChromeOptions();
-			if(isBrowserMaximized())
-				chromeOptions.addArguments("--start-maximized");
-			if(isLogEnabled())
-				chromeOptions.setCapability("enableLog",true);
-			if(isVideoEnabled())
-				chromeOptions.setCapability("enableVideo",true);
-			if(isVNCEnabled())
-				chromeOptions.setCapability("enableVNC",true);
-			capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
-		}
-		else if (getCapability().equals(INTERNET_EXPLORER)) {
+		AbstractDriverOptions caps = null;
+		switch(getCapability()) {
+		case CHROME:
+			caps = new ChromeOptions();
+			if (isHeadlessEnabled()) {
+				((ChromiumOptions<ChromeOptions>) caps).addArguments("--headless");
+			} else {
+				if(isBrowserMaximized())
+					((ChromiumOptions<ChromeOptions>) caps).addArguments("--start-maximized");
+				if(isLogEnabled())
+					caps.setCapability("enableLog",true);
+				if(isVideoEnabled())
+					caps.setCapability("enableVideo",true);
+				if(isVNCEnabled())
+					caps.setCapability("enableVNC",true);
+			}
+			break;
+		case FIREFOX:
+			caps = new FirefoxOptions();
+			((FirefoxOptions) caps).setProfile(new FirefoxProfile());
+			break;
+		case INTERNET_EXPLORER:
 			// Settings to launch Microsoft Edge in IE mode
-			InternetExplorerOptions ieOptions = new InternetExplorerOptions();
-			ieOptions.attachToEdgeChrome();
-			ieOptions.withEdgeExecutablePath(getMsEdgeDriverPath());
-			ieOptions.ignoreZoomSettings();
+			caps = new InternetExplorerOptions();
+			((InternetExplorerOptions) caps).attachToEdgeChrome();
+			((InternetExplorerOptions) caps).withEdgeExecutablePath(getMsEdgeDriverPath());
+			((InternetExplorerOptions) caps).ignoreZoomSettings();
 			// Set an initial valid page otherwise IeDriver hangs on page load...
-			ieOptions.withInitialBrowserUrl("http://www.bing.com");
-			capabilities.merge(ieOptions);
+			((InternetExplorerOptions) caps).withInitialBrowserUrl("http://www.bing.com");
+			break;
+		default:
+			throw new IllegalArgumentException("No such capability");
 		}
-		return capabilities;
+		caps.setProxy(createProxy());
+		return caps;
 	}
 
 	@Override

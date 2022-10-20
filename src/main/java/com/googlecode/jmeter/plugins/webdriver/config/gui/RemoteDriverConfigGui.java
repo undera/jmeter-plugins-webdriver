@@ -142,24 +142,24 @@ public class RemoteDriverConfigGui extends WebDriverConfigGui implements ItemLis
     capabilitiesLabel.setText("Capability");
     capabilitiesComboBox = new JComboBox<Object>(RemoteCapability.values());
     
-    edgeLabel.setText("For IE only, path to Edge executable on Remote");
+    edgeLabel.setText("IE: path to Edge executable on Remote");
     edgePanel.add(edgeLabel);
     msEdgePath = new JTextField();
     edgePanel.add(msEdgePath);
 
-    headlessEnabledLabel.setText("Headless");
-    headlessEnabled = new JCheckBox("Use Chrome headless mode");
+    headlessEnabledLabel.setText("Chrome: Headless");
+    headlessEnabled = new JCheckBox("Use headless mode");
 
-    vncEnabledLabel.setText("VNC");
+    vncEnabledLabel.setText("Chrome: VNC");
     vncEnabled = new JCheckBox("Enable VNC");
 
-    videoEnabledLabel.setText("Video");
+    videoEnabledLabel.setText("Chrome: Video");
     videoEnabled = new JCheckBox("Enable Video Recording of scripts");
 
-    logEnabledLabel.setText("Log");
+    logEnabledLabel.setText("Chrome: Log");
     logEnabled = new JCheckBox("Enable Log capturing");
 
-    browserMaxLabel.setText("Browser");
+    browserMaxLabel.setText("Chrome: Browser");
     maxBrowser = new JCheckBox("Run browser in maximized window");
 
     fileDetectorLabel.setText("File detector");

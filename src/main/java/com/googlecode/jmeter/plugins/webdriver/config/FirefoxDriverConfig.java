@@ -53,8 +53,8 @@ public class FirefoxDriverConfig extends WebDriverConfig<FirefoxDriver> {
     
     FirefoxOptions createOptions() {
     	FirefoxOptions options = new FirefoxOptions();
-    	options.setCapability(CapabilityType.PROXY, createProxy());
-        options.setCapability(FirefoxDriver.Capability.PROFILE, createProfile());
+    	options.setProxy(createProxy());
+    	options.setProfile(createProfile());
         options.setHeadless(isHeadless());
         options.setAcceptInsecureCerts(isAcceptInsecureCerts());
         return options;

@@ -20,7 +20,6 @@ public class FirefoxDriverConfigGui extends WebDriverConfigGui implements ItemLi
     private static final long serialVersionUID = 100L;
     JTextField firefoxServicePath;
     JTextField userAgentOverrideText;
-    JCheckBox legacyCheckbox;
     JCheckBox acceptInsecureCertsCheckbox;
     JCheckBox headlessCheckbox;
     JCheckBox userAgentOverrideCheckbox;
@@ -111,11 +110,6 @@ public class FirefoxDriverConfigGui extends WebDriverConfigGui implements ItemLi
         firefoxServicePath = new JTextField();
         firefoxServicePanel.add(firefoxServicePath);
         firefoxPanel.add(firefoxServicePanel);
-
-        legacyCheckbox = new JCheckBox("Legacy mode");
-        legacyCheckbox.setSelected(false);
-        legacyCheckbox.setEnabled(true);
-        firefoxPanel.add(legacyCheckbox);
 
         acceptInsecureCertsCheckbox = new JCheckBox("Accept Insecure Certificates");
         acceptInsecureCertsCheckbox.setSelected(false);

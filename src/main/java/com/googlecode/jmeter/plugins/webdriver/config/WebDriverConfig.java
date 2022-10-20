@@ -295,7 +295,10 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
         if (browser != null) {
             webdrivers.put(currentThreadName(), browser);
             // Make sure we stow the object in both places, in case someone wants a copy
-            getThreadContext().getVariables().putObject(WebDriverConfig.BROWSER, browser);
+            if (getThreadContext().getVariables() != null)
+            {
+                getThreadContext().getVariables().putObject(WebDriverConfig.BROWSER, browser);
+            }
         }
     }
 
