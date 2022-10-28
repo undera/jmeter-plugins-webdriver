@@ -1,41 +1,63 @@
 package com.googlecode.jmeter.plugins.webdriver.config;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
-import kg.apc.jmeter.JMeterPluginsUtils;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jmeter.gui.util.PowerTableModel;
 import org.apache.jmeter.testelement.property.CollectionProperty;
 import org.apache.jmeter.testelement.property.JMeterProperty;
 import org.apache.jmeter.testelement.property.NullProperty;
-import org.apache.jorphan.logging.LoggingManager;
-import org.apache.log.Logger;
-import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxDriverService;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.firefox.GeckoDriverService;
 import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import kg.apc.jmeter.JMeterPluginsUtils;
 
 public class FirefoxDriverConfig extends WebDriverConfig<FirefoxDriver> {
-    private static final Logger log = LoggingManager.getLoggerForClass();
 
     private static final long serialVersionUID = 100L;
+    private static final Logger log = LoggerFactory.getLogger(FirefoxDriverConfig.class);
+    
+    private static final String FIREFOX_SERVICE_PATH = "FirefoxDriverConfig.firefoxdriver_path";
     private static final String GENERAL_USERAGENT_OVERRIDE = "FirefoxDriverConfig.general.useragent.override";
     private static final String ENABLE_USERAGENT_OVERRIDE = "FirefoxDriverConfig.general.useragent.override.enabled";
-    private static final String ENABLE_LEGACY = "FirefoxDriverConfig.general.legacy";
     private static final String ENABLE_ACCEPT_INSECURE_CERTS = "FirefoxDriverConfig.general.accept-insecure-certs";
     private static final String ENABLE_HEADLESS = "FirefoxDriverConfig.general.headless";
     private static final String ENABLE_NTML = "FirefoxDriverConfig.network.negotiate-auth.allow-insecure-ntlm-v1";
     private static final String EXTENSIONS_TO_LOAD = "FirefoxDriverConfig.general.extensions";
     private static final String PREFERENCES = "FirefoxDriverConfig.general.preferences";
+    private static final Map<String, FirefoxDriverService> services = new ConcurrentHashMap<String, FirefoxDriverService>();
 
-    Capabilities createCapabilities() {
-        DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setCapability(CapabilityType.PROXY, createProxy());
-        return capabilities;
+    public void setFirefoxDriverPath(String path) {
+        setProperty(FIREFOX_SERVICE_PATH, path);
+    }
+
+    public String getFirefoxDriverPath() {
+        return getPropertyAsString(FIREFOX_SERVICE_PATH);
+    }
+
+	// Used only in unit tests
+	private Boolean bUnitTests = false;
+	public void enableUnitTests() {
+		bUnitTests = true;
+	}
+    
+    FirefoxOptions createOptions() {
+    	FirefoxOptions options = new FirefoxOptions();
+    	options.setProxy(createProxy());
+    	options.setProfile(createProfile());
+        options.setHeadless(isHeadless());
+        options.setAcceptInsecureCerts(isAcceptInsecureCerts());
+        return options;
     }
 
     FirefoxProfile createProfile() {
@@ -95,23 +117,35 @@ public class FirefoxDriverConfig extends WebDriverConfig<FirefoxDriver> {
         }
     }
 
+    Map<String, FirefoxDriverService> getServices() {
+        return services;
+    }
+
     @Override
     protected FirefoxDriver createBrowser() {
-        FirefoxOptions desiredCapabilities = new FirefoxOptions(createCapabilities());
-        desiredCapabilities.setCapability(FirefoxDriver.PROFILE, createProfile());
-        desiredCapabilities.setHeadless(isHeadless());
-        desiredCapabilities.setAcceptInsecureCerts(isAcceptInsecureCerts());
-        desiredCapabilities.setLegacy(isLegacy());
-        return new FirefoxDriver(new GeckoDriverService.Builder().usingFirefoxBinary(new FirefoxBinary()).build(),
-                desiredCapabilities);
+        final FirefoxDriverService service = getThreadService();
+        FirefoxOptions options = createOptions();
+        return service != null ? new FirefoxDriver(service, options) : null;
     }
 
-    public boolean isLegacy() {
-        return getPropertyAsBoolean(ENABLE_LEGACY);
-    }
-
-    public void setLegacy(boolean legacy) {
-        setProperty(ENABLE_LEGACY, legacy);
+    private FirefoxDriverService getThreadService() {
+        FirefoxDriverService service = services.get(currentThreadName());
+        if (service != null) {
+            return service;
+        }
+        try {
+			if (bUnitTests) {
+			    service = GeckoDriverService.createDefaultService();
+			} else {
+                service = new GeckoDriverService.Builder().usingDriverExecutable(new File(getFirefoxDriverPath())).build();
+			}
+            service.start();
+            services.put(currentThreadName(), service);
+        } catch (IOException e) {
+            log.error("Failed to start Firefox service");
+            service = null;
+        }
+        return service;
     }
 
     public boolean isAcceptInsecureCerts() {

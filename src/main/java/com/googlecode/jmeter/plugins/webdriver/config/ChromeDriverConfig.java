@@ -1,26 +1,24 @@
 package com.googlecode.jmeter.plugins.webdriver.config;
 
-import org.apache.jorphan.logging.LoggingManager;
-import org.apache.log.Logger;
-import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeDriverService;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.logging.LoggingPreferences;
-import org.openqa.selenium.logging.LogType;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeDriverService;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.logging.LogType;
+import org.openqa.selenium.logging.LoggingPreferences;
+import org.openqa.selenium.remote.CapabilityType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
 
     private static final long serialVersionUID = 100L;
-    private static final Logger LOGGER = LoggingManager.getLoggerForClass();
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChromeDriverConfig.class);
     private static final String CHROME_SERVICE_PATH = "ChromeDriverConfig.chromedriver_path";
     private static final String ANDROID_ENABLED = "ChromeDriverConfig.android_enabled";
     private static final String HEADLESS_ENABLED = "ChromeDriverConfig.headless_enabled";
@@ -29,6 +27,7 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
     private static final String NO_SANDBOX_ENABLED = "ChromeDriverConfig.no_sandbox_enabled";
     private static final String ADDITIONAL_ARGS = "ChromeDriverConfig.additional_args";
     private static final String BINARY_PATH = "ChromeDriverConfig.binary_path";
+    private static final String DISABLE_DEV_SHM_USAGE="ChromeDriverConfig.disable_dev_shm_usage";
 
     private static final Map<String, ChromeDriverService> services = new ConcurrentHashMap<String, ChromeDriverService>();
 
@@ -48,28 +47,30 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
         return getPropertyAsString(BINARY_PATH);
     }
 
-    Capabilities createCapabilities() {
-        DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setCapability(CapabilityType.PROXY, createProxy());
+    ChromeOptions createOptions() {
+    	ChromeOptions chromeOptions = new ChromeOptions();
+    	chromeOptions.setCapability(CapabilityType.PROXY, createProxy());
+
         LoggingPreferences logPrefs = new LoggingPreferences();
 		logPrefs.enable(LogType.BROWSER, Level.ALL);
-		capabilities.setCapability(CapabilityType.LOGGING_PREFS, logPrefs);
+		chromeOptions.setCapability(ChromeOptions.LOGGING_PREFS, logPrefs);
         
         final String additionalArgs = trimmed(getAdditionalArgs());
         final String binaryPath = trimmed(getBinaryPath());
-        if(isAndroidEnabled() || isHeadlessEnabled() || isIncognitoEnabled() || isNoSandboxEnabled() || (null != additionalArgs && !additionalArgs.isEmpty()) || (null != binaryPath && !binaryPath.isEmpty())) {
-            //Map<String, String> chromeOptions = new HashMap<String, String>();
-            //chromeOptions.put("androidPackage", "com.android.chrome");
-            ChromeOptions chromeOptions = new ChromeOptions();
+        if(isAndroidEnabled() || isHeadlessEnabled() || isIncognitoEnabled() || isNoSandboxEnabled() || (null != additionalArgs && !additionalArgs.isEmpty()) || (null != binaryPath && !binaryPath.isEmpty()) || isDisableDevShmUsage()) {
             if (isAndroidEnabled()) {
                 chromeOptions.setExperimentalOption("androidPackage", "com.android.chrome");
             }
             if (isHeadlessEnabled()) {
                 chromeOptions.addArguments("--headless");
+                //Adding the options to whitelist all IPs to allow the WebDriverSampler to call ChromeDriver from Docker in headless mode
+                chromeOptions.addArguments("--whitelisted-ips");
             }
             if (isNoSandboxEnabled()) {
                 chromeOptions.addArguments("--no-sandbox");
-
+            }
+            if (isDisableDevShmUsage()){
+                chromeOptions.addArguments("--disable-dev-shm-usage");
             }
             if (isIncognitoEnabled()) {
                 chromeOptions.addArguments("--incognito");
@@ -80,14 +81,13 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
             if(null != binaryPath && !binaryPath.isEmpty()) {
                 chromeOptions.setBinary(binaryPath);
             }
-            capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
         }
 
         if(isInsecureCertsEnabled()) {
-              capabilities.setCapability("acceptInsecureCerts", true);
+        	chromeOptions.setCapability("acceptInsecureCerts", true);
         }
 
-        return capabilities;
+        return chromeOptions;
     }
 
     private String trimmed(String str) {
@@ -101,7 +101,8 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
     @Override
     protected ChromeDriver createBrowser() {
         final ChromeDriverService service = getThreadService();
-        return service != null ? new ChromeDriver(service, createCapabilities()) : null;
+        ChromeOptions options = createOptions();
+        return service != null ? new ChromeDriver(service, options) : null;
     }
 
     @Override
@@ -175,4 +176,11 @@ public class ChromeDriverConfig extends WebDriverConfig<ChromeDriver> {
         setProperty(ADDITIONAL_ARGS, additionalArgs);
     }
 
+    public boolean isDisableDevShmUsage(){
+        return getPropertyAsBoolean(DISABLE_DEV_SHM_USAGE);
+    }
+
+    public void setDisableDevShmUsage(boolean enabled){
+        setProperty(DISABLE_DEV_SHM_USAGE,enabled);
+    }
 }

@@ -1,7 +1,29 @@
 package com.googlecode.jmeter.plugins.webdriver.config;
 
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.verifyNew;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.Collections;
+
 import org.apache.jmeter.threads.JMeterContextService;
 import org.apache.jmeter.threads.JMeterVariables;
+import org.hamcrest.CoreMatchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,25 +31,17 @@ import org.junit.runner.RunWith;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerDriverService;
+import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.remote.CapabilityType;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.io.*;
-import java.util.Collections;
-
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.matchers.JUnitMatchers.hasItem;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.*;
-import static org.powermock.api.mockito.PowerMockito.verifyNew;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
+@PowerMockIgnore("javax.management.*")
 @PrepareForTest(InternetExplorerDriverConfig.class)
+
 public class InternetExplorerDriverConfigTest {
 
     private InternetExplorerDriverConfig config;
@@ -65,7 +79,7 @@ public class InternetExplorerDriverConfigTest {
     @Test
     public void shouldCreateInternetExplorerAndStartService() throws Exception {
         InternetExplorerDriver mockInternetExplorerDriver = mock(InternetExplorerDriver.class);
-        whenNew(InternetExplorerDriver.class).withParameterTypes(InternetExplorerDriverService.class, Capabilities.class).withArguments(isA(InternetExplorerDriverService.class), isA(Capabilities.class)).thenReturn(mockInternetExplorerDriver);
+        whenNew(InternetExplorerDriver.class).withParameterTypes(InternetExplorerDriverService.class, InternetExplorerOptions.class).withArguments(isA(InternetExplorerDriverService.class), isA(InternetExplorerOptions.class)).thenReturn(mockInternetExplorerDriver);
         InternetExplorerDriverService.Builder mockServiceBuilder = mock(InternetExplorerDriverService.Builder.class);
         whenNew(InternetExplorerDriverService.Builder.class).withNoArguments().thenReturn(mockServiceBuilder);
         when(mockServiceBuilder.usingDriverExecutable(isA(File.class))).thenReturn(mockServiceBuilder);
@@ -78,7 +92,7 @@ public class InternetExplorerDriverConfigTest {
         verifyNew(InternetExplorerDriver.class, times(1)).withArguments(isA(InternetExplorerDriverService.class), isA(Capabilities.class));
         verify(mockServiceBuilder, times(1)).build();
         assertThat(config.getServices().size(), is(1));
-        assertThat(config.getServices().values(), hasItem(mockService));
+        assertThat(config.getServices().values(), CoreMatchers.hasItem(mockService));
     }
 
     @Test
@@ -141,7 +155,8 @@ public class InternetExplorerDriverConfigTest {
 
     @Test
     public void shouldHaveProxyInCapability() {
-        final Capabilities capabilities = config.createCapabilities();
-        assertThat(capabilities.getCapability(CapabilityType.PROXY), is(notNullValue()));
+        final InternetExplorerOptions options = config.createOptions();
+        assertThat(options.getCapability(CapabilityType.PROXY), is(notNullValue()));
     }
+
 }

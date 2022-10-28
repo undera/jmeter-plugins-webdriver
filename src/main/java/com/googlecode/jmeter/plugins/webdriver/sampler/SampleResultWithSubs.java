@@ -1,11 +1,12 @@
 package com.googlecode.jmeter.plugins.webdriver.sampler;
 
 import org.apache.jmeter.samplers.SampleResult;
-import org.apache.jorphan.logging.LoggingManager;
-import org.apache.log.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SampleResultWithSubs extends SampleResult {
-    private static final Logger log = LoggingManager.getLoggerForClass();
+	private static final long serialVersionUID = 100L;
+	private static final Logger log = LoggerFactory.getLogger(SampleResultWithSubs.class);
     private SampleResult subSample;
 
     public void subSampleStart(String label) {

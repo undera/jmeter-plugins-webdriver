@@ -3,6 +3,8 @@ package com.googlecode.jmeter.plugins.webdriver.config.gui;
 import com.googlecode.jmeter.plugins.webdriver.config.FirefoxDriverConfig;
 import kg.apc.jmeter.JMeterPluginsUtils;
 import kg.apc.jmeter.gui.Grid;
+
+import org.apache.jmeter.gui.util.HorizontalPanel;
 import org.apache.jmeter.gui.util.VerticalPanel;
 import org.apache.jmeter.testelement.TestElement;
 import org.apache.jmeter.testelement.property.CollectionProperty;
@@ -16,8 +18,8 @@ import java.awt.event.ItemListener;
 public class FirefoxDriverConfigGui extends WebDriverConfigGui implements ItemListener {
 
     private static final long serialVersionUID = 100L;
+    JTextField firefoxServicePath;
     JTextField userAgentOverrideText;
-    JCheckBox legacyCheckbox;
     JCheckBox acceptInsecureCertsCheckbox;
     JCheckBox headlessCheckbox;
     JCheckBox userAgentOverrideCheckbox;
@@ -62,7 +64,7 @@ public class FirefoxDriverConfigGui extends WebDriverConfigGui implements ItemLi
         super.configure(element);
         if (element instanceof FirefoxDriverConfig) {
             FirefoxDriverConfig config = (FirefoxDriverConfig) element;
-            legacyCheckbox.setSelected(config.isLegacy());
+            firefoxServicePath.setText(config.getFirefoxDriverPath());
             acceptInsecureCertsCheckbox.setSelected(config.isAcceptInsecureCerts());
             headlessCheckbox.setSelected(config.isHeadless());
             userAgentOverrideCheckbox.setSelected(config.isUserAgentOverridden());
@@ -86,7 +88,7 @@ public class FirefoxDriverConfigGui extends WebDriverConfigGui implements ItemLi
         super.modifyTestElement(element);
         if (element instanceof FirefoxDriverConfig) {
             FirefoxDriverConfig config = (FirefoxDriverConfig) element;
-            config.setLegacy(legacyCheckbox.isSelected());
+            config.setFirefoxDriverPath(firefoxServicePath.getText());
             config.setAcceptInsecureCerts(acceptInsecureCertsCheckbox.isSelected());
             config.setHeadless(headlessCheckbox.isSelected());
             config.setUserAgentOverridden(userAgentOverrideCheckbox.isSelected());
@@ -101,10 +103,13 @@ public class FirefoxDriverConfigGui extends WebDriverConfigGui implements ItemLi
 
     private JPanel createProfilePanel() {
         final JPanel firefoxPanel = new VerticalPanel();
-        legacyCheckbox = new JCheckBox("Legacy mode");
-        legacyCheckbox.setSelected(false);
-        legacyCheckbox.setEnabled(true);
-        firefoxPanel.add(legacyCheckbox);
+        
+        final JPanel firefoxServicePanel = new HorizontalPanel();
+        final JLabel firefoxDriverServiceLabel = new JLabel("Path to Firefox Driver");
+        firefoxServicePanel.add(firefoxDriverServiceLabel);
+        firefoxServicePath = new JTextField();
+        firefoxServicePanel.add(firefoxServicePath);
+        firefoxPanel.add(firefoxServicePanel);
 
         acceptInsecureCertsCheckbox = new JCheckBox("Accept Insecure Certificates");
         acceptInsecureCertsCheckbox.setSelected(false);
@@ -146,6 +151,7 @@ public class FirefoxDriverConfigGui extends WebDriverConfigGui implements ItemLi
     @Override
     public void clearGui() {
         super.clearGui();
+        firefoxServicePath.setText("path to geckodriver.exe");
         headlessCheckbox.setSelected(false);
         userAgentOverrideCheckbox.setSelected(false);
         userAgentOverrideText.setText("");

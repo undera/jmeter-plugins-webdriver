@@ -1,13 +1,17 @@
 package com.googlecode.jmeter.plugins.webdriver.config.gui;
 
-import com.googlecode.jmeter.plugins.webdriver.config.ChromeDriverConfig;
-import kg.apc.emulators.TestJMeterUtils;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
+import com.googlecode.jmeter.plugins.webdriver.config.ChromeDriverConfig;
+
+import kg.apc.emulators.TestJMeterUtils;
 
 public class ChromeDriverConfigGuiTest {
 
@@ -86,6 +90,13 @@ public class ChromeDriverConfigGuiTest {
     }
 
     @Test
+    public void shouldSetDisableDevShmUsageEnabled() {
+        gui.getDisableDevShmUsageEnabled().setSelected(true);
+        final ChromeDriverConfig testElement = (ChromeDriverConfig) gui.createTestElement();
+        assertThat(testElement.isDisableDevShmUsage(), is(true));
+    }
+
+    @Test
     public void shouldSetAdditionalArgs() {
         gui.additionalArgs.setText("additionalArgs");
         final ChromeDriverConfig testElement = (ChromeDriverConfig) gui.createTestElement();
@@ -101,17 +112,18 @@ public class ChromeDriverConfigGuiTest {
         gui.getInsecureCertsEnabled().setSelected(true);
         gui.getIncognitoEnabled().setSelected(true);
         gui.getNoSandboxEnabled().setSelected(true);
+        gui.getDisableDevShmUsageEnabled().setSelected(true);
         gui.additionalArgs.setText("additional");
 
         gui.clearGui();
 
-        assertThat(gui.chromeServicePath.getText(), is(""));
-        assertThat(gui.chromeServicePath.getText(), is(""));
+        assertThat(gui.chromeServicePath.getText(), is("path to chromedriver.exe"));
         assertThat(gui.androidEnabled.isSelected(), is(false));
         assertThat(gui.getHeadlessEnabled().isSelected(), is(false));
         assertThat(gui.getInsecureCertsEnabled().isSelected(), is(false));
         assertThat(gui.getIncognitoEnabled().isSelected(), is(false));
         assertThat(gui.getNoSandboxEnabled().isSelected(), is(false));
+        assertThat(gui.getDisableDevShmUsageEnabled().isSelected(), is(false));
         assertThat(gui.additionalArgs.getText(), is(""));
     }
 
@@ -193,4 +205,12 @@ public class ChromeDriverConfigGuiTest {
         assertThat(gui.additionalArgs.getText(), is(config.getAdditionalArgs()));
     }
 
+    @Test
+    public void shouldSetDisableDevShmUsage() {
+        ChromeDriverConfig config = new ChromeDriverConfig();
+        config.setDisableDevShmUsage(true);
+        gui.configure(config);
+
+        assertThat(gui.getDisableDevShmUsageEnabled().isSelected(), is(config.isDisableDevShmUsage()));
+    }
 }

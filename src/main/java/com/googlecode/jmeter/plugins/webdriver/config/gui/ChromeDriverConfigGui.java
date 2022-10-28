@@ -1,12 +1,17 @@
 package com.googlecode.jmeter.plugins.webdriver.config.gui;
 
-import com.googlecode.jmeter.plugins.webdriver.config.ChromeDriverConfig;
-import kg.apc.jmeter.JMeterPluginsUtils;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
 import org.apache.jmeter.gui.util.HorizontalPanel;
 import org.apache.jmeter.gui.util.VerticalPanel;
 import org.apache.jmeter.testelement.TestElement;
 
-import javax.swing.*;
+import com.googlecode.jmeter.plugins.webdriver.config.ChromeDriverConfig;
+
+import kg.apc.jmeter.JMeterPluginsUtils;
 
 public class ChromeDriverConfigGui extends WebDriverConfigGui {
 
@@ -17,6 +22,7 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
     private JCheckBox insecureCertsEnabled;
     private JCheckBox incognitoEnabled;
     private JCheckBox noSandboxEnabled;
+    private JCheckBox disableDevShmUsageEnabled;
     JTextField additionalArgs;
     JTextField binaryPath;
 
@@ -41,6 +47,7 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
             getInsecureCertsEnabled().setSelected(config.isInsecureCertsEnabled());
             getIncognitoEnabled().setSelected(config.isIncognitoEnabled());
             getNoSandboxEnabled().setSelected(config.isNoSandboxEnabled());
+            getDisableDevShmUsageEnabled().setSelected(config.isDisableDevShmUsage());
             additionalArgs.setText(config.getAdditionalArgs());
             binaryPath.setText(config.getBinaryPath());
         }
@@ -64,6 +71,7 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
             config.setInsecureCertsEnabled(getInsecureCertsEnabled().isSelected());
             config.setIncognitoEnabled(getIncognitoEnabled().isSelected());
             config.setNoSandboxEnabled(getNoSandboxEnabled().isSelected());
+            config.setDisableDevShmUsage(getDisableDevShmUsageEnabled().isSelected());
             config.setAdditionalArgs(additionalArgs.getText());
             config.setBinaryPath(binaryPath.getText());
         }
@@ -72,12 +80,13 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
     @Override
     public void clearGui() {
         super.clearGui();
-        chromeServicePath.setText("");
+        chromeServicePath.setText("path to chromedriver.exe");
         androidEnabled.setSelected(false);
         getHeadlessEnabled().setSelected(false);
         getInsecureCertsEnabled().setSelected(false);
         getIncognitoEnabled().setSelected(false);
         getNoSandboxEnabled().setSelected(false);
+        getDisableDevShmUsageEnabled().setSelected(false);
         additionalArgs.setText("");
         binaryPath.setText("");
     }
@@ -129,6 +138,9 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
         noSandboxEnabled = new JCheckBox("Run in No sandbox mode");
         browserPanel.add(getNoSandboxEnabled());
 
+        disableDevShmUsageEnabled=new JCheckBox("Run in disable dev shm (if run no-gui under docker)");
+        browserPanel.add(getDisableDevShmUsageEnabled());
+
         final JPanel additionalArgsPanel = new HorizontalPanel();
         final JLabel additionalArgsLabel = new JLabel("Additional arguments");
         additionalArgs = new JTextField();
@@ -163,5 +175,9 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
 
     public JCheckBox getNoSandboxEnabled() {
         return noSandboxEnabled;
+    }
+
+    public JCheckBox getDisableDevShmUsageEnabled(){
+        return disableDevShmUsageEnabled;
     }
 }

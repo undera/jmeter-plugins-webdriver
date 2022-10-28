@@ -1,36 +1,49 @@
 package com.googlecode.jmeter.plugins.webdriver.config;
 
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.verifyNew;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.jmeter.threads.JMeterContextService;
 import org.apache.jmeter.threads.JMeterVariables;
+import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.CapabilityType;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.io.*;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.*;
-import static org.powermock.api.mockito.PowerMockito.verifyNew;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
-
 @RunWith(PowerMockRunner.class)
+@PowerMockIgnore("javax.management.*")
 @PrepareForTest(ChromeDriverConfig.class)
+
 public class ChromeDriverConfigTest {
 
     private ChromeDriverConfig config;
@@ -68,7 +81,7 @@ public class ChromeDriverConfigTest {
     @Test
     public void shouldCreateChromeAndStartService() throws Exception {
         ChromeDriver mockChromeDriver = mock(ChromeDriver.class);
-        whenNew(ChromeDriver.class).withParameterTypes(ChromeDriverService.class, Capabilities.class).withArguments(isA(ChromeDriverService.class), isA(Capabilities.class)).thenReturn(mockChromeDriver);
+        whenNew(ChromeDriver.class).withParameterTypes(ChromeDriverService.class, ChromeOptions.class).withArguments(isA(ChromeDriverService.class), isA(ChromeOptions.class)).thenReturn(mockChromeDriver);
         ChromeDriverService.Builder mockServiceBuilder = mock(ChromeDriverService.Builder.class);
         whenNew(ChromeDriverService.Builder.class).withNoArguments().thenReturn(mockServiceBuilder);
         when(mockServiceBuilder.usingDriverExecutable(isA(File.class))).thenReturn(mockServiceBuilder);
@@ -78,7 +91,7 @@ public class ChromeDriverConfigTest {
         final ChromeDriver browser = config.createBrowser();
 
         assertThat(browser, is(mockChromeDriver));
-        verifyNew(ChromeDriver.class, times(1)).withArguments(isA(ChromeDriverService.class), isA(Capabilities.class));
+        verifyNew(ChromeDriver.class, times(1)).withArguments(isA(ChromeDriverService.class), isA(ChromeOptions.class));
         verify(mockServiceBuilder, times(1)).build();
         assertThat(config.getServices().size(), is(1));
         assertThat(config.getServices().values(), hasItem(mockService));
@@ -144,56 +157,60 @@ public class ChromeDriverConfigTest {
 
     @Test
     public void shouldHaveProxyInCapability() {
-        final Capabilities capabilities = config.createCapabilities();
-        assertThat(capabilities.getCapability(CapabilityType.PROXY), is(notNullValue()));
+        final ChromeOptions options = config.createOptions();
+        assertThat(options.getCapability(CapabilityType.PROXY), is(notNullValue()));
     }
 
     @Test
     public void shouldNotHaveChromeOptionsWhenAndroidIsNotEnabled() {
         config.setAndroidEnabled(false);
-        final Capabilities capabilities = config.createCapabilities();
-        assertThat(capabilities.getCapability(ChromeOptions.CAPABILITY), is(nullValue()));
+        final ChromeOptions options = config.createOptions();
+        org.hamcrest.MatcherAssert.assertThat(options.getCapability(ChromeOptions.CAPABILITY), Matchers.hasToString("{args=[], extensions=[]}"));
     }
 
     @Test
     public void shouldHaveChromeOptionsWhenRemoteIsEnabled() {
         config.setHeadlessEnabled(true);
-        final Capabilities capabilities = config.createCapabilities();
-        TreeMap capability = (TreeMap) capabilities.getCapability(ChromeOptions.CAPABILITY);
+        final ChromeOptions options = config.createOptions();
+        @SuppressWarnings("unchecked")
+		Map<String,Object> capability = (Map<String,Object>) options.getCapability(ChromeOptions.CAPABILITY);
         assertThat(capability, is(notNullValue()));
-        List<String> args = (List<String>) capability.get("args");
+		@SuppressWarnings("unchecked")
+		List<String> args = (List<String>) capability.get("args");
         assertThat(args, is(notNullValue()));
-        assertEquals(1, args.size());
+        assertEquals(2, args.size());
         assertEquals("--headless", args.get(0));
+        assertEquals("--whitelisted-ips", args.get(1));
     }
 
     @Test
     public void shouldNotHaveChromeOptionsWhenRemoteIsNotEnabled() {
         config.setAndroidEnabled(false);
-        final Capabilities capabilities = config.createCapabilities();
-        assertThat(capabilities.getCapability(ChromeOptions.CAPABILITY), is(nullValue()));
+        final ChromeOptions options = config.createOptions();
+        org.hamcrest.MatcherAssert.assertThat(options.getCapability(ChromeOptions.CAPABILITY), Matchers.hasToString("{args=[], extensions=[]}"));
     }
 
     @Test
     public void shouldHaveInsecureCertsWhenInsecureCertsIsEnabled() {
         config.setInsecureCertsEnabled(true);
-        final Capabilities capabilities = config.createCapabilities();
-        assertThat((Boolean) capabilities.getCapability("acceptInsecureCerts"), is(true));
+        final ChromeOptions options = config.createOptions();
+        assertThat((Boolean) options.getCapability("acceptInsecureCerts"), is(true));
     }
 
     @Test
     public void shouldNotHaveInsecureCertsWhenInsecureCertsIsNotEnabled() {
         config.setInsecureCertsEnabled(false);
-        final Capabilities capabilities = config.createCapabilities();
-        assertThat(capabilities.getCapability("acceptInsecureCerts"), is(nullValue()));
+        final ChromeOptions options = config.createOptions();
+        assertThat(options.getCapability("acceptInsecureCerts"), is(nullValue()));
     }
 
     @Test
     public void shouldHaveAndroidConfigWhenAndroidIsEnabled() {
         config.setAndroidEnabled(true);
 
-        final Capabilities capabilities = config.createCapabilities();
-        Map<String, Object> options = (Map<String, Object>) capabilities.getCapability(ChromeOptions.CAPABILITY);
+        final ChromeOptions chromeOptions = config.createOptions();
+		@SuppressWarnings("unchecked")
+		Map<String, Object> options = (Map<String, Object>) chromeOptions.getCapability(ChromeOptions.CAPABILITY);
         assertThat("ChromeOption expected", options, is(notNullValue()));
 
         final String androidConfig = (String) options.get("androidPackage");
@@ -251,5 +268,12 @@ public class ChromeDriverConfigTest {
     public void getSetAdditionalArgs() {
         config.setAdditionalArgs("additional args");
         assertThat(config.getAdditionalArgs(), is("additional args"));
+    }
+
+    @Test
+    public void getSetDisableDevShmUsageEnabled() {
+        assertThat(config.isDisableDevShmUsage(), is(false));
+        config.setDisableDevShmUsage(true);
+        assertThat(config.isDisableDevShmUsage(), is(true));
     }
 }

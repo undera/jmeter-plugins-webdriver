@@ -4,7 +4,8 @@ import com.googlecode.jmeter.plugins.webdriver.config.WebDriverConfig;
 import org.apache.jmeter.samplers.SampleResult;
 import org.apache.jmeter.threads.JMeterContextService;
 import org.apache.jmeter.threads.JMeterVariables;
-import org.apache.log.Logger;
+import org.slf4j.Logger;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -39,6 +40,7 @@ public class WebDriverSamplerTest {
         variables.putObject(WebDriverConfig.BROWSER, browser);
         JMeterContextService.getContext().setVariables(variables);
         sampler = new WebDriverSampler();
+        sampler.setScriptLanguage("groovy");
     }
 
     @Test
@@ -135,11 +137,13 @@ public class WebDriverSamplerTest {
 
     @Test
     public void shouldReturnFailureSampleResultWhenEvalScriptIsInvalid() {
+        // This test throws a compile ERROR: please ignore the error as it is done on purpose
+        System.out.println("shouldReturnFailureSampleResultWhenEvalScriptIsInvalid: will throw ERROR on purpose...");
         sampler.setScript("x.methodThatDoesNotExist();");
         final SampleResult sampleResult = sampler.sample(null);
 
         assertThat(sampleResult.isResponseCodeOK(), is(false));
-        assertThat(sampleResult.getResponseMessage(), containsString("ReferenceError"));
+        assertThat(sampleResult.getResponseMessage(), containsString("No such property: x for class: Script1"));
         assertThat(sampleResult.isSuccessful(), is(false));
 
         verify(browser, never()).getPageSource();

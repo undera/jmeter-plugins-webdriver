@@ -5,8 +5,8 @@ import java.util.Properties;
 import org.apache.jmeter.samplers.SampleResult;
 import org.apache.jmeter.threads.JMeterContext;
 import org.apache.jmeter.threads.JMeterVariables;
-import org.apache.log.Logger;
 import org.openqa.selenium.WebDriver;
+import org.slf4j.Logger;
 
 /**
  * An instance of this object is added to the running Script context when {@link WebDriverSampler} is running.

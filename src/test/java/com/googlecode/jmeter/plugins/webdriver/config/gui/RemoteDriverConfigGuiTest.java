@@ -1,17 +1,24 @@
 package com.googlecode.jmeter.plugins.webdriver.config.gui;
 
-import com.googlecode.jmeter.plugins.webdriver.config.RemoteCapability;
-import com.googlecode.jmeter.plugins.webdriver.config.RemoteDriverConfig;
-import kg.apc.emulators.TestJMeterUtils;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
+import java.awt.event.FocusEvent;
+
 import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.awt.event.FocusEvent;
+import com.googlecode.jmeter.plugins.webdriver.config.RemoteCapability;
+import com.googlecode.jmeter.plugins.webdriver.config.RemoteDriverConfig;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import kg.apc.emulators.TestJMeterUtils;
 
 public class RemoteDriverConfigGuiTest {
 
@@ -61,6 +68,7 @@ public class RemoteDriverConfigGuiTest {
         gui.clearGui();
 
         assertThat(gui.remoteSeleniumGridText.getText(), is(StringUtils.EMPTY));
+        assertThat(gui.msEdgePath.getText(), is("C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"));
     }
 
     @Test

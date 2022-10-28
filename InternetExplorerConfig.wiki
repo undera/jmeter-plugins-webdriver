@@ -1,7 +1,7 @@
 = InternetExplorer Driver Config =
 
 == Introduction ==
-Add this configuration to enable browser based performance testing using InternetExplorer.  This document covers the various configuration options available on the InternetExplorer browser.  For an overview of performing client sider performance testing, refer to the [WebDriverTutorial Web Driver Tutorial].
+Add this configuration to enable browser based performance testing using InternetExplorer 11 (IE) mode in Microsoft Edge.  This document covers the various configuration options available on the InternetExplorer browser.  For an overview of performing client sider performance testing, refer to the [WebDriverTutorial Web Driver Tutorial].
 
 Different browsers have different levels of setup complexity.  In the overall scheme of things, using a InternetExplorer Browser is considered to have a *medium level* of setup complexity. 
 
@@ -16,6 +16,7 @@ The main part of the InternetExplorer configuration UI lies in the tabs:
   # InternetExplorer
   # Experimental
 
+Upon start-up, IE will load "http://wwww.bing.com". So ensure the browser can access this url otherwise the driver will fail.
 
 == Proxy ==
 The default configuration (Use system proxy) is suitable for most.  However, if you operate within a corporate network (that use http proxies), then this section may be important to you.
@@ -54,10 +55,11 @@ This is a comma separated list of all host(s) and/or IP Address(es) that will by
 For networks that have a proxy configuration server (PAC), and its name and the location of the PAC file is known, please use this option.  The usual configuration for this is http://proxy-server/proxy.pac
 
 == InternetExplorer ==
-For Web Driver controls to work against InternetExplorer, it is important to:
-  # [http://selenium-release.storage.googleapis.com/index.html Download the InternetExplorer driver] for your Operating System.
+For Web Driver controls to work against InternetExplorer in Edge, it is important to:
+  # [https://www.selenium.dev/downloads/ Download the InternetExplorer driver] for your Operating System. Make sure that the version of IEDriver that you download is 4.0.0.0 or greater.
   # Unzip the binary to a specific location
-  # Specify the InternetExplorer binary in the input field in this tab.
+  # Specify the InternetExplorerDriver binary in the input field in this tab.
+  # In the second field, if the default path to the Microsoft Edge binary is not good, change it accordingly.
 
 [/img/wiki/web-driver/internetexplorer-driver-tab.png]
 
