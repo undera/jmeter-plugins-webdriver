@@ -68,6 +68,8 @@ public class RemoteDriverConfig extends WebDriverConfig<RemoteWebDriver> {
 			((InternetExplorerOptions) caps).attachToEdgeChrome();
 			((InternetExplorerOptions) caps).withEdgeExecutablePath(getMsEdgeDriverPath());
 			((InternetExplorerOptions) caps).ignoreZoomSettings();
+			// To avoid driver construction exception in environments where protected mode is not properly set
+			((InternetExplorerOptions) caps).introduceFlakinessByIgnoringSecurityDomains();
 			// Set an initial valid page otherwise IeDriver hangs on page load...
 			((InternetExplorerOptions) caps).withInitialBrowserUrl("http://www.bing.com");
 			break;

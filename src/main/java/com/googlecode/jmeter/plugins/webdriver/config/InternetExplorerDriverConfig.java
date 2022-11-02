@@ -45,6 +45,8 @@ public class InternetExplorerDriverConfig extends WebDriverConfig<InternetExplor
     	options.attachToEdgeChrome();
         options.withEdgeExecutablePath(getMsEdgeDriverPath());
     	options.ignoreZoomSettings();
+        // To avoid driver construction exception in environments where protected mode is not properly set
+        options.introduceFlakinessByIgnoringSecurityDomains();
     	// Set an initial valid page otherwise IeDriver hangs on page load...
     	options.withInitialBrowserUrl("http://www.bing.com");
         return options;
