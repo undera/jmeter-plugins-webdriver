@@ -18,7 +18,6 @@ public class InternetExplorerDriverConfig extends WebDriverConfig<InternetExplor
 	private static final Logger LOGGER = LoggerFactory.getLogger(InternetExplorerDriverConfig.class);
 
     private static final String IE_SERVICE_PATH = "InternetExplorerDriverConfig.iedriver_path";
-    private static final String EDGE_SERVICE_PATH = "InternetExplorerDriverConfig.edgedriver_path";
     private static final Map<String, InternetExplorerDriverService> services = new ConcurrentHashMap<String, InternetExplorerDriverService>();
 
     public void setInternetExplorerDriverPath(String path) {
@@ -29,26 +28,17 @@ public class InternetExplorerDriverConfig extends WebDriverConfig<InternetExplor
         return getPropertyAsString(IE_SERVICE_PATH);
     }
 
-    public void setMsEdgeDriverPath(String path) {
-        setProperty(EDGE_SERVICE_PATH, path);
-    }
-
-    public String getMsEdgeDriverPath() {
-        return getPropertyAsString(EDGE_SERVICE_PATH);
-    }
-
     InternetExplorerOptions createOptions() {
     	InternetExplorerOptions options = new InternetExplorerOptions();
-    	options.setCapability(CapabilityType.PROXY, createProxy());
-    	options.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION, true);
     	// Settings to launch Microsoft Edge in IE mode
+        // As of v4.5.0, IE Driver will automatically locate Edge on the system.
     	options.attachToEdgeChrome();
-        options.withEdgeExecutablePath(getMsEdgeDriverPath());
     	options.ignoreZoomSettings();
-        // To avoid driver construction exception in environments where protected mode is not properly set
-        options.introduceFlakinessByIgnoringSecurityDomains();
     	// Set an initial valid page otherwise IeDriver hangs on page load...
-    	options.withInitialBrowserUrl("http://www.bing.com");
+        options.withInitialBrowserUrl("https://www.bing.com/");
+        // Proxy configuration
+        options.setCapability(CapabilityType.PROXY, createProxy());
+        options.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION, true);
         return options;
     }
 

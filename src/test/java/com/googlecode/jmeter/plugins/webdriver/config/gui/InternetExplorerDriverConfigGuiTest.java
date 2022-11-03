@@ -57,7 +57,6 @@ public class InternetExplorerDriverConfigGuiTest {
         gui.clearGui();
 
         assertThat(gui.ieServicePath.getText(), is("path to IEDriverServer.exe"));
-        assertThat(gui.msEdgePath.getText(), is("C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"));
     }
 
     @Test

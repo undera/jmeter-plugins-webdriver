@@ -22,7 +22,6 @@ public class RemoteDriverConfigGui extends WebDriverConfigGui implements ItemLis
   private static final long serialVersionUID = 100L;
   JTextField remoteSeleniumGridText;
   JComboBox<?> capabilitiesComboBox;
-  JTextField msEdgePath;
   JCheckBox headlessEnabled;
   JCheckBox vncEnabled;
   JCheckBox videoEnabled;
@@ -71,7 +70,6 @@ public class RemoteDriverConfigGui extends WebDriverConfigGui implements ItemLis
       RemoteDriverConfig config = (RemoteDriverConfig) element;
       remoteSeleniumGridText.setText(config.getSeleniumGridUrl());
       capabilitiesComboBox.setSelectedItem(config.getCapability());
-      msEdgePath.setText(config.getMsEdgeDriverPath());
       fileDetectorsComboBox.setSelectedItem(config.getFileDetectorOption());
 
       getHeadlessEnabled().setSelected(config.isHeadlessEnabled());
@@ -110,7 +108,6 @@ public class RemoteDriverConfigGui extends WebDriverConfigGui implements ItemLis
       RemoteDriverConfig config = (RemoteDriverConfig) element;
       config.setSeleniumGridUrl(remoteSeleniumGridText.getText());
       config.setCapability((RemoteCapability)capabilitiesComboBox.getSelectedItem());
-      config.setMsEdgeDriverPath(msEdgePath.getText());
       config.setFileDetectorOption((FileDetectorOption)fileDetectorsComboBox.getSelectedItem());
       config.setHeadlessEnabled(getHeadlessEnabled().isSelected());
       config.setVNCEnabled(getVncEnabled().isSelected());
@@ -126,7 +123,6 @@ public class RemoteDriverConfigGui extends WebDriverConfigGui implements ItemLis
     final JLabel remoteUrlLabel = new JLabel();
     final JLabel capabilitiesLabel = new JLabel();
     final JPanel edgePanel = new HorizontalPanel();
-    final JLabel edgeLabel = new JLabel();
     final JLabel headlessEnabledLabel = new JLabel();
     final JLabel vncEnabledLabel = new JLabel();
     final JLabel videoEnabledLabel = new JLabel();
@@ -142,11 +138,6 @@ public class RemoteDriverConfigGui extends WebDriverConfigGui implements ItemLis
     capabilitiesLabel.setText("Capability");
     capabilitiesComboBox = new JComboBox<Object>(RemoteCapability.values());
     
-    edgeLabel.setText("IE: path to Edge executable on Remote");
-    edgePanel.add(edgeLabel);
-    msEdgePath = new JTextField();
-    edgePanel.add(msEdgePath);
-
     headlessEnabledLabel.setText("Chrome: Headless");
     headlessEnabled = new JCheckBox("Use headless mode");
 
@@ -196,7 +187,6 @@ public class RemoteDriverConfigGui extends WebDriverConfigGui implements ItemLis
     super.clearGui();
     remoteSeleniumGridText.setText(StringUtils.EMPTY);
     capabilitiesComboBox.setSelectedIndex(2);
-    msEdgePath.setText("C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe");
     fileDetectorsComboBox.setSelectedIndex(1);
     headlessEnabled.setSelected(false);
     vncEnabled.setSelected(false);

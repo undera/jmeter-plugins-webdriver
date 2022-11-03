@@ -68,7 +68,6 @@ public class RemoteDriverConfigGuiTest {
         gui.clearGui();
 
         assertThat(gui.remoteSeleniumGridText.getText(), is(StringUtils.EMPTY));
-        assertThat(gui.msEdgePath.getText(), is("C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"));
     }
 
     @Test
