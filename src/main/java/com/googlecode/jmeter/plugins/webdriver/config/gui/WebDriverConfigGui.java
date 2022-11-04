@@ -22,6 +22,7 @@ import kg.apc.jmeter.JMeterPluginsUtils;
 import org.apache.jmeter.config.gui.AbstractConfigGui;
 import org.apache.jmeter.gui.util.HorizontalPanel;
 import org.apache.jmeter.gui.util.VerticalPanel;
+import org.apache.jmeter.samplers.Clearable;
 import org.apache.jmeter.testelement.TestElement;
 
 public abstract class WebDriverConfigGui extends AbstractConfigGui implements ItemListener {
@@ -68,11 +69,12 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements It
 
     JTextArea noProxyList;
 
+    JTextField driverPath;
+
+    JCheckBox acceptInsecureCerts;
+
     JCheckBox maximizeBrowser;
 
-    /*
-     * THE FOLLOWING ATTRIBUTES ARE EXPERIMENTAL - USE WITH CAUTION
-     */
     JCheckBox recreateBrowserOnIterationStart;
     JCheckBox devMode;
 
@@ -114,8 +116,9 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements It
                 socksProxyPort.setText(String.valueOf(webDriverConfig.getSocksPort()));
                 noProxyList.setText(webDriverConfig.getNoProxyHost());
             }
-            if (isExperimentalEnabled()) {
-                // EXPERIMENTAL
+            if (isDirectEnabled()) {
+                driverPath.setText(webDriverConfig.getDriverPath());
+                acceptInsecureCerts.setSelected(webDriverConfig.isAcceptInsecureCerts());
                 maximizeBrowser.setSelected(webDriverConfig.isBrowserMaximized());
                 recreateBrowserOnIterationStart.setSelected(webDriverConfig.isRecreateBrowserOnIterationStart());
                 devMode.setSelected(webDriverConfig.isDevMode());
@@ -152,8 +155,9 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements It
                 webDriverConfig.setSocksPort(Integer.parseInt(socksProxyPort.getText()));
                 webDriverConfig.setNoProxyHost(noProxyList.getText());
             }
-            if (isExperimentalEnabled()) {
-                // EXPERIMENTAL
+            if (isDirectEnabled()) {
+                webDriverConfig.setDriverPath(driverPath.getText());
+                webDriverConfig.setAcceptInsecureCerts(acceptInsecureCerts.isSelected());
                 webDriverConfig.setBrowserMaximized(maximizeBrowser.isSelected());
                 webDriverConfig.setRecreateBrowserOnIterationStart(recreateBrowserOnIterationStart.isSelected());
                 webDriverConfig.setDevMode(devMode.isSelected());
@@ -178,7 +182,9 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements It
             socksProxyPort.setText(String.valueOf(DEFAULT_PROXY_PORT));
             noProxyList.setText(DEFAULT_NO_PROXY_LIST);
         }
-        if (isExperimentalEnabled()) {
+        if (isDirectEnabled()) {
+            driverPath.setText("path to driver.exe of the relevant browser");
+            acceptInsecureCerts.setSelected(false);
             maximizeBrowser.setSelected(true);
         }
     }
@@ -190,30 +196,43 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements It
         add(JMeterPluginsUtils.addHelpLinkToPanel(makeTitlePanel(), getWikiPage()), BorderLayout.NORTH);
 
         final JTabbedPane tabbedPane = new JTabbedPane();
+        if (isDirectEnabled()) {
+            // Driver details for Direct communication
+            tabbedPane.add("Driver", createDirectPanel());
+            //2. Tab for Browser Options
+            // tabbedPane.add(browserName(), createBrowserPanel());
+            tabbedPane.add("Options", createOptionsPanel());
+        } else {
+            // Driver details for Remote communication
+            //tabbedPane.add("Remote", createRemotePanel());
+            //2. Tabs for Options for each type of browser
+            //tabbedPane.add(browserName(), createBrowserPanel());
+        }
+
+        // 3. Proxy tab (absent for Remote Driver)
         if (isProxyEnabled()) {
             tabbedPane.add("Proxy", createProxyPanel());
         }
-        tabbedPane.add(browserName(), createBrowserPanel());
-        if (isExperimentalEnabled()) {
-            tabbedPane.add("Experimental", createExperimentalPanel());
-        }
-
         add(tabbedPane, BorderLayout.CENTER);
     }
 
-    private JPanel createExperimentalPanel() {
+    private JPanel createDirectPanel() {
         JPanel panel = new VerticalPanel();
 
-        // LABEL
-        JLabel experimentalLabel = new JLabel("EXPERIMENTAL PROPERTIES - USE AT YOUR DISCRETION");
-        experimentalLabel.setFont(new Font(Font.MONOSPACED, Font.BOLD, 16));
-        panel.add(experimentalLabel);
+        final JPanel driverPanel = new HorizontalPanel();
+        final JLabel driverLabel = new JLabel("Path to Driver");
+        driverPanel.add(driverLabel);
+        driverPath = new JTextField();
+        driverPanel.add(driverPath);
+        panel.add(driverPanel);
+
+        acceptInsecureCerts = new JCheckBox("Accept Insecure Certs");
+        panel.add(acceptInsecureCerts);
 
         maximizeBrowser = new JCheckBox("Maximize browser window");
         maximizeBrowser.setSelected(true);
         panel.add(maximizeBrowser);
 
-        // EXPERIMENTAL PROPERTIES
         recreateBrowserOnIterationStart = new JCheckBox("Create a new Browser at the start of each iteration");
         recreateBrowserOnIterationStart.setSelected(false);
         panel.add(recreateBrowserOnIterationStart);
@@ -342,7 +361,7 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements It
         return mainPanel;
     }
 
-    protected abstract JPanel createBrowserPanel();
+    protected abstract JPanel createOptionsPanel();
 
     protected abstract String browserName();
 
@@ -352,7 +371,7 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements It
         return false;
     }
 
-    protected boolean isExperimentalEnabled() {
+    protected boolean isDirectEnabled() {
         return false;
     }
 

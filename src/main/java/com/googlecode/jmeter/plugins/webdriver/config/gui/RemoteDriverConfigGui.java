@@ -42,7 +42,7 @@ public class RemoteDriverConfigGui extends WebDriverConfigGui implements ItemLis
   }
 
   @Override
-  protected JPanel createBrowserPanel() {
+  protected JPanel createOptionsPanel() {
     return createProfilePanel();
   }
 
@@ -224,7 +224,7 @@ public class RemoteDriverConfigGui extends WebDriverConfigGui implements ItemLis
   }
 
   @Override
-  protected boolean isExperimentalEnabled() {
+  protected boolean isDirectEnabled() {
     return false;
   }
 }

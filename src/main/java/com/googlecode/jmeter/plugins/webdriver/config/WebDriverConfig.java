@@ -47,6 +47,8 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
     private static final String SOCKS_PORT = "WebDriverConfig.socks_port";
     private static final String NO_PROXY = "WebDriverConfig.no_proxy";
     private static final String PROXY_TYPE = "WebDriverConfig.proxy_type";
+    private static final String DRIVER_PATH = "WebDriverConfig.driver_path";
+    private static final String ACCEPT_INSECURE_CERTS = "WebDriverConfig.acceptinsecurecerts";
     private static final String MAXIMIZE_WINDOW = "WebDriverConfig.maximize_browser";
 
     /*
@@ -159,6 +161,21 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
 
     public ProxyType getProxyType() {
         return ProxyType.valueOf(getPropertyAsString(PROXY_TYPE, ProxyType.SYSTEM.name()));
+    }
+
+    public String getDriverPath() {
+        return getPropertyAsString(DRIVER_PATH);
+    }
+
+    public void setDriverPath(String path) {
+        setProperty(DRIVER_PATH, path);
+    }
+
+    public boolean isAcceptInsecureCerts() {
+        return getPropertyAsBoolean(ACCEPT_INSECURE_CERTS);
+    }
+    public void setAcceptInsecureCerts(boolean enabled) {
+        setProperty(ACCEPT_INSECURE_CERTS, enabled);
     }
 
     public boolean isBrowserMaximized() {

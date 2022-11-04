@@ -38,7 +38,7 @@ public class FirefoxDriverConfigGui extends WebDriverConfigGui implements ItemLi
     }
 
     @Override
-    protected JPanel createBrowserPanel() {
+    protected JPanel createOptionsPanel() {
         return createProfilePanel();
     }
 
@@ -172,7 +172,7 @@ public class FirefoxDriverConfigGui extends WebDriverConfigGui implements ItemLi
     }
 
     @Override
-    protected boolean isExperimentalEnabled() {
+    protected boolean isDirectEnabled() {
         return true;
     }
 

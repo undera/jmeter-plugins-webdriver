@@ -22,7 +22,7 @@ public class HtmlUnitDriverConfigGui extends WebDriverConfigGui {
     }
 
     @Override
-    protected JPanel createBrowserPanel() {
+    protected JPanel createOptionsPanel() {
         return new VerticalPanel();
     }
 
@@ -49,7 +49,7 @@ public class HtmlUnitDriverConfigGui extends WebDriverConfigGui {
 	}
 
 	@Override
-	protected boolean isExperimentalEnabled() {
+	protected boolean isDirectEnabled() {
 		return true;
 	}
 }

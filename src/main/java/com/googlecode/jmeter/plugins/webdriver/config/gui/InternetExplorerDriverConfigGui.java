@@ -1,9 +1,11 @@
 package com.googlecode.jmeter.plugins.webdriver.config.gui;
 
+import java.text.NumberFormat;
+
+import javax.swing.JCheckBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
-
 import kg.apc.jmeter.JMeterPluginsUtils;
 
 import org.apache.jmeter.gui.util.HorizontalPanel;
@@ -15,7 +17,20 @@ import com.googlecode.jmeter.plugins.webdriver.config.InternetExplorerDriverConf
 public class InternetExplorerDriverConfigGui extends WebDriverConfigGui {
 
     private static final long serialVersionUID = 100L;
-    JTextField ieServicePath;
+    private static final NumberFormat NUMBER_FORMAT = NumberFormat.getIntegerInstance();
+    private static final int Default_FileUploadDialogTimeout = 1000;
+
+    static {
+        NUMBER_FORMAT.setGroupingUsed(false);
+    }
+
+    JFormattedTextField fileUploadDialogTiemout;
+
+    JCheckBox ensureCleanSession;
+
+    JCheckBox ignoreProtectedMode;
+
+    JCheckBox silent;
 
     @Override
     public String getStaticLabel() {
@@ -32,7 +47,9 @@ public class InternetExplorerDriverConfigGui extends WebDriverConfigGui {
         super.configure(element);
         if(element instanceof InternetExplorerDriverConfig) {
             InternetExplorerDriverConfig config = (InternetExplorerDriverConfig)element;
-            ieServicePath.setText(config.getInternetExplorerDriverPath());
+            fileUploadDialogTiemout.setText(String.valueOf(config.getFileUploadDialogTimeout()));
+            ensureCleanSession.setSelected(config.isEnsureCleanSession());
+            silent.setSelected(config.isSilent());
         }
     }
 
@@ -48,19 +65,48 @@ public class InternetExplorerDriverConfigGui extends WebDriverConfigGui {
         super.modifyTestElement(element);
         if(element instanceof InternetExplorerDriverConfig) {
             InternetExplorerDriverConfig config = (InternetExplorerDriverConfig)element;
-            config.setInternetExplorerDriverPath(ieServicePath.getText());
+            config.setFileUploadDialogTimeout(Integer.parseInt(fileUploadDialogTiemout.getText()));
+            config.setEnsureCleanSession(ensureCleanSession.isSelected());
+            config.setIgnoreProtectedMode(ignoreProtectedMode.isSelected());
+            config.setSilent(silent.isSelected());
         }
     }
 
     @Override
     public void clearGui() {
         super.clearGui();
-        ieServicePath.setText("path to IEDriverServer.exe");
+        fileUploadDialogTiemout.setText(String.valueOf(Default_FileUploadDialogTimeout));
+        ensureCleanSession.setSelected(false);
+        ignoreProtectedMode.setSelected(false);
+        silent.setSelected(false);
     }
 
     @Override
-    protected JPanel createBrowserPanel() {
-        return createServicePanel();
+    protected JPanel createOptionsPanel() {
+        JPanel panel = new VerticalPanel();
+
+        // fileUploadDialogTimeout
+        final JPanel fileUploadDialogTimeoutPanel = new HorizontalPanel();
+        final JLabel fileUploadDialogTimeoutLabel = new JLabel("Wait for File Upload Dialog up to (ms)");
+        fileUploadDialogTimeoutPanel.add(fileUploadDialogTimeoutLabel);
+        fileUploadDialogTiemout = new JFormattedTextField(NUMBER_FORMAT);
+        fileUploadDialogTiemout.setText(String.valueOf(Default_FileUploadDialogTimeout));
+        fileUploadDialogTimeoutPanel.add(fileUploadDialogTiemout);
+        panel.add(fileUploadDialogTimeoutPanel);
+
+        ensureCleanSession = new JCheckBox("Ensure Clean Session");
+        ensureCleanSession.setSelected(false);
+        panel.add(ensureCleanSession);
+
+        ignoreProtectedMode = new JCheckBox("Ignore Protected Mode Settings");
+        ignoreProtectedMode.setSelected(false);
+        panel.add(ignoreProtectedMode);
+
+        silent = new JCheckBox("Silent");
+        silent.setSelected(false);
+        panel.add(silent);
+
+        return panel;
     }
 
     @Override
@@ -73,25 +119,13 @@ public class InternetExplorerDriverConfigGui extends WebDriverConfigGui {
         return "InternetExplorerConfig";
     }
 
-    private JPanel createServicePanel() {
-        final JPanel browserPanel = new VerticalPanel();
-        final JPanel ieServicePanel = new HorizontalPanel();
-        final JLabel ieDriverServiceLabel = new JLabel("Path to Internet Explorer Driver");
-        ieServicePanel.add(ieDriverServiceLabel);
-
-        ieServicePath = new JTextField();
-        ieServicePanel.add(ieServicePath);
-        browserPanel.add(ieServicePanel);
-        return browserPanel;
-    }
-
 	@Override
 	protected boolean isProxyEnabled() {
 		return true;
 	}
 
 	@Override
-	protected boolean isExperimentalEnabled() {
+	protected boolean isDirectEnabled() {
 		return true;
 	}
 
