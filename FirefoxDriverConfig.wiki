@@ -11,7 +11,7 @@ As per Selenium 4, it requires Firefox 78 or greater. It is also recommended to 
 
 On startup, the user is presented with the following:
 
-[/img/wiki/web-driver/firefox-driver-config.png]
+[/img/firefox-driver-config.png]
 
 The main part of the Firefox configuration UI lies in the tabs:
   # Proxy

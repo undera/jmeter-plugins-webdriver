@@ -6,7 +6,7 @@ Unlike most Samplers, the Web Driver Sampler provides the reader with an empty e
 == General concepts ==
 When a new Web Driver Sampler is added, the user interface will resemble something as follows:
 
-[/img/wiki/web-driver/web-driver-tutorial-web-sampler.png]
+[/img/web-driver-tutorial-web-sampler.png]
 
 The main fields that the scripter can make use of are:
 

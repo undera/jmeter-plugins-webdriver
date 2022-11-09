@@ -7,7 +7,7 @@ Currently we can select the browser where we can execute the load testing from a
 
 On startup, the user is presented with the following:
 
-[/img/wiki/web-driver/remote-driver-config.png]
+[/img/remote-driver-config.png]
 
 The main part of the Remote Web Driver configuration UI lies in the Remote tab.
 

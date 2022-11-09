@@ -9,7 +9,7 @@ Different browsers have different levels of setup complexity.  In the overall sc
 
 On startup, the user is presented with the following:
 
-[/img/wiki/web-driver/chrome-driver-config.png]
+[/img/chrome-driver-config.png]
 
 The main part of the Chrome configuration UI lies in the tabs:
   # Proxy
@@ -59,7 +59,7 @@ For Web Driver controls to work against Chrome, it is important to:
   # Unzip the binary to a specific location
   # Specify the chrome binary in the input field in this tab.
 
-[/img/wiki/web-driver/chrome-driver-tab.png]
+[/img/chrome-driver-tab.png]
 
 Since v1.3.0 of JMeter-Plugins: 
 * ChromeDriver can now be used to control Chrome on Android. To enable this check the *Use Chrome on Android* checkbox.
