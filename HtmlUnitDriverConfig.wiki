@@ -17,7 +17,7 @@ JMeter ships with *HttpClient v4.2.x*, however for the latest HtmlUnit to work p
 
 On startup, the user is presented with the following:
 
-[/img/wiki/web-driver/htmlunit-driver-config.png]
+[/img/htmlunit-driver-config.png]
 
 The main part of the HtmlUnit configuration UI lies in the tabs:
   # Proxy
