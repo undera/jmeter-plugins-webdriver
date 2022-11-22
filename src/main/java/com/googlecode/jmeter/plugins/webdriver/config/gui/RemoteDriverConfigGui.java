@@ -1,230 +1,120 @@
 package com.googlecode.jmeter.plugins.webdriver.config.gui;
 
-import com.googlecode.jmeter.plugins.webdriver.config.FileDetectorOption;
-import com.googlecode.jmeter.plugins.webdriver.config.RemoteCapability;
-import com.googlecode.jmeter.plugins.webdriver.config.RemoteDriverConfig;
-import kg.apc.jmeter.JMeterPluginsUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.jmeter.gui.util.HorizontalPanel;
-import org.apache.jmeter.gui.util.VerticalPanel;
-import org.apache.jmeter.testelement.TestElement;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemListener;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.jmeter.gui.util.VerticalPanel;
+import org.apache.jmeter.testelement.TestElement;
+
+import com.googlecode.jmeter.plugins.webdriver.config.RemoteCapability;
+import com.googlecode.jmeter.plugins.webdriver.config.RemoteDriverConfig;
+import com.googlecode.jmeter.plugins.webdriver.config.WebDriverConfig;
+
+import kg.apc.jmeter.JMeterPluginsUtils;
+
 public class RemoteDriverConfigGui extends WebDriverConfigGui implements ItemListener, FocusListener {
 
-  private static final long serialVersionUID = 100L;
-  JTextField remoteSeleniumGridText;
-  JComboBox<?> capabilitiesComboBox;
-  JCheckBox headlessEnabled;
-  JCheckBox vncEnabled;
-  JCheckBox videoEnabled;
-  JCheckBox logEnabled;
-  JCheckBox maxBrowser;
-  JLabel errorMsg;
+	private static final long serialVersionUID = 100L;
 
-  private JComboBox<?> fileDetectorsComboBox;
+	@Override
+	String browserName() {
+		WebDriverConfig.setBrowserName("Remote");
+	    return "Remote";
+	}
 
-  @Override
-  public String getStaticLabel() {
-    return JMeterPluginsUtils.prefixLabel("Remote Driver Config");
-  }
+	@Override
+	public String getStaticLabel() {
+		return JMeterPluginsUtils.prefixLabel("Remote Driver Config");
+	}
 
-  @Override
-  public String getLabelResource() {
-    return getClass().getCanonicalName();
-  }
+	@Override
+	protected String getWikiPage() {
+		return "RemoteDriverConfig";
+	}
 
-  @Override
-  protected JPanel createOptionsPanel() {
-    return createProfilePanel();
-  }
+	@Override
+	protected boolean isBrowser() {
+		return false;
+	}
 
-  @Override
-  protected String browserName() {
-    return "Remote";
-  }
+	@Override
+	protected boolean isProxyEnabled() {
+		return true;
+	}
 
-  @Override
-  protected String getWikiPage() {
-    return "RemoteDriverConfig";
-  }
+	@Override
+	public String getLabelResource() {
+		return getClass().getCanonicalName();
+	}
 
-  @Override
-  public TestElement createTestElement() {
-    RemoteDriverConfig element = new RemoteDriverConfig();
-    modifyTestElement(element);
-    return element;
-  }
+	@Override
+	public TestElement createTestElement() {
+		RemoteDriverConfig element = new RemoteDriverConfig();
+		modifyTestElement(element);
+		return element;
+	}
 
-  @Override
-  public void configure(TestElement element) {
-    super.configure(element);
-    if (element instanceof RemoteDriverConfig) {
-      RemoteDriverConfig config = (RemoteDriverConfig) element;
-      remoteSeleniumGridText.setText(config.getSeleniumGridUrl());
-      capabilitiesComboBox.setSelectedItem(config.getCapability());
-      fileDetectorsComboBox.setSelectedItem(config.getFileDetectorOption());
+	@Override
+	public void modifyTestElement(TestElement element) {
+		super.modifyTestElement(element);
+		if (element instanceof RemoteDriverConfig) {
+			RemoteDriverConfig config = (RemoteDriverConfig) element;
+			config.setSeleniumGridUrl(remoteSeleniumGridText.getText());
+			config.setCapability((RemoteCapability) capabilitiesComboBox.getSelectedItem());
+			config.setLocalFileDetector(localFileDetector.isSelected());
+		}
+	}
 
-      getHeadlessEnabled().setSelected(config.isHeadlessEnabled());
-      getVncEnabled().setSelected(config.isVNCEnabled());
-      getVideoEnabled().setSelected(config.isVideoEnabled());
-      getLogEnabled().setSelected(config.isLogEnabled());
-      getMaxBrowser().setSelected(config.isBrowserMaximized());
-    }
-  }
+	@Override
+	public void clearGui() {
+		super.clearGui();
+		remoteSeleniumGridText.setText(StringUtils.EMPTY);
+		capabilitiesComboBox.setSelectedIndex(2);
+		localFileDetector.setSelected(false);
+	}
 
+	@Override
+	public void configure(TestElement element) {
+		super.configure(element);
+		if (element instanceof RemoteDriverConfig) {
+			RemoteDriverConfig config = (RemoteDriverConfig) element;
+			remoteSeleniumGridText.setText(config.getSeleniumGridUrl());
+			capabilitiesComboBox.setSelectedItem(config.getCapability());
+			localFileDetector.setSelected(config.isLocalFileDectedor());
+		}
+	}
 
-  public JCheckBox getHeadlessEnabled() {
-    return headlessEnabled;
-  }
+	@Override
+	public void focusGained(FocusEvent e) {
+		// Nothing to do
+	}
 
-  public JCheckBox getVncEnabled() {
-    return vncEnabled;
-  }
+	@Override
+	public void focusLost(FocusEvent e) {
+		if (remoteSeleniumGridText.equals(e.getComponent()) && !isValidUrl(remoteSeleniumGridText.getText())) {
+			errorMsg.setText("The selenium grid URL is malformed");
+		} else {
+			errorMsg.setText("");
+		}
+	}
 
-  public JCheckBox getVideoEnabled() {
-    return videoEnabled;
-  }
-
-  public JCheckBox getLogEnabled() {
-    return logEnabled;
-  }
-
-  public JCheckBox getMaxBrowser() {
-    return maxBrowser;
-  }
-
-  @Override
-  public void modifyTestElement(TestElement element) {
-    super.modifyTestElement(element);
-    if (element instanceof RemoteDriverConfig) {
-      RemoteDriverConfig config = (RemoteDriverConfig) element;
-      config.setSeleniumGridUrl(remoteSeleniumGridText.getText());
-      config.setCapability((RemoteCapability)capabilitiesComboBox.getSelectedItem());
-      config.setFileDetectorOption((FileDetectorOption)fileDetectorsComboBox.getSelectedItem());
-      config.setHeadlessEnabled(getHeadlessEnabled().isSelected());
-      config.setVNCEnabled(getVncEnabled().isSelected());
-      config.setVideoEnabled(getVideoEnabled().isSelected());
-      config.setLogEnabled(getLogEnabled().isSelected());
-      config.setBrowserMaximize(getMaxBrowser().isSelected());
-    }
-  }
-
-  private JPanel createProfilePanel() {
-    final JPanel browserPanel = new VerticalPanel();
-    final JPanel remotePanel = new VerticalPanel();
-    final JLabel remoteUrlLabel = new JLabel();
-    final JLabel capabilitiesLabel = new JLabel();
-    final JPanel edgePanel = new HorizontalPanel();
-    final JLabel headlessEnabledLabel = new JLabel();
-    final JLabel vncEnabledLabel = new JLabel();
-    final JLabel videoEnabledLabel = new JLabel();
-    final JLabel logEnabledLabel = new JLabel();
-    final JLabel browserMaxLabel = new JLabel();
-    final JLabel fileDetectorLabel = new JLabel();
-
-    remoteUrlLabel.setText("Selenium Grid URL");
-    remoteSeleniumGridText = new JTextField();
-    remoteSeleniumGridText.setEnabled(true);
-    remoteSeleniumGridText.addFocusListener(this);
-
-    capabilitiesLabel.setText("Capability");
-    capabilitiesComboBox = new JComboBox<Object>(RemoteCapability.values());
-    
-    headlessEnabledLabel.setText("Chrome: Headless");
-    headlessEnabled = new JCheckBox("Use headless mode");
-
-    vncEnabledLabel.setText("Chrome: VNC");
-    vncEnabled = new JCheckBox("Enable VNC");
-
-    videoEnabledLabel.setText("Chrome: Video");
-    videoEnabled = new JCheckBox("Enable Video Recording of scripts");
-
-    logEnabledLabel.setText("Chrome: Log");
-    logEnabled = new JCheckBox("Enable Log capturing");
-
-    browserMaxLabel.setText("Browser");
-    maxBrowser = new JCheckBox("Run browser in maximized window");
-
-    fileDetectorLabel.setText("File detector");
-    fileDetectorsComboBox = new JComboBox<Object>(FileDetectorOption.values());
-
-    remotePanel.add(remoteUrlLabel);
-    remotePanel.add(remoteSeleniumGridText);
-    remotePanel.add(errorMsg=new JLabel());
-    remotePanel.add(capabilitiesLabel);
-    remotePanel.add(capabilitiesComboBox);
-    remotePanel.add(edgePanel);
-    remotePanel.add(headlessEnabledLabel);
-    remotePanel.add(headlessEnabled);
-    remotePanel.add(vncEnabledLabel);
-    remotePanel.add(vncEnabled);
-    remotePanel.add(videoEnabledLabel);
-    remotePanel.add(videoEnabled);
-    remotePanel.add(logEnabledLabel);
-    remotePanel.add(logEnabled);
-    remotePanel.add(browserMaxLabel);
-    remotePanel.add(maxBrowser);
-    remotePanel.add(fileDetectorLabel);
-    remotePanel.add(fileDetectorsComboBox);
-
-    errorMsg.setForeground(Color.red);
-
-    browserPanel.add(remotePanel);
-
-    return browserPanel;
-  }
-
-  @Override
-  public void clearGui() {
-    super.clearGui();
-    remoteSeleniumGridText.setText(StringUtils.EMPTY);
-    capabilitiesComboBox.setSelectedIndex(2);
-    fileDetectorsComboBox.setSelectedIndex(1);
-    headlessEnabled.setSelected(false);
-    vncEnabled.setSelected(false);
-    videoEnabled.setSelected(false);
-    logEnabled.setSelected(false);
-    maxBrowser.setSelected(false);
-  }
-
-  @Override
-  public void focusGained(FocusEvent e) {
-    // Nothing to do
-  }
-
-  @Override
-  public void focusLost(FocusEvent e) {
-    if(remoteSeleniumGridText.equals(e.getComponent()) && !isValidUrl(remoteSeleniumGridText.getText())){
-      errorMsg.setText("The selenium grid URL is malformed");
-    } else {
-      errorMsg.setText("");
-    }
-  }
-
-  private boolean isValidUrl(String urlStr) {
-    try {
-      new URL(urlStr);
-      return true;
-    } catch (MalformedURLException e) {
-      return false;
-    }
-  }
-
-  @Override
-  protected boolean isProxyEnabled() {
-    return false;
-  }
-
-  @Override
-  protected boolean isDirectEnabled() {
-    return false;
-  }
+	private boolean isValidUrl(String urlStr) {
+		try {
+			new URL(urlStr);
+			return true;
+		} catch (MalformedURLException e) {
+			return false;
+		}
+	}
 }
