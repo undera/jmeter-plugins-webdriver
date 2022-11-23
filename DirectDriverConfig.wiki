@@ -1,0 +1,102 @@
+= Direct Testing of Browsers =
+
+This configuration is suited when the JMeter tests are executed on the same system as the browser. If you want to execute the tests on a remote system (via a Selenium Grid for instance), then use the [[RemoteDriverConfig | Remote Driver configuration]].
+
+For an overview of performing client side performance testing, refer to the [[WebDriverTutorial | Web Driver Tutorial]].
+
+At the time of writing, four types of browsers are supported by JMeter Web Driver plugin:
+* Chrome (Chrome Driver Config);
+* Firefox (Firefox Driver Config);
+* Internet Explorer (InternetExplorer Driver Config);
+* HtmlUnit (HtmlUnit Driver Config), a GUI-Less browser;
+
+For Internet Explorer, the system will start Edge in "IE Mode" as Internet Explorer is now deprecated as of June 2022. Upon start-up, IE will load "http://wwww.bing.com". So ensure the browser can access this url otherwise the driver will fail.
+
+HtmlUnit is a good compromise between speed of execution and the CPU usage per thread while maintaining Selenium API.
+The main drawback is that there is no screen so it's more difficult to understand the cause of problems and also that the javascript engine is not powerful as browsers such Firefox or Chrome.
+
+The configuration of eacḣ browser follows the same principle and is divided across three different tabs:
+* the Driver tab;
+* the Options tab;
+* the Proxy tab;
+
+== Driver Tab ==
+=== Install Drivers ===
+First, you need to manually download the appropriate driver from the [https://www.selenium.dev/documentation/webdriver/getting_started/install_drivers/#quick-reference Quick Reference Section] and then specify the location of the driver in the "Path to Driver" field.
+
+For the IE driver, ensure you download a version >= 4.5.0 as IE drivers from this version and onwards will automatically look for Edge on your system and use it in IE Mode.
+Note that it is not required to download a driver for HtmlUnit.
+
+Beware that most machines automatically update the browser, but not the driver which may cause your test to fail in case the driver becomes out-dated. So ensure you regularly check that the versions of the driver and its browser match.
+
+=== Common Browser Options ===
+The Driver tab also contains most common capabilities that are shared by all browsers. Their names are meaningful by themselves; but you can also refer to the [https://w3c.github.io/webdriver/#capabilities w3c specification] for further description of these options.
+
+== Options Tab ==
+This tab contains the custom options for each browser. The most commonly used options are listed and their names are meaningful by themselves. At the time of writing, there are no options to configure for HtmlUnit. 
+
+=== Chrome ===
+In the Options tab of Chrome for instance, you can specify the location of a Chrome Binary in case you want to test a different version of Chrome from the standard one. Leave this field blank if you are happy to test the Chrome that is defined in your path variable.
+
+You can find more information on the Chrome options presented in this tab at [https://chromedriver.chromium.org/capabilities Capabilities & ChromeOptions].
+
+=== Firefox ===
+In the Options tab of Firefox, you can override the user agent of Firefox. To do so, check the 'Override User Agent' checkbox and then paste in the user agent string to use. The UserAgentString.com site has an [https://www.useragentstring.com/pages/useragentstring.php extensive list of user agent strings].
+
+There is also an option to enable NTLM.
+
+You can find more information on the Firefox options presented in this tab at [https://developer.mozilla.org/en-US/docs/Web/WebDriver/Capabilities/firefoxOptions firefoxOptions].
+
+=== Internet Explorer ===
+You can find more information on the IE options presented in this tab at [https://www.selenium.dev/documentation/webdriver/browsers/internet_explorer/ IE specific functionality]
+
+== Proxy Tab ==
+The default configuration (Use system proxy) is suitable for most. However, if you are in a corporate environment and a browser fails to connect to a URL, this is most likely because the environmemt needs a proxy to be accessed.
+
+=== No proxy ===
+Use this option if you directly connect to the internet, and your network will not make use of any proxies.  
+
+=== Auto-detect proxy settings ===
+Some networks will automatically transmit the proxy configuration.  This is especially true for Microsoft Windows networks that make use of WPAD/PAC to transmit the proxy configuration to its host.
+
+=== Use system proxy settings ===
+This is the default configuration, and will make use of the network and/or proxy settings configured for your Operating System.
+
+=== Manual proxy configuration ===
+This is the most involved, but also allows for the most control of you proxy settings.  
+
+==== HTTP Proxy/Port ====
+Specify the name/IP Address of the HTTP proxy server and its associated port to use when the browser makes external network connections.
+
+==== Use HTTP proxy server for all protocols ====
+By default this is checked, as most environments use the same HTTP Proxy server for its SSL, FTP and SOCKS connections.  However, if this is not the case, then uncheck this option, and override the settings for the other connections.
+
+==== HTTPS Proxy/Port ====
+Specify the name/IP Address of the HTTPS proxy server and its associated port to use when the browser makes external network connections.
+
+==== FTP Proxy/Port ====
+Specify the name/IP Address of the FTP proxy server and its associated port to use when the browser makes external network connections.
+
+==== SOCKS Proxy/Port ====
+Specify the name/IP Address of the SOCKS proxy server and its associated port to use when the browser makes external network connections.
+
+==== No Proxy for ====
+This is a comma separated list of all host(s) and/or IP Address(es) that will bypass the proxy server.
+
+=== Automatic proxy configuration URL ===
+For networks that have a proxy configuration server (PAC), and its name and the location of the PAC file is known, please use this option.  The usual configuration for this is http://proxy-server/proxy.pac
+
+== Code Samples ==
+=== Chrome Logs ===
+You can read output logging from Developer Tool, just use the following code:
+<syntaxhighlight lang="javascript">
+var logPkg = JavaImporter(org.openqa.selenium.logging)
+WDS.sampleResult.sampleStart()
+WDS.browser.get('http://yoursite.com')
+var logEntries = new logPkg.LogEntries(WDS.browser.manage().logs().get(logPkg.LogType.BROWSER));
+logEntries.forEach(function(entry)
+{
+   WDS.log.info(entry.getTimestamp() + " " + entry.getLevel() + " " + entry.getMessage()); 
+})
+WDS.sampleResult.sampleEnd()
+</syntaxhighlight>
