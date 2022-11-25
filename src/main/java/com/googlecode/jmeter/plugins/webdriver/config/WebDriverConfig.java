@@ -392,9 +392,7 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
 
 	public void setSharedCaps(AbstractDriverOptions<?> caps) {
 	    // Capabilities shared by all browsers
-		if (isAcceptInsecureCerts()) {
-			caps.setCapability("acceptInsecureCerts", true);
-		}
+		caps.setAcceptInsecureCerts(isAcceptInsecureCerts());
 		caps.setProxy(createProxy());
 	}
 

@@ -35,8 +35,8 @@ public class RemoteDriverConfig extends WebDriverConfig<RemoteWebDriver> {
 		}
 	}
 
-	private Capabilities createCapabilities() {
-		AbstractDriverOptions caps = null;
+	Capabilities createCapabilities() {
+		AbstractDriverOptions<?> caps = null;
 		switch (getCapability()) {
 		case CHROME:
 			caps = createChromeOptions();

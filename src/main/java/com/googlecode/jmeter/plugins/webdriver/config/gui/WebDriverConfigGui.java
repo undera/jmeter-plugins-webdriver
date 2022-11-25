@@ -292,7 +292,7 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements It
 		return browserPanel;
 	}
 
-	private JPanel createProxyPanel() {
+	protected JPanel createProxyPanel() {
 		JPanel mainPanel = new VerticalPanel();
 		ButtonGroup group = new ButtonGroup();
 
@@ -600,8 +600,8 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements It
 				webDriverConfig.setUserAgentOverridden(userAgentOverrideCheckbox.isSelected());
 				webDriverConfig.setNtlmSetting(ntlmOverrideCheckbox.isSelected());
 				if (userAgentOverrideCheckbox.isSelected()) {
-						webDriverConfig.setUserAgentOverride(userAgentOverrideText.getText());
-					}
+					webDriverConfig.setUserAgentOverride(userAgentOverrideText.getText());
+				}
 				webDriverConfig.setExtensions(extensions.getModel());
 				webDriverConfig.setPreferences(preferences.getModel());
 			}

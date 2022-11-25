@@ -155,8 +155,7 @@ public class InternetExplorerDriverConfigTest {
 
     @Test
     public void shouldHaveProxyInCapability() {
-        final InternetExplorerOptions options = config.createOptions();
+        final InternetExplorerOptions options = config.createIEOptions();
         assertThat(options.getCapability(CapabilityType.PROXY), is(notNullValue()));
     }
-
 }

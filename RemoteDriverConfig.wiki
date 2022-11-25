@@ -1,6 +1,6 @@
 = Remote Driver Config =
 
-Add this configuration to enable browser based performance testing on a remote machine using a Remote Selenium Grid.
+Add this configuration to enable desktop browser based performance testing on a remote machine using a Remote Selenium Grid.
 If you want to execute the tests on the local system where JMeter is running, then use one of the browser drivers as described in the [[DirectDriverConfig | Direct Driver configuration]].
 
 Before using the Remote Driver Config, ensure you have setup a Selenium Grid on a remote machine as per following [https://www.selenium.dev/documentation/grid/ Selenium Documentation instructions].

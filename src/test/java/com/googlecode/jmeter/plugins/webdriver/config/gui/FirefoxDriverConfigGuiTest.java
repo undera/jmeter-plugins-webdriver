@@ -30,7 +30,7 @@ public class FirefoxDriverConfigGuiTest {
 
     @Test
     public void shouldReturnWikiPage() {
-        assertThat(gui.getWikiPage(), is("FirefoxDriverConfig"));
+        assertThat(gui.getWikiPage(), is("DirectDriverConfig"));
     }
 
     @Test
@@ -68,7 +68,7 @@ public class FirefoxDriverConfigGuiTest {
 
         assertThat(gui.userAgentOverrideText.getText(), is(""));
         assertThat(gui.userAgentOverrideCheckbox.isSelected(), is(false));
-        assertThat(gui.firefoxServicePath.getText(), is("path to geckodriver.exe"));
+        assertThat(gui.driverPath.getText(), is("path to driver.exe of the relevant browser"));
     }
 
     @Test
@@ -83,8 +83,8 @@ public class FirefoxDriverConfigGuiTest {
     }
     
     @Test
-	public void shouldEnableProxyAndExperimental() throws Exception {
-		assertThat(gui.isExperimentalEnabled(), is(true));
+	public void shouldEnableProxyAndBrowser() throws Exception {
+		assertThat(gui.isBrowser(), is(true));
 		assertThat(gui.isProxyEnabled(), is(true));
 	}
 }

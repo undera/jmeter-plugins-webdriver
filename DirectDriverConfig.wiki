@@ -1,6 +1,6 @@
 = Direct Testing of Browsers =
 
-This configuration is suited when the JMeter tests are executed on the same system as the browser. If you want to execute the tests on a remote system (via a Selenium Grid for instance), then use the [[RemoteDriverConfig | Remote Driver configuration]].
+These configurations are suited when you want to test desktop browsers on the same system as JMeter. If you want to execute the tests on a remote system (via a Selenium Grid for instance), then use the [[RemoteDriverConfig | Remote Driver configuration]].
 
 For an overview of performing client side performance testing, refer to the [[WebDriverTutorial | Web Driver Tutorial]].
 
@@ -30,10 +30,10 @@ Note that it is not required to download a driver for HtmlUnit.
 Beware that most machines automatically update the browser, but not the driver which may cause your test to fail in case the driver becomes out-dated. So ensure you regularly check that the versions of the driver and its browser match.
 
 === Common Browser Options ===
-The Driver tab also contains most common capabilities that are shared by all browsers. Their names are meaningful by themselves; but you can also refer to the [https://w3c.github.io/webdriver/#capabilities w3c specification] for further description of these options.
+The Driver tab also contains some common capabilities that are shared by all browsers. Their names are meaningful by themselves; but you can also refer to the [https://w3c.github.io/webdriver/#capabilities w3c specification] for further description of these options.
 
 == Options Tab ==
-This tab contains the custom options for each browser. The most commonly used options are listed and their names are meaningful by themselves. At the time of writing, there are no options to configure for HtmlUnit. 
+This tab contains some custom options for each browser. Their names are meaningful by themselves. At the time of writing, there are no options to configure for HtmlUnit.
 
 === Chrome ===
 In the Options tab of Chrome for instance, you can specify the location of a Chrome Binary in case you want to test a different version of Chrome from the standard one. Leave this field blank if you are happy to test the Chrome that is defined in your path variable.

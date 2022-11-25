@@ -90,10 +90,10 @@ public class FirefoxDriverConfigTest {
         assertThat(config.getServices().size(), is(1));
     }
 
+
     @Test
     public void shouldHaveProxyInCapability() {
-        final FirefoxOptions options = config.createOptions();
+        final FirefoxOptions options = config.createFirefoxOptions();
         assertThat(options.getCapability(CapabilityType.PROXY), is(notNullValue()));
     }
-
 }
