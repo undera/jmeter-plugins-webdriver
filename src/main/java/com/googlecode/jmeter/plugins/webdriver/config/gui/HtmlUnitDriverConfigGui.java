@@ -24,7 +24,7 @@ public class HtmlUnitDriverConfigGui extends WebDriverConfigGui {
 
     @Override
     protected String getWikiPage() {
-        return "HtmlUnitDriverConfig";
+        return "DirectDriverConfig";
     }
 
 	@Override

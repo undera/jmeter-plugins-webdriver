@@ -36,7 +36,7 @@ public class FirefoxDriverConfigGui extends WebDriverConfigGui implements ItemLi
 
 	@Override
 	protected String getWikiPage() {
-		return "FirefoxDriverConfig";
+		return "DirectDriverConfig";
 	}
 
 	@Override

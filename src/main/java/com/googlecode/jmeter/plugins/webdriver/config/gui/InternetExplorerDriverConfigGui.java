@@ -32,7 +32,7 @@ public class InternetExplorerDriverConfigGui extends WebDriverConfigGui {
 
     @Override
     protected String getWikiPage() {
-        return "InternetExplorerConfig";
+        return "DirectDriverConfig";
     }
 
 	@Override

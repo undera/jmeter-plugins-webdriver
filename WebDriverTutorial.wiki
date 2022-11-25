@@ -19,17 +19,17 @@ To get started, first follow the [PluginInstall installation instructions] and t
 
 Your basic Test Plan should look like this after adding the Thread Group:
 
-[/img/wiki/web-driver/web-driver-tutorial-thread-group.png]
+[/img/web-driver-tutorial-thread-group.png]
 
 === Firefox Driver Config ===
 Add a Firefox Driver Config to your Thread Group.
 
-[/img/wiki/web-driver/web-driver-tutorial-firefox-config.png]
+[/img/web-driver-tutorial-firefox-config.png]
 
 === Web Driver Sampler ===
 Add a Web Driver Sampler to your Thread Group.
 
-[/img/wiki/web-driver/web-driver-tutorial-web-sampler.png]
+[/img/web-driver-tutorial-web-sampler.png]
 
 Add the following *Javascript* code to the Script section to navigate to Google.
 
@@ -42,7 +42,7 @@ WDS.sampleResult.sampleEnd()
 === View Results Table ===
 Add a View Results in Table to your Thread Group and then *run* your test.  You should see something like the screenshot below that captures the result of the sample.
 
-[/img/wiki/web-driver/web-driver-tutorial-view-results-in-table.png]
+[/img/web-driver-tutorial-view-results-in-table.png]
 
 == 10 Minute Guide ==
 The 2 minute guide is useful to get something up and running, but at the cost of some understanding.  This section hopefully fills in some of the gaps/questions that can come from going through the previous guide. 
@@ -68,9 +68,7 @@ meaning that the script should have a MAXIMUM of 3 threads.
 This might should a little limiting.  However, it is important to note that this is mainly used to *complement JMeter's HTTP Sampler*.  The [WebDriverSampler Web Driver Sampler] is meant to be run in conjunction with a HTTP Sampler so that from the server's perspective, the load is production like.  At the same time, the web sampler will simulate the user experience of interacting with the website/webapp whilst the server is under load, hence measuring the real user's experience at the same time.
 
 === Firefox Driver Config ===
-For the `Web Driver Sampler` to work, it will need to know what type of browser to run the tests with.  The simplest browser to use is Firefox, as there are no external dependencies required (unlike the [ChromeDriverConfig Chrome Driver Config]).  As such it has been chosen for the quick tutorial.  For a more thorough understanding, it is useful for the reader to try out different Driver Configs to better evaluate which browser best suits their needs.
-
-At the time of writing, only Chrome and Firefox browsers are supported.  However the reason why [https://code.google.com/p/selenium/ Web Driver] was chosen is because of the breadth of browsers it can control and script.  The [Roadmap roadmap] has more details on when more browsers will be added, however the initial browsers are just a starting point, and more browser support will be added in the future.  
+For the `Web Driver Sampler` to work, it will need to know what type of browser to run the tests with. Firefox has been chosen for the quick tutorial. However you can try out different Driver Configs to evaluate the other supported browsers as well.
 
 === Web Driver Sampler ===
 There is more in depth information on the [WebDriverSampler Web Driver Sampler page].  However, it is important to understand that the content of the script editor is to allow the user total control over when the interactions with the browser *as well as* when the sampling should be conducted.  This last part is important as it will allow the reader to not only measure the amount of time it takes to load a URL (as the above example), but also to measure AJAX requests as well (more on this in the [WebDriverSampler Web Driver Sampler page]).
@@ -81,7 +79,7 @@ The `Browser` object exposed in the `Script` section is an instance of the `WebD
 
 It is also up to the reader to ensure that they verify that the correct page has been loaded and then setting the corresponding `SampleResult.setSuccessful(boolean)` method when invoking this script.  Since the full WebDriver instance is available to the reader, they should be able to verify that the page has loaded successfully and then set the correct status on the SampleResult.  The example below will verify that the page contains the correct title and uses this to indicate success/failure on the SampleResult.
 
-{{{
+<syntaxhighlight lang="javascript">
 WDS.sampleResult.sampleStart()
 WDS.browser.get('http://google.com')
 WDS.sampleResult.sampleEnd()
@@ -90,6 +88,6 @@ if(WDS.browser.getTitle() != 'Google') {
     WDS.sampleResult.setSuccessful(false)
     WDS.sampleResult.setResponseMessage('Page title is not Google!')
 }
-}}}
+</syntaxhighlight>
 
 For a more thorough understanding, the reader should familiarise themselves with the SampleResult documentation as well, to better understand what is scriptable on the SampleResult object.

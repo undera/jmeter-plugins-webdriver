@@ -1,33 +1,29 @@
 = Remote Driver Config =
 
-== Introduction ==
-Add this configuration to enable browser based performance testing using a Remote Selenium Grid.  This document covers the various configuration options available on the Remote browser from a Selenium Grid.  For an overview of performing client sider performance testing, refer to the [WebDriverTutorial Web Driver Tutorial].  
+Add this configuration to enable browser based performance testing on a remote machine using a Remote Selenium Grid.
+If you want to execute the tests on the local system where JMeter is running, then use one of the browser drivers as described in the [[DirectDriverConfig | Direct Driver configuration]].
 
-Currently we can select the browser where we can execute the load testing from a Selenium Grid.
+Before using the Remote Driver Config, ensure you have setup a Selenium Grid on a remote machine as per following [https://www.selenium.dev/documentation/grid/ Selenium Documentation instructions].
 
-On startup, the user is presented with the following:
+For an overview of performing client side performance testing, refer to the [[WebDriverTutorial | Web Driver Tutorial]].
 
-[/img/wiki/web-driver/remote-driver-config.png]
+The configuration of a Remote Test is split across different tabs, one for the Remote Driver itself, than a tab for each supported browser and finally the Proxy tab.
 
-The main part of the Remote Web Driver configuration UI lies in the Remote tab.
+== Remote Tab ==
+=== Remote Selenium Grid URL & Capability ===
+In this tab, you need to:
+* specify the URL of the Selenium Grid;
+* and select which browser to launch on your Selenium Grid. For example, if you are running three concurrent users, the system will spin three browser instances in the Selenium grid node.
 
-== Remote ==
+=== Common Browser Options ===
+The Remote tab also contains most common capabilities that are shared by all browsers. Their names are meaningful by themselves; but you can also refer to the [https://w3c.github.io/webdriver/#capabilities w3c specification] for further description of these options.
 
-=== Remote Selenium Grid/Selenoid URL ===
-Specify the URL of the Selenium Grid. The URL must be correct, if you specify a wrong URL it will pop up a dialog message showing an error with the URL.
+== Browser Tabs ==
+Each of these tabs contains the custom options for each browser. The most commonly used options are listed and their names are meaningful by themselves.
 
-=== Capability ===
-Specify which browser selects from your Selenium Grid. Currently it only selects the browser matching the browserName. So if you are running three concurrent users it will spin three browser instances in a selenium grid node.
+Once you have selected the browser in the Capability list box, navigate to the appropriate tab and change the default options if needed.
 
-For Internet Explorer, the system will ask your Selenium Grid to launch Microsoft Edge in InternetExplorer 11 (IE) mode. If the default path to msedge.exe on the remote server is not good, then change it appropriately.
-Upon start-up, IE will load "http://wwww.bing.com". So ensure the remote server can access this url otherwise the driver will fail.
+For more information on the options, please refer to [[DirectDriverConfig#Options Tab|Options Tab]] in the Direct Driver wiki page.
 
-=== Headless ===
-Specify if the browser is to be run in headless mode.
-
-Following three will be required for selenoid
-==Enable VNC==
-==Enable Video==
-==Enable Log==
-
-Please see the [Roadmap] document for future plans.
+== Proxy Tab ==
+Please see [[DirectDriverConfig#Proxy Tab|Proxy Tab]] in the Direct Driver wiki page for more information on the Proxy settings of browser.

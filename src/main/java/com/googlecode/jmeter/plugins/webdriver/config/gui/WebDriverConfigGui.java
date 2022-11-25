@@ -181,6 +181,9 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements It
 			remoteSeleniumGridText.addFocusListener((FocusListener) this);
 			panel.add(remoteSeleniumGridText);
 
+			panel.add(errorMsg = new JLabel());
+			errorMsg.setForeground(Color.red);
+
 			JLabel capabilitiesLabel = new JLabel();
 			capabilitiesLabel.setText("Capability");
 			panel.add(capabilitiesLabel);
@@ -189,11 +192,6 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements It
 
 			localFileDetector = new JCheckBox("Local File Detector");
 			panel.add(localFileDetector);
-
-//			final JPanel edgePanel = new HorizontalPanel();
-//			panel.add(edgePanel);
-			panel.add(errorMsg = new JLabel());
-			errorMsg.setForeground(Color.red);
 		}
 
 		acceptInsecureCerts = new JCheckBox("Accept Insecure Certs");

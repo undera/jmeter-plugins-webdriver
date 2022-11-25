@@ -24,7 +24,7 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
 
 	@Override
 	protected String getWikiPage() {
-		return "ChromeDriverConfig";
+		return "DirectDriverConfig";
 	}
 
 	@Override
