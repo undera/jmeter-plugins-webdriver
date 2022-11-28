@@ -34,7 +34,7 @@ public class ChromeDriverConfigGuiTest {
 
     @Test
     public void shouldReturnWikiPage() {
-        assertThat(gui.getWikiPage(), is("ChromeDriverConfig"));
+        assertThat(gui.getWikiPage(), is("DirectDriverConfig"));
     }
 
     @Test
@@ -49,51 +49,23 @@ public class ChromeDriverConfigGuiTest {
 
     @Test
     public void shouldSetChromeDriverPath() {
-        gui.chromeServicePath.setText("chromedriver");
+        gui.driverPath.setText("chromedriver");
         final ChromeDriverConfig testElement = (ChromeDriverConfig) gui.createTestElement();
-        assertThat(testElement.getChromeDriverPath(), is("chromedriver"));
-    }
-
-    @Test
-    public void shouldSetAndroidEnabled() {
-        gui.androidEnabled.setSelected(true);
-        final ChromeDriverConfig testElement = (ChromeDriverConfig) gui.createTestElement();
-        assertThat(testElement.isAndroidEnabled(), is(true));
+        assertThat(testElement.getDriverPath(), is("chromedriver"));
     }
 
     @Test
     public void shouldSetHeadlessEnabled() {
-        gui.getHeadlessEnabled().setSelected(true);
+        gui.headless.setSelected(true);
         final ChromeDriverConfig testElement = (ChromeDriverConfig) gui.createTestElement();
-        assertThat(testElement.isHeadlessEnabled(), is(true));
+        assertThat(testElement.isHeadless(), is(true));
     }
 
     @Test
     public void shouldSetInsecureCertsEnabled() {
-        gui.getInsecureCertsEnabled().setSelected(true);
+        gui.acceptInsecureCerts.setSelected(true);
         final ChromeDriverConfig testElement = (ChromeDriverConfig) gui.createTestElement();
-        assertThat(testElement.isInsecureCertsEnabled(), is(true));
-    }
-
-    @Test
-    public void shouldSetIncognitoEnabled() {
-        gui.getIncognitoEnabled().setSelected(true);
-        final ChromeDriverConfig testElement = (ChromeDriverConfig) gui.createTestElement();
-        assertThat(testElement.isIncognitoEnabled(), is(true));
-    }
-
-    @Test
-    public void shouldSetNoSandboxEnabled() {
-        gui.getNoSandboxEnabled().setSelected(true);
-        final ChromeDriverConfig testElement = (ChromeDriverConfig) gui.createTestElement();
-        assertThat(testElement.isNoSandboxEnabled(), is(true));
-    }
-
-    @Test
-    public void shouldSetDisableDevShmUsageEnabled() {
-        gui.getDisableDevShmUsageEnabled().setSelected(true);
-        final ChromeDriverConfig testElement = (ChromeDriverConfig) gui.createTestElement();
-        assertThat(testElement.isDisableDevShmUsage(), is(true));
+        assertThat(testElement.isAcceptInsecureCerts(), is(true));
     }
 
     @Test
@@ -105,35 +77,27 @@ public class ChromeDriverConfigGuiTest {
 
     @Test
     public void shouldResetValuesOnClearGui() {
-        gui.chromeServicePath.setText("path");
+        gui.driverPath.setText("path");
         gui.binaryPath.setText("path/binary");
-        gui.androidEnabled.setSelected(true);
-        gui.getHeadlessEnabled().setSelected(true);
-        gui.getInsecureCertsEnabled().setSelected(true);
-        gui.getIncognitoEnabled().setSelected(true);
-        gui.getNoSandboxEnabled().setSelected(true);
-        gui.getDisableDevShmUsageEnabled().setSelected(true);
+        gui.headless.setSelected(true);
+        gui.acceptInsecureCerts.setSelected(true);
         gui.additionalArgs.setText("additional");
 
         gui.clearGui();
 
-        assertThat(gui.chromeServicePath.getText(), is("path to chromedriver.exe"));
-        assertThat(gui.androidEnabled.isSelected(), is(false));
-        assertThat(gui.getHeadlessEnabled().isSelected(), is(false));
-        assertThat(gui.getInsecureCertsEnabled().isSelected(), is(false));
-        assertThat(gui.getIncognitoEnabled().isSelected(), is(false));
-        assertThat(gui.getNoSandboxEnabled().isSelected(), is(false));
-        assertThat(gui.getDisableDevShmUsageEnabled().isSelected(), is(false));
+        assertThat(gui.driverPath.getText(), is("path to driver.exe of the relevant browser"));
+        assertThat(gui.headless.isSelected(), is(false));
+        assertThat(gui.acceptInsecureCerts.isSelected(), is(false));
         assertThat(gui.additionalArgs.getText(), is(""));
     }
 
     @Test
     public void shouldSetChromeDriverPathOnConfigure() {
         ChromeDriverConfig config = new ChromeDriverConfig();
-        config.setChromeDriverPath("chromedriver.path");
+        config.setDriverPath("chromedriver.path");
         gui.configure(config);
 
-        assertThat(gui.chromeServicePath.getText(), is(config.getChromeDriverPath()));
+        assertThat(gui.driverPath.getText(), is(config.getDriverPath()));
     }
 
     @Test
@@ -146,71 +110,34 @@ public class ChromeDriverConfigGuiTest {
     }
 
     @Test
-    public void shouldSetAndroidEnabledOnConfigure() {
-        ChromeDriverConfig config = new ChromeDriverConfig();
-        config.setAndroidEnabled(true);
-        gui.configure(config);
-
-        assertThat(gui.androidEnabled.isSelected(), is(config.isAndroidEnabled()));
-    }
-
-    @Test
     public void shouldSetHeadlessEnabledOnConfigure() {
         ChromeDriverConfig config = new ChromeDriverConfig();
-        config.setHeadlessEnabled(true);
+        config.setHeadless(true);
         gui.configure(config);
 
-        assertThat(gui.getHeadlessEnabled().isSelected(), is(config.isHeadlessEnabled()));
+        assertThat(gui.headless.isSelected(), is(config.isHeadless()));
     }
 
     @Test
     public void shouldSetInsecureCertsEnabledOnConfigure() {
         ChromeDriverConfig config = new ChromeDriverConfig();
-        config.setInsecureCertsEnabled(true);
+        config.setAcceptInsecureCerts(true);
         gui.configure(config);
 
-        assertThat(gui.getInsecureCertsEnabled().isSelected(), is(config.isInsecureCertsEnabled()));
+        assertThat(gui.acceptInsecureCerts.isSelected(), is(config.isAcceptInsecureCerts()));
     }
 
     @Test
-    public void shouldSetIncognitoEnabledOnConfigure() {
-        ChromeDriverConfig config = new ChromeDriverConfig();
-        config.setIncognitoEnabled(true);
-        gui.configure(config);
-
-        assertThat(gui.getIncognitoEnabled().isSelected(), is(config.isIncognitoEnabled()));
-    }
-
-    @Test
-	public void shouldEnableProxyAndExperimental() throws Exception {
-		assertThat(gui.isExperimentalEnabled(), is(true));
+	public void shouldEnableProxyAndBrowser() throws Exception {
+		assertThat(gui.isBrowser(), is(true));
 		assertThat(gui.isProxyEnabled(), is(true));
 	}
-
-    @Test
-    public void shouldSetNoSandboxEnabledOnConfigure() {
-        ChromeDriverConfig config = new ChromeDriverConfig();
-        config.setNoSandboxEnabled(true);
-        gui.configure(config);
-
-        assertThat(gui.getNoSandboxEnabled().isSelected(), is(config.isNoSandboxEnabled()));
-    }
 
     @Test
     public void shouldSetAdditionalArgsOnConfigure() {
         ChromeDriverConfig config = new ChromeDriverConfig();
         config.setAdditionalArgs("chromedriver.additional_args");
         gui.configure(config);
-
-        assertThat(gui.additionalArgs.getText(), is(config.getAdditionalArgs()));
-    }
-
-    @Test
-    public void shouldSetDisableDevShmUsage() {
-        ChromeDriverConfig config = new ChromeDriverConfig();
-        config.setDisableDevShmUsage(true);
-        gui.configure(config);
-
-        assertThat(gui.getDisableDevShmUsageEnabled().isSelected(), is(config.isDisableDevShmUsage()));
+       assertThat(gui.additionalArgs.getText(), is(config.getAdditionalArgs()));
     }
 }

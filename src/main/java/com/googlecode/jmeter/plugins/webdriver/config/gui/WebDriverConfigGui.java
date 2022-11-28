@@ -52,18 +52,16 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements It
 	// Shared variables
 	JTextField driverPath;
 	JCheckBox acceptInsecureCerts;
+	JCheckBox maximizeBrowser;
+	JCheckBox headless;
+	JCheckBox devMode;
+	JCheckBox recreateBrowserOnIterationStart;
 
 	// Remote variables
 	JTextField remoteSeleniumGridText;
 	JComboBox<?> capabilitiesComboBox;
 	JCheckBox localFileDetector;
 	JLabel errorMsg;
-
-	// Common variables
-	JCheckBox maximizeBrowser;
-	JCheckBox headless;
-	JCheckBox devMode;
-	JCheckBox recreateBrowserOnIterationStart;
 
 	// Chrome variables
 	JTextField additionalArgs;
@@ -531,6 +529,7 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements It
 			if ((browserName().equals("internet explorer")) || (browserName().equals("Remote"))) {
 	            fileUploadDialogTimeout.setText(String.valueOf(webDriverConfig.getFileUploadDialogTimeout()));
 	            ensureCleanSession.setSelected(webDriverConfig.isEnsureCleanSession());
+	            ignoreProtectedMode.setSelected(webDriverConfig.isIgnoreProtectedMode());
 	            silent.setSelected(webDriverConfig.isSilent());
 			}
 
