@@ -136,7 +136,7 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>htmlunit-driver</artifactId>
-            <version>3.64.0</version>
+            <version>${selenium.version}</version>
         </dependency>
 
         <!-- begin need this libraries for HtmlUnitDriver -->
