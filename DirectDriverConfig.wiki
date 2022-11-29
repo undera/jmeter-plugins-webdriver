@@ -89,7 +89,8 @@ For networks that have a proxy configuration server (PAC), and its name and the 
 == Code Samples ==
 === Chrome Logs ===
 You can read output logging from Developer Tool, just use the following code:
-{{{
+
+<syntaxhighlight lang="javascript">
 var logPkg = JavaImporter(org.openqa.selenium.logging)
 WDS.sampleResult.sampleStart()
 WDS.browser.get('http://yoursite.com')
@@ -99,4 +100,4 @@ logEntries.forEach(function(entry)
    WDS.log.info(entry.getTimestamp() + " " + entry.getLevel() + " " + entry.getMessage()); 
 })
 WDS.sampleResult.sampleEnd()
-}}}
+</syntaxhighlight>
