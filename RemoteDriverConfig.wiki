@@ -26,4 +26,4 @@ Once you have selected the browser in the Capability list box, navigate to the a
 For more information on the options, please refer to [[DirectDriverConfig#Options Tab|Options Tab]] in the Direct Driver wiki page.
 
 == Proxy Tab ==
-Please see [[DirectDriverConfig.wiki#Proxy Tab|Proxy Tab]] in the Direct Driver wiki page for more information on the Proxy settings of browser.
+Please see the [[DirectDriverConfig.wiki | Proxy Tab]] in the Direct Driver wiki page for more information on the Proxy settings of browser.
