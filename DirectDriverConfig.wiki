@@ -1,8 +1,8 @@
 = Direct Testing of Browsers =
 
-These configurations are suited when you want to test desktop browsers on the same system as JMeter. If you want to execute the tests on a remote system (via a Selenium Grid for instance), then use the [[RemoteDriverConfig.wiki | Remote Driver configuration]].
+These configurations are suited when you want to test desktop browsers on the same system as JMeter. If you want to execute the tests on a remote system (via a Selenium Grid for instance), then use the [[RemoteDriverConfig.wiki|Remote Driver configuration]].
 
-For an overview of performing client side performance testing, refer to the [[WebDriverTutorial.wiki | Web Driver Tutorial]].
+For an overview of performing client side performance testing, refer to the [[WebDriverTutorial.wiki|Web Driver Tutorial]].
 
 At the time of writing, four types of browsers are supported by JMeter Web Driver plugin:
 * Chrome (Chrome Driver Config);
