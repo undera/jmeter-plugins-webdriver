@@ -1,11 +1,11 @@
 = Remote Driver Config =
 
 Add this configuration to enable desktop browser based performance testing on a remote machine using a Remote Selenium Grid.
-If you want to execute the tests on the local system where JMeter is running, then use one of the browser drivers as described in the [[DirectDriverConfig | Direct Driver configuration]].
+If you want to execute the tests on the local system where JMeter is running, then use one of the browser drivers as described in the [[DirectDriverConfig.wiki | Direct Driver configuration]].
 
 Before using the Remote Driver Config, ensure you have setup a Selenium Grid on a remote machine as per following [https://www.selenium.dev/documentation/grid/ Selenium Documentation instructions].
 
-For an overview of performing client side performance testing, refer to the [[WebDriverTutorial | Web Driver Tutorial]].
+For an overview of performing client side performance testing, refer to the [[WebDriverTutorial.wiki | Web Driver Tutorial]].
 
 The configuration of a Remote Test is split across different tabs, one for the Remote Driver itself, than a tab for each supported browser and finally the Proxy tab.
 
@@ -26,4 +26,4 @@ Once you have selected the browser in the Capability list box, navigate to the a
 For more information on the options, please refer to [[DirectDriverConfig#Options Tab|Options Tab]] in the Direct Driver wiki page.
 
 == Proxy Tab ==
-Please see [[DirectDriverConfig#Proxy Tab|Proxy Tab]] in the Direct Driver wiki page for more information on the Proxy settings of browser.
+Please see [[DirectDriverConfig.wiki#Proxy Tab|Proxy Tab]] in the Direct Driver wiki page for more information on the Proxy settings of browser.
