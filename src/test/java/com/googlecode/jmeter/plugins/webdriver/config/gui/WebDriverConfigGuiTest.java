@@ -438,12 +438,8 @@ public class WebDriverConfigGuiTest {
 
         public WebDriverConfigGuiImpl() {
             setLayout(new BorderLayout(0, 5));
+            add(createMainPanel(), BorderLayout.NORTH);
             add(createProxyPanel(), BorderLayout.CENTER);
-        }
-
-        @Override
-        protected JPanel createBrowserPanel() {
-            return new VerticalPanel();
         }
 
         @Override
@@ -474,7 +470,7 @@ public class WebDriverConfigGuiTest {
 		}
 
 		@Override
-		protected boolean isExperimentalEnabled() {
+		protected boolean isBrowser() {
 			return true;
 		}
     }

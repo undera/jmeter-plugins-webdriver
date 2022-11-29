@@ -1,15 +1,21 @@
 package com.googlecode.jmeter.plugins.webdriver.config.gui;
 
 import com.googlecode.jmeter.plugins.webdriver.config.HtmlUnitDriverConfig;
-import kg.apc.jmeter.JMeterPluginsUtils;
-import org.apache.jmeter.gui.util.VerticalPanel;
-import org.apache.jmeter.testelement.TestElement;
+import com.googlecode.jmeter.plugins.webdriver.config.WebDriverConfig;
 
-import javax.swing.*;
+import kg.apc.jmeter.JMeterPluginsUtils;
+
+import org.apache.jmeter.testelement.TestElement;
 
 public class HtmlUnitDriverConfigGui extends WebDriverConfigGui {
 
     private static final long serialVersionUID = 100L;
+
+	@Override
+	String browserName() {
+		WebDriverConfig.setBrowserName("HtmlUnit");
+	    return "HtmlUnit";
+	}
 
     @Override
     public String getStaticLabel() {
@@ -17,23 +23,23 @@ public class HtmlUnitDriverConfigGui extends WebDriverConfigGui {
     }
 
     @Override
+    protected String getWikiPage() {
+        return "DirectDriverConfig";
+    }
+
+	@Override
+	protected boolean isBrowser() {
+		return false;
+	}
+
+	@Override
+	protected boolean isProxyEnabled() {
+		return true;
+	}
+
+    @Override
     public String getLabelResource() {
         return getClass().getCanonicalName();
-    }
-
-    @Override
-    protected JPanel createBrowserPanel() {
-        return new VerticalPanel();
-    }
-
-    @Override
-    protected String browserName() {
-        return "HtmlUnit";
-    }
-
-    @Override
-    protected String getWikiPage() {
-        return "HtmlUnitDriverConfig";
     }
 
     @Override
@@ -43,13 +49,16 @@ public class HtmlUnitDriverConfigGui extends WebDriverConfigGui {
         return element;
     }
 
-	@Override
-	protected boolean isProxyEnabled() {
-		return true;
-	}
+    /*
+    @Override
+    protected JPanel createOptionsPanel() {
+        final JPanel browserPanel = new VerticalPanel();
 
-	@Override
-	protected boolean isExperimentalEnabled() {
-		return true;
-	}
+        // ToDo Label
+        JLabel experimentalLabel = new JLabel("To Do");
+        experimentalLabel.setFont(new Font(Font.MONOSPACED, Font.BOLD, 16));
+        browserPanel.add(experimentalLabel);
+        return browserPanel;
+    }
+*/
 }

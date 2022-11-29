@@ -1,5 +1,6 @@
 package com.googlecode.jmeter.plugins.webdriver.config.gui;
 
+import com.googlecode.jmeter.plugins.webdriver.config.ChromeDriverConfig;
 import com.googlecode.jmeter.plugins.webdriver.config.InternetExplorerDriverConfig;
 import kg.apc.emulators.TestJMeterUtils;
 import org.junit.Before;
@@ -30,7 +31,7 @@ public class InternetExplorerDriverConfigGuiTest {
 
     @Test
     public void shouldReturnWikiPage() {
-        assertThat(gui.getWikiPage(), is("InternetExplorerConfig"));
+        assertThat(gui.getWikiPage(), is("DirectDriverConfig"));
     }
 
     @Test
@@ -45,28 +46,81 @@ public class InternetExplorerDriverConfigGuiTest {
 
     @Test
     public void shouldSetInternetExplorerDriverPath() {
-        gui.ieServicePath.setText("iedriver");
+        gui.driverPath.setText("iedriver");
         final InternetExplorerDriverConfig testElement = (InternetExplorerDriverConfig) gui.createTestElement();
-        assertThat(testElement.getInternetExplorerDriverPath(), is("iedriver"));
+        assertThat(testElement.getDriverPath(), is("iedriver"));
     }
 
     @Test
+    public void shouldSetCleanSessionEnabled() {
+        gui.ensureCleanSession.setSelected(true);
+        final InternetExplorerDriverConfig testElement = (InternetExplorerDriverConfig) gui.createTestElement();
+        assertThat(testElement.isEnsureCleanSession(), is(true));
+    }
+
+    @Test
+    public void shouldSetProtectedModeEnabled() {
+        gui.ignoreProtectedMode.setSelected(true);
+        final InternetExplorerDriverConfig testElement = (InternetExplorerDriverConfig) gui.createTestElement();
+        assertThat(testElement.isIgnoreProtectedMode(), is(true));
+    }
+
+    @Test
+    public void shouldSetSilentEnabled() {
+        gui.silent.setSelected(true);
+        final InternetExplorerDriverConfig testElement = (InternetExplorerDriverConfig) gui.createTestElement();
+        assertThat(testElement.isSilent(), is(true));
+    }
+
+
+    @Test
     public void shouldResetValuesOnClearGui() {
-        gui.ieServicePath.setText("path");
+        gui.driverPath.setText("path");
+        gui.ensureCleanSession.setSelected(true);
+        gui.ignoreProtectedMode.setSelected(true);
+        gui.silent.setSelected(true);
 
         gui.clearGui();
 
-        assertThat(gui.ieServicePath.getText(), is("path to IEDriverServer.exe"));
-        assertThat(gui.msEdgePath.getText(), is("C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"));
+        assertThat(gui.driverPath.getText(), is("path to driver.exe of the relevant browser"));
+        assertThat(gui.ensureCleanSession.isSelected(), is(false));
+        assertThat(gui.ignoreProtectedMode.isSelected(), is(false));
+        assertThat(gui.silent.isSelected(), is(false));
     }
 
     @Test
     public void shouldSetInternetExplorerDriverPathOnConfigure() {
         InternetExplorerDriverConfig config = new InternetExplorerDriverConfig();
-        config.setInternetExplorerDriverPath("iedriver.path");
+        config.setDriverPath("iedriver.path");
         gui.configure(config);
 
-        assertThat(gui.ieServicePath.getText(), is(config.getInternetExplorerDriverPath()));
+        assertThat(gui.driverPath.getText(), is(config.getDriverPath()));
     }
 
+    @Test
+    public void shouldSetCleanSessionOnConfigure() {
+        InternetExplorerDriverConfig config = new InternetExplorerDriverConfig();
+        config.setEnsureCleanSession(true);
+        gui.configure(config);
+
+        assertThat(gui.ensureCleanSession.isSelected(), is(config.isEnsureCleanSession()));
+    }
+
+    @Test
+    public void shouldSetProtectedModeOnConfigure() {
+        InternetExplorerDriverConfig config = new InternetExplorerDriverConfig();
+        config.setIgnoreProtectedMode(true);
+        gui.configure(config);
+
+        assertThat(gui.ignoreProtectedMode.isSelected(), is(config.isIgnoreProtectedMode()));
+    }
+
+    @Test
+    public void shouldSetSilentOnConfigure() {
+        InternetExplorerDriverConfig config = new InternetExplorerDriverConfig();
+        config.setSilent(true);
+        gui.configure(config);
+
+        assertThat(gui.silent.isSelected(), is(config.isSilent()));
+    }
 }

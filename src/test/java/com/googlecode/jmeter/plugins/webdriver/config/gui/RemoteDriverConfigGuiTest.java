@@ -17,7 +17,6 @@ import org.junit.Test;
 
 import com.googlecode.jmeter.plugins.webdriver.config.RemoteCapability;
 import com.googlecode.jmeter.plugins.webdriver.config.RemoteDriverConfig;
-
 import kg.apc.emulators.TestJMeterUtils;
 
 public class RemoteDriverConfigGuiTest {
@@ -68,7 +67,6 @@ public class RemoteDriverConfigGuiTest {
         gui.clearGui();
 
         assertThat(gui.remoteSeleniumGridText.getText(), is(StringUtils.EMPTY));
-        assertThat(gui.msEdgePath.getText(), is("C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"));
     }
 
     @Test
@@ -80,7 +78,7 @@ public class RemoteDriverConfigGuiTest {
 
         assertThat(gui.remoteSeleniumGridText.getText(), is(config.getSeleniumGridUrl()));
         assertThat((RemoteCapability)gui.capabilitiesComboBox.getSelectedItem(), is(config.getCapability()));
-        assertFalse(gui.getHeadlessEnabled().isSelected());
+        assertFalse(gui.headless.isSelected());
     }
 
     @Test
@@ -88,10 +86,9 @@ public class RemoteDriverConfigGuiTest {
         RemoteDriverConfig config = new RemoteDriverConfig();
         config.setSeleniumGridUrl("my.awesome.grid.com");
         config.setCapability(RemoteCapability.CHROME);
-        config.setHeadlessEnabled(true);
+        config.setHeadless(true);
         gui.configure(config);
-
-        assertTrue(gui.getHeadlessEnabled().isSelected());
+        assertTrue(gui.headless.isSelected());
     }
 
     @Test
@@ -112,8 +109,8 @@ public class RemoteDriverConfigGuiTest {
 	}
     
     @Test
-	public void shouldDisableProxyAndExperimental() throws Exception {
-		assertThat(gui.isExperimentalEnabled(), is(false));
-		assertThat(gui.isProxyEnabled(), is(false));
+	public void shouldEnableProxyAndNotBrowser() throws Exception {
+		assertThat(gui.isBrowser(), is(false));
+		assertThat(gui.isProxyEnabled(), is(true));
 	}
 }

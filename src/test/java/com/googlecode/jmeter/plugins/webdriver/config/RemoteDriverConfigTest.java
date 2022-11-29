@@ -5,7 +5,6 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.times;
@@ -31,9 +30,7 @@ import org.mockito.Mockito;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.LocalFileDetector;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.remote.UselessFileDetector;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -110,7 +107,7 @@ public class RemoteDriverConfigTest {
 
     @Test
     public void shouldHaveHeadlessInChromeOptionsWhenEnabled() {
-        config.setHeadlessEnabled(true);
+        config.setHeadless(true);
         final Capabilities capabilities = config.createCapabilities();
 		@SuppressWarnings("unchecked")
 		Map<String,Object> capability = (Map<String,Object>) capabilities.getCapability(ChromeOptions.CAPABILITY);
@@ -124,7 +121,7 @@ public class RemoteDriverConfigTest {
 
     @Test
     public void shouldNotHaveHeadlessInChromeOptionsWhenDisabled() {
-        config.setHeadlessEnabled(false);
+        config.setHeadless(false);
         final Capabilities capabilities = config.createCapabilities();
 		@SuppressWarnings("unchecked")
 		Map<String,Object> capability = (Map<String,Object>) capabilities.getCapability(ChromeOptions.CAPABILITY);
@@ -136,27 +133,22 @@ public class RemoteDriverConfigTest {
     }
 
     @Test
-    public void should() throws Exception {
-
-    }
-
-    @Test
     public void shouldRevertToDefaultFileLocator() {
-        assertEquals(FileDetectorOption.USELESS, config.getFileDetectorOption());
+        assertThat((Boolean) config.isLocalFileDectedor(), is(false));
     }
 
     @Test
     public void shouldProduceLocalFileLocator() {
-        config.setFileDetectorOption(FileDetectorOption.LOCAL);
-        assertTrue(config.createFileDetector() instanceof LocalFileDetector);
+        config.setLocalFileDetector(true);
+        assertThat((Boolean) config.isLocalFileDectedor(), is(true));
     }
 
     @Test
     public void shouldProduceUselessFileLocator() {
-        config.setFileDetectorOption(FileDetectorOption.USELESS);
-        assertTrue(config.createFileDetector() instanceof UselessFileDetector);
+        config.setLocalFileDetector(false);
+        assertThat((Boolean) config.isLocalFileDectedor(), is(false));
     }
-    
+
     @Test
 	public void shouldThrowAnExceptionWhenTheURLIsMalformed() throws Exception {
     	try{

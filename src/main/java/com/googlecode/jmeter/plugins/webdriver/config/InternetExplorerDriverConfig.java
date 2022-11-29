@@ -8,7 +8,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerDriverService;
 import org.openqa.selenium.ie.InternetExplorerOptions;
-import org.openqa.selenium.remote.CapabilityType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,38 +16,7 @@ public class InternetExplorerDriverConfig extends WebDriverConfig<InternetExplor
     private static final long serialVersionUID = 100L;
 	private static final Logger LOGGER = LoggerFactory.getLogger(InternetExplorerDriverConfig.class);
 
-    private static final String IE_SERVICE_PATH = "InternetExplorerDriverConfig.iedriver_path";
-    private static final String EDGE_SERVICE_PATH = "InternetExplorerDriverConfig.edgedriver_path";
     private static final Map<String, InternetExplorerDriverService> services = new ConcurrentHashMap<String, InternetExplorerDriverService>();
-
-    public void setInternetExplorerDriverPath(String path) {
-        setProperty(IE_SERVICE_PATH, path);
-    }
-
-    public String getInternetExplorerDriverPath() {
-        return getPropertyAsString(IE_SERVICE_PATH);
-    }
-
-    public void setMsEdgeDriverPath(String path) {
-        setProperty(EDGE_SERVICE_PATH, path);
-    }
-
-    public String getMsEdgeDriverPath() {
-        return getPropertyAsString(EDGE_SERVICE_PATH);
-    }
-
-    InternetExplorerOptions createOptions() {
-    	InternetExplorerOptions options = new InternetExplorerOptions();
-    	options.setCapability(CapabilityType.PROXY, createProxy());
-    	options.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION, true);
-    	// Settings to launch Microsoft Edge in IE mode
-    	options.attachToEdgeChrome();
-        options.withEdgeExecutablePath(getMsEdgeDriverPath());
-    	options.ignoreZoomSettings();
-    	// Set an initial valid page otherwise IeDriver hangs on page load...
-    	options.withInitialBrowserUrl("http://www.bing.com");
-        return options;
-    }
 
     Map<String, InternetExplorerDriverService> getServices() {
         return services;
@@ -57,7 +25,7 @@ public class InternetExplorerDriverConfig extends WebDriverConfig<InternetExplor
     @Override
     protected InternetExplorerDriver createBrowser() {
         final InternetExplorerDriverService service = getThreadService();
-    	InternetExplorerOptions ieOptions = createOptions();
+        InternetExplorerOptions ieOptions = createIEOptions();
         return service != null ? new InternetExplorerDriver(service, ieOptions) : null;
     }
 
@@ -76,7 +44,7 @@ public class InternetExplorerDriverConfig extends WebDriverConfig<InternetExplor
             return service;
         }
         try {
-            service = new InternetExplorerDriverService.Builder().usingDriverExecutable(new File(getInternetExplorerDriverPath())).build();
+            service = new InternetExplorerDriverService.Builder().usingDriverExecutable(new File(getDriverPath())).build();
             service.start();
             services.put(currentThreadName(), service);
         } catch (IOException e) {

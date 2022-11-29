@@ -155,8 +155,28 @@ public class InternetExplorerDriverConfigTest {
 
     @Test
     public void shouldHaveProxyInCapability() {
-        final InternetExplorerOptions options = config.createOptions();
+        final InternetExplorerOptions options = config.createIEOptions();
         assertThat(options.getCapability(CapabilityType.PROXY), is(notNullValue()));
     }
 
+    @Test
+    public void getSetCleanSession() {
+        assertThat(config.isEnsureCleanSession(), is(false));
+        config.setEnsureCleanSession(true);
+        assertThat(config.isEnsureCleanSession(), is(true));
+    }
+
+    @Test
+    public void getSetProtectedMode() {
+        assertThat(config.isIgnoreProtectedMode(), is(false));
+        config.setIgnoreProtectedMode(true);
+        assertThat(config.isIgnoreProtectedMode(), is(true));
+    }
+
+    @Test
+    public void getSetSilent() {
+        assertThat(config.isSilent(), is(false));
+        config.setSilent(true);
+        assertThat(config.isSilent(), is(true));
+    }
 }

@@ -11,9 +11,9 @@ public class HtmlUnitDriverConfig extends WebDriverConfig<HtmlUnitDriver> {
 
     Capabilities createCapabilities() {
         DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setCapability(CapabilityType.PROXY, createProxy());
-        capabilities.setCapability("javascriptEnabled", "true");
         capabilities.setBrowserName("htmlunit");
+        capabilities.setAcceptInsecureCerts(isAcceptInsecureCerts());
+        capabilities.setCapability(CapabilityType.PROXY, createProxy());
         return capabilities;
     }
 

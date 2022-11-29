@@ -30,7 +30,7 @@ public class HtmlUnitDriverConfigGuiTest {
 
     @Test
     public void shouldReturnWikiPage() {
-        assertThat(gui.getWikiPage(), is("HtmlUnitDriverConfig"));
+        assertThat(gui.getWikiPage(), is("DirectDriverConfig"));
     }
 
     @Test
@@ -44,8 +44,8 @@ public class HtmlUnitDriverConfigGuiTest {
     }
     
     @Test
-	public void shouldEnableProxyAndExperimental() throws Exception {
-		assertThat(gui.isExperimentalEnabled(), is(true));
+	public void shouldEnableProxyAndBrowser() throws Exception {
+		assertThat(gui.isBrowser(), is(false));
 		assertThat(gui.isProxyEnabled(), is(true));
 	}
 }

@@ -157,70 +157,48 @@ public class ChromeDriverConfigTest {
 
     @Test
     public void shouldHaveProxyInCapability() {
-        final ChromeOptions options = config.createOptions();
+        final ChromeOptions options = config.createChromeOptions();
         assertThat(options.getCapability(CapabilityType.PROXY), is(notNullValue()));
     }
 
     @Test
-    public void shouldNotHaveChromeOptionsWhenAndroidIsNotEnabled() {
-        config.setAndroidEnabled(false);
-        final ChromeOptions options = config.createOptions();
-        org.hamcrest.MatcherAssert.assertThat(options.getCapability(ChromeOptions.CAPABILITY), Matchers.hasToString("{args=[], extensions=[]}"));
-    }
-
-    @Test
     public void shouldHaveChromeOptionsWhenRemoteIsEnabled() {
-        config.setHeadlessEnabled(true);
-        final ChromeOptions options = config.createOptions();
+        config.setHeadless(true);
+        final ChromeOptions options = config.createChromeOptions();
         @SuppressWarnings("unchecked")
 		Map<String,Object> capability = (Map<String,Object>) options.getCapability(ChromeOptions.CAPABILITY);
         assertThat(capability, is(notNullValue()));
 		@SuppressWarnings("unchecked")
 		List<String> args = (List<String>) capability.get("args");
         assertThat(args, is(notNullValue()));
-        assertEquals(2, args.size());
+        assertEquals(1, args.size());
         assertEquals("--headless", args.get(0));
-        assertEquals("--whitelisted-ips", args.get(1));
     }
 
     @Test
     public void shouldNotHaveChromeOptionsWhenRemoteIsNotEnabled() {
-        config.setAndroidEnabled(false);
-        final ChromeOptions options = config.createOptions();
+        final ChromeOptions options = config.createChromeOptions();
         org.hamcrest.MatcherAssert.assertThat(options.getCapability(ChromeOptions.CAPABILITY), Matchers.hasToString("{args=[], extensions=[]}"));
     }
 
     @Test
     public void shouldHaveInsecureCertsWhenInsecureCertsIsEnabled() {
-        config.setInsecureCertsEnabled(true);
-        final ChromeOptions options = config.createOptions();
+        config.setAcceptInsecureCerts(true);
+        final ChromeOptions options = config.createChromeOptions();
         assertThat((Boolean) options.getCapability("acceptInsecureCerts"), is(true));
     }
 
     @Test
     public void shouldNotHaveInsecureCertsWhenInsecureCertsIsNotEnabled() {
-        config.setInsecureCertsEnabled(false);
-        final ChromeOptions options = config.createOptions();
-        assertThat(options.getCapability("acceptInsecureCerts"), is(nullValue()));
-    }
-
-    @Test
-    public void shouldHaveAndroidConfigWhenAndroidIsEnabled() {
-        config.setAndroidEnabled(true);
-
-        final ChromeOptions chromeOptions = config.createOptions();
-		@SuppressWarnings("unchecked")
-		Map<String, Object> options = (Map<String, Object>) chromeOptions.getCapability(ChromeOptions.CAPABILITY);
-        assertThat("ChromeOption expected", options, is(notNullValue()));
-
-        final String androidConfig = (String) options.get("androidPackage");
-        assertThat(androidConfig, is("com.android.chrome"));
+        config.setAcceptInsecureCerts(false);
+        final ChromeOptions options = config.createChromeOptions();
+        assertThat(options.getCapability("acceptInsecureCerts"), is(false));
     }
 
     @Test
     public void getSetChromeDriverPath() {
-        config.setChromeDriverPath("some path");
-        assertThat(config.getChromeDriverPath(), is("some path"));
+        config.setDriverPath("some path");
+        assertThat(config.getDriverPath(), is("some path"));
     }
 
     @Test
@@ -230,50 +208,22 @@ public class ChromeDriverConfigTest {
     }
 
     @Test
-    public void getSetAndroidEnabled() {
-        assertThat(config.isAndroidEnabled(), is(false));
-        config.setAndroidEnabled(true);
-        assertThat(config.isAndroidEnabled(), is(true));
-    }
-
-    @Test
     public void getSetHeadlessEnabled() {
-        assertThat(config.isHeadlessEnabled(), is(false));
-        config.setHeadlessEnabled(true);
-        assertThat(config.isHeadlessEnabled(), is(true));
+        assertThat(config.isHeadless(), is(false));
+        config.setHeadless(true);
+        assertThat(config.isHeadless(), is(true));
     }
 
     @Test
     public void getSetInsecureCertsEnabled() {
-        assertThat(config.isInsecureCertsEnabled(), is(false));
-        config.setInsecureCertsEnabled(true);
-        assertThat(config.isInsecureCertsEnabled(), is(true));
-    }
-
-    @Test
-    public void getSetIncognitoEnabled() {
-        assertThat(config.isIncognitoEnabled(), is(false));
-        config.setIncognitoEnabled(true);
-        assertThat(config.isIncognitoEnabled(), is(true));
-    }
-
-    @Test
-    public void getSetNoSandboxEnabled() {
-        assertThat(config.isNoSandboxEnabled(), is(false));
-        config.setNoSandboxEnabled(true);
-        assertThat(config.isNoSandboxEnabled(), is(true));
+        assertThat(config.isAcceptInsecureCerts(), is(false));
+        config.setAcceptInsecureCerts(true);
+        assertThat(config.isAcceptInsecureCerts(), is(true));
     }
 
     @Test
     public void getSetAdditionalArgs() {
         config.setAdditionalArgs("additional args");
         assertThat(config.getAdditionalArgs(), is("additional args"));
-    }
-
-    @Test
-    public void getSetDisableDevShmUsageEnabled() {
-        assertThat(config.isDisableDevShmUsage(), is(false));
-        config.setDisableDevShmUsage(true);
-        assertThat(config.isDisableDevShmUsage(), is(true));
     }
 }
