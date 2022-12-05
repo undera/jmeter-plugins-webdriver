@@ -44,6 +44,11 @@ public class InternetExplorerDriverConfig extends WebDriverConfig<InternetExplor
             return service;
         }
         try {
+            /*
+             * For debugging purposes
+             * System.setProperty("webdriver.ie.driver.loglevel", "DEBUG");
+             * System.setProperty("webdriver.ie.driver.logfile", "C:\\DEV\\WebDriverIeDriver.log");        	
+             */
             service = new InternetExplorerDriverService.Builder().usingDriverExecutable(new File(getDriverPath())).build();
             service.start();
             services.put(currentThreadName(), service);

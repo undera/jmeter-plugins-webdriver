@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.NumberFormat;
 
 import javax.swing.BorderFactory;
@@ -61,7 +63,7 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements It
 	JTextField remoteSeleniumGridText;
 	JComboBox<?> capabilitiesComboBox;
 	JCheckBox localFileDetector;
-	JLabel errorMsg;
+	JLabel RemoteErrorMsg;
 
 	// Chrome variables
 	JTextField additionalArgs;
@@ -79,6 +81,8 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements It
     JCheckBox ensureCleanSession;
     JCheckBox ignoreProtectedMode;
     JCheckBox silent;
+	JTextField initialBrowserUrl;
+	JLabel IEerrorMsg;
 
 	// Proxy variables
 	JRadioButton autoDetectProxy;
@@ -179,8 +183,8 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements It
 			remoteSeleniumGridText.addFocusListener((FocusListener) this);
 			panel.add(remoteSeleniumGridText);
 
-			panel.add(errorMsg = new JLabel());
-			errorMsg.setForeground(Color.red);
+			panel.add(RemoteErrorMsg = new JLabel());
+			RemoteErrorMsg.setForeground(Color.red);
 
 			JLabel capabilitiesLabel = new JLabel();
 			capabilitiesLabel.setText("Capability");
@@ -265,6 +269,18 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements It
 
 	private JPanel crteIEOptionsPanel() {
 		final JPanel browserPanel = new VerticalPanel();
+
+		// Initial URL
+		JLabel initialUrlLabel = new JLabel();
+		initialUrlLabel.setText("Initial Browser URL");
+		browserPanel.add(initialUrlLabel);
+		initialBrowserUrl = new JTextField();
+		initialBrowserUrl.setEnabled(true);
+		initialBrowserUrl.addFocusListener((FocusListener) this);
+		browserPanel.add(initialBrowserUrl);
+
+		browserPanel.add(IEerrorMsg = new JLabel());
+		IEerrorMsg.setForeground(Color.red);
 
 		// fileUploadDialogTimeout
         JPanel fileUploadDialogTimeoutPanel = new HorizontalPanel();
@@ -462,6 +478,8 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements It
 	        ensureCleanSession.setSelected(false);
 	        ignoreProtectedMode.setSelected(false);
 	        silent.setSelected(false);
+	        // Set a default initial page that is valid otherwise IeDriver may hang on startup...
+	        initialBrowserUrl.setText("https://www.bing.com/");
 		}
 
 		// Proxy
@@ -531,6 +549,7 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements It
 	            ensureCleanSession.setSelected(webDriverConfig.isEnsureCleanSession());
 	            ignoreProtectedMode.setSelected(webDriverConfig.isIgnoreProtectedMode());
 	            silent.setSelected(webDriverConfig.isSilent());
+	            initialBrowserUrl.setText(webDriverConfig.getInitialIeUrl());
 			}
 
 			// Proxy
@@ -611,6 +630,7 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements It
 				webDriverConfig.setEnsureCleanSession(ensureCleanSession.isSelected());
 				webDriverConfig.setIgnoreProtectedMode(ignoreProtectedMode.isSelected());
 				webDriverConfig.setSilent(silent.isSelected());
+				webDriverConfig.setInitialIeUrl(initialBrowserUrl.getText());
 			}
 
 			// Proxy
@@ -641,5 +661,14 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements It
 		webDriverConfig.setSocksHost(socksProxyHost.getText());
 		webDriverConfig.setSocksPort(Integer.parseInt(socksProxyPort.getText()));
 		webDriverConfig.setNoProxyHost(noProxyList.getText());
+	}
+
+	public boolean isValidUrl(String urlStr) {
+		try {
+			new URL(urlStr);
+			return true;
+		} catch (MalformedURLException e) {
+			return false;
+		}
 	}
 }

@@ -1,6 +1,5 @@
 package com.googlecode.jmeter.plugins.webdriver.sampler;
 
-import junit.framework.TestCase;
 import org.junit.Test;
 
 public class SampleResultWithSubsTest {

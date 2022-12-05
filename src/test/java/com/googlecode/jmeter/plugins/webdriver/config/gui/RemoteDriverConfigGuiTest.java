@@ -96,7 +96,7 @@ public class RemoteDriverConfigGuiTest {
     	gui.remoteSeleniumGridText.setText("badURL");
     	FocusEvent focusEvent = new FocusEvent(gui.remoteSeleniumGridText, 1);
     	gui.focusLost(focusEvent);
-        assertEquals("The selenium grid URL is malformed", gui.errorMsg.getText());
+        assertEquals("The selenium grid URL is malformed", gui.RemoteErrorMsg.getText());
 	}
 
     @Test
@@ -105,7 +105,7 @@ public class RemoteDriverConfigGuiTest {
     	gui.remoteSeleniumGridText.setText("http://my.awesomegrid.com");
     	FocusEvent focusEvent = new FocusEvent(gui.remoteSeleniumGridText, 1);
     	gui.focusLost(focusEvent);
-        assertEquals("", gui.errorMsg.getText());
+        assertEquals("", gui.RemoteErrorMsg.getText());
 	}
     
     @Test

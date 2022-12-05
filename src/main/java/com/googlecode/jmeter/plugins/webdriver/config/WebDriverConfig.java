@@ -72,6 +72,7 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
     private static final String ENSURE_CLEAN_SESSION = "InternetExplorerDriverConfig.ensure_clean_session";
     private static final String IGNORE_PROTECTED_MODE = "InternetExplorerDriverConfig.ignore_protected_mode";
     private static final String SILENT = "InternetExplorerDriverConfig.silent";
+	private static final String INITIAL_IE_URL = "InternetExplorerDriverConfig.initial_browser_url";
 
 	// Constants for Proxy
 	private static final String PROXY_PAC_URL = "WebDriverConfig.proxy_pac_url";
@@ -369,8 +370,7 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
         // As of v4.5.0, IE Driver will automatically locate Edge on the system.
         options.attachToEdgeChrome();
         options.ignoreZoomSettings();	// always set otherwise driver may throw an exception
-        // Set an initial valid page otherwise IeDriver hangs on page load...
-        options.withInitialBrowserUrl("https://www.bing.com/");
+        options.withInitialBrowserUrl(getInitialIeUrl());
 
         // Other options
         options.waitForUploadDialogUpTo(Duration.ofMillis(getFileUploadDialogTimeout()));
@@ -600,6 +600,13 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
     public void setSilent(boolean state) {
         setProperty(SILENT, state);
     }
+
+	public String getInitialIeUrl() {
+		return getPropertyAsString(INITIAL_IE_URL);
+	}
+	public void setInitialIeUrl(String webUrl) {
+		setProperty(INITIAL_IE_URL, webUrl);
+	}
 
 	private String trimmed(String str) {
 		return null == str ? null : str.trim();

@@ -4,7 +4,6 @@ import com.googlecode.jmeter.plugins.webdriver.config.WebDriverConfig;
 import com.googlecode.jmeter.plugins.webdriver.proxy.ProxyType;
 import kg.apc.emulators.TestJMeterUtils;
 import org.apache.jmeter.gui.JMeterGUIComponent;
-import org.apache.jmeter.gui.util.VerticalPanel;
 import org.apache.jmeter.testelement.TestElement;
 import org.hamcrest.CoreMatchers;
 import org.junit.Before;
@@ -12,7 +11,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemListener;
 

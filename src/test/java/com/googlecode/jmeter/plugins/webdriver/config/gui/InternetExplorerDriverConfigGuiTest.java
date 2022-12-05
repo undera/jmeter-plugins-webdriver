@@ -1,6 +1,5 @@
 package com.googlecode.jmeter.plugins.webdriver.config.gui;
 
-import com.googlecode.jmeter.plugins.webdriver.config.ChromeDriverConfig;
 import com.googlecode.jmeter.plugins.webdriver.config.InternetExplorerDriverConfig;
 import kg.apc.emulators.TestJMeterUtils;
 import org.junit.Before;
@@ -8,7 +7,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+
+import java.awt.event.FocusEvent;
 
 public class InternetExplorerDriverConfigGuiTest {
 
@@ -79,6 +81,7 @@ public class InternetExplorerDriverConfigGuiTest {
         gui.ensureCleanSession.setSelected(true);
         gui.ignoreProtectedMode.setSelected(true);
         gui.silent.setSelected(true);
+        gui.initialBrowserUrl.setText("path");
 
         gui.clearGui();
 
@@ -86,6 +89,7 @@ public class InternetExplorerDriverConfigGuiTest {
         assertThat(gui.ensureCleanSession.isSelected(), is(false));
         assertThat(gui.ignoreProtectedMode.isSelected(), is(false));
         assertThat(gui.silent.isSelected(), is(false));
+        assertThat(gui.initialBrowserUrl.getText(), is("https://www.bing.com/"));
     }
 
     @Test
@@ -123,4 +127,20 @@ public class InternetExplorerDriverConfigGuiTest {
 
         assertThat(gui.silent.isSelected(), is(config.isSilent()));
     }
+
+    @Test
+	public void shouldFireAMessageWindowWhenTheFocusIsLost() throws Exception {
+        gui.IEerrorMsg.setText("badURL");
+        FocusEvent focusEvent = new FocusEvent(gui.IEerrorMsg, 1);
+        gui.focusLost(focusEvent);
+        assertEquals("The URL is malformed", gui.IEerrorMsg.getText());
+	}
+
+    @Test
+	public void shouldNotFireAMessageWindowWhenTheURLIsCorrect() throws Exception {
+        gui.IEerrorMsg.setText("http://my.awesomegrid.com");
+        FocusEvent focusEvent = new FocusEvent(gui.IEerrorMsg, 1);
+        gui.focusLost(focusEvent);
+        assertEquals("", gui.IEerrorMsg.getText());
+	}
 }
