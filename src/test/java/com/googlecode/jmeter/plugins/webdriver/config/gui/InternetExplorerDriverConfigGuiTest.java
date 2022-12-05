@@ -130,16 +130,16 @@ public class InternetExplorerDriverConfigGuiTest {
 
     @Test
 	public void shouldFireAMessageWindowWhenTheFocusIsLost() throws Exception {
-        gui.IEerrorMsg.setText("badURL");
-        FocusEvent focusEvent = new FocusEvent(gui.IEerrorMsg, 1);
+        gui.initialBrowserUrl.setText("badURL");
+        FocusEvent focusEvent = new FocusEvent(gui.initialBrowserUrl, 1);
         gui.focusLost(focusEvent);
         assertEquals("The URL is malformed", gui.IEerrorMsg.getText());
 	}
 
     @Test
 	public void shouldNotFireAMessageWindowWhenTheURLIsCorrect() throws Exception {
-        gui.IEerrorMsg.setText("http://my.awesomegrid.com");
-        FocusEvent focusEvent = new FocusEvent(gui.IEerrorMsg, 1);
+        gui.initialBrowserUrl.setText("http://my.awesomegrid.com");
+        FocusEvent focusEvent = new FocusEvent(gui.initialBrowserUrl, 1);
         gui.focusLost(focusEvent);
         assertEquals("", gui.IEerrorMsg.getText());
 	}

@@ -101,7 +101,6 @@ public class RemoteDriverConfigGuiTest {
 
     @Test
 	public void shouldNotFireAMessageWindowWhenTheURLIsCorrect() throws Exception {
-    	
     	gui.remoteSeleniumGridText.setText("http://my.awesomegrid.com");
     	FocusEvent focusEvent = new FocusEvent(gui.remoteSeleniumGridText, 1);
     	gui.focusLost(focusEvent);

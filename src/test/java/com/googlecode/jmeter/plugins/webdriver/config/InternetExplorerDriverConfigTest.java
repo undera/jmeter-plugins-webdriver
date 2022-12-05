@@ -183,14 +183,8 @@ public class InternetExplorerDriverConfigTest {
     }
 
     @Test
-    public void shouldThrowAnExceptionWhenTheURLIsMalformed() throws Exception {
-        try{
-            config.setInitialIeUrl("BadURL");
-            config.createBrowser();
-            fail();
-        } catch (Exception unit){
-            assertThat(unit, instanceOf(RuntimeException.class));
-            assertThat(unit.getMessage(), is("java.net.MalformedURLException: no protocol: BadURL"));
-        }
+    public void getSetInitialIeUrl() {
+        config.setInitialIeUrl("http://my.awesomegrid.com");
+        assertThat(config.getInitialIeUrl(), is("http://my.awesomegrid.com"));
 	}
 }
