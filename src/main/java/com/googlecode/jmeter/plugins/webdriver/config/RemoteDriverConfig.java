@@ -41,6 +41,9 @@ public class RemoteDriverConfig extends WebDriverConfig<RemoteWebDriver> {
 		case CHROME:
 			caps = createChromeOptions();
 			break;
+		case EDGE:
+			caps = createEdgeOptions();
+			break;
 		case FIREFOX:
 			caps = createFirefoxOptions();
 			break;

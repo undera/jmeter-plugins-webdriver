@@ -66,8 +66,12 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements It
 	JLabel RemoteErrorMsg;
 
 	// Chrome variables
-	JTextField additionalArgs;
-	JTextField binaryPath;
+	JTextField chromeAdditionalArgs;
+	JTextField chromeBinaryPath;
+
+	// Edge variables
+	JTextField edgeAdditionalArgs;
+	JTextField edgeBinaryPath;
 
 	// Firefox variables
 	JTextField userAgentOverrideText;
@@ -126,6 +130,11 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements It
 			tabbedPane.add("Options", crteChromeOptionsPanel());
 			break;
 
+		case "edge":
+			tabbedPane.add("Driver", createMainPanel());
+			tabbedPane.add("Options", crteEdgeOptionsPanel());
+			break;
+
 		case "firefox":
 			tabbedPane.add("Driver", createMainPanel());
 			tabbedPane.add("Options", crteFirefoxOptionsPanel());
@@ -143,6 +152,7 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements It
 		case "Remote":
 			tabbedPane.add("Remote", createMainPanel());
 			tabbedPane.add("Chrome", crteChromeOptionsPanel());
+			tabbedPane.add("Edge", crteEdgeOptionsPanel());
 			tabbedPane.add("Firefox", crteFirefoxOptionsPanel());
 			tabbedPane.add("IE", crteIEOptionsPanel());
 			break;
@@ -222,16 +232,36 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements It
 
 		final JPanel binaryPathPanel = new HorizontalPanel();
 		final JLabel binaryPathLabel = new JLabel("Binary (if in non-standard location)");
-		binaryPath = new JTextField("");
+		chromeBinaryPath = new JTextField("");
 		binaryPathPanel.add(binaryPathLabel);
-		binaryPathPanel.add(binaryPath);
+		binaryPathPanel.add(chromeBinaryPath);
 		browserPanel.add(binaryPathPanel);
 
 		final JPanel additionalArgsPanel = new HorizontalPanel();
 		final JLabel additionalArgsLabel = new JLabel("Additional arguments");
-		additionalArgs = new JTextField();
+		chromeAdditionalArgs = new JTextField();
 		additionalArgsPanel.add(additionalArgsLabel);
-		additionalArgsPanel.add(additionalArgs);
+		additionalArgsPanel.add(chromeAdditionalArgs);
+		browserPanel.add(additionalArgsPanel);
+
+		return browserPanel;
+	}
+
+	private JPanel crteEdgeOptionsPanel() {
+		final JPanel browserPanel = new VerticalPanel();
+
+		final JPanel binaryPathPanel = new HorizontalPanel();
+		final JLabel binaryPathLabel = new JLabel("Binary (if in non-standard location)");
+		edgeBinaryPath = new JTextField("");
+		binaryPathPanel.add(binaryPathLabel);
+		binaryPathPanel.add(edgeBinaryPath);
+		browserPanel.add(binaryPathPanel);
+
+		final JPanel additionalArgsPanel = new HorizontalPanel();
+		final JLabel additionalArgsLabel = new JLabel("Additional arguments");
+		edgeAdditionalArgs = new JTextField();
+		additionalArgsPanel.add(additionalArgsLabel);
+		additionalArgsPanel.add(edgeAdditionalArgs);
 		browserPanel.add(additionalArgsPanel);
 
 		return browserPanel;
@@ -461,8 +491,13 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements It
 		}
 
 		if ((browserName().equals("chrome")) || (browserName().equals("Remote"))) {
-			additionalArgs.setText("");
-			binaryPath.setText("");
+			chromeAdditionalArgs.setText("");
+			chromeBinaryPath.setText("");
+		}
+
+		if ((browserName().equals("edge")) || (browserName().equals("Remote"))) {
+			edgeAdditionalArgs.setText("");
+			edgeBinaryPath.setText("");
 		}
 
 		if ((browserName().equals("firefox")) || (browserName().equals("Remote"))) {
@@ -523,8 +558,14 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements It
 
 			// Chrome configs
 			if ((browserName().equals("chrome")) || (browserName().equals("Remote"))) {
-				additionalArgs.setText(webDriverConfig.getAdditionalArgs());
-				binaryPath.setText(webDriverConfig.getBinaryPath());
+				chromeAdditionalArgs.setText(webDriverConfig.getChromeAdditionalArgs());
+				chromeBinaryPath.setText(webDriverConfig.getChromeBinaryPath());
+			}
+
+			// Edge configs
+			if ((browserName().equals("edge")) || (browserName().equals("Remote"))) {
+				edgeAdditionalArgs.setText(webDriverConfig.getEdgeAdditionalArgs());
+				edgeBinaryPath.setText(webDriverConfig.getEdgeBinaryPath());
 			}
 
 			// Firefox configs
@@ -609,8 +650,14 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements It
 
 			// Chrome elements
 			if ((browserName().equals("chrome")) || (browserName().equals("Remote"))) {
-				webDriverConfig.setAdditionalArgs(additionalArgs.getText());
-				webDriverConfig.setBinaryPath(binaryPath.getText());
+				webDriverConfig.setChromeAdditionalArgs(chromeAdditionalArgs.getText());
+				webDriverConfig.setChromeBinaryPath(chromeBinaryPath.getText());
+			}
+
+			// Edge elements
+			if ((browserName().equals("edge")) || (browserName().equals("Remote"))) {
+				webDriverConfig.setEdgeAdditionalArgs(edgeAdditionalArgs.getText());
+				webDriverConfig.setEdgeBinaryPath(edgeBinaryPath.getText());
 			}
 
 			// Firefox elements

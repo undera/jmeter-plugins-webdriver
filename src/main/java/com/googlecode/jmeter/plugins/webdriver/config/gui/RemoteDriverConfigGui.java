@@ -69,7 +69,7 @@ public class RemoteDriverConfigGui extends WebDriverConfigGui implements ItemLis
 	public void clearGui() {
 		super.clearGui();
 		remoteSeleniumGridText.setText(StringUtils.EMPTY);
-		capabilitiesComboBox.setSelectedIndex(2);
+		capabilitiesComboBox.setSelectedIndex(1);
 		localFileDetector.setSelected(false);
 	}
 
