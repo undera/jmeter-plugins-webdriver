@@ -187,4 +187,10 @@ public class InternetExplorerDriverConfigTest {
         config.setInitialIeUrl("http://my.awesomegrid.com");
         assertThat(config.getInitialIeUrl(), is("http://my.awesomegrid.com"));
 	}
+
+    @Test
+    public void getSetFileUpload() {
+        config.setFileUploadDialogTimeout(300);
+        assertThat(config.getFileUploadDialogTimeout(), is(300));
+	}
 }

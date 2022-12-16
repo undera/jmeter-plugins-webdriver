@@ -32,9 +32,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeDriverService;
-import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeDriverService;
+import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.remote.CapabilityType;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -42,16 +42,16 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
 @PowerMockIgnore("javax.management.*")
-@PrepareForTest(ChromeDriverConfig.class)
+@PrepareForTest(EdgeDriverConfig.class)
 
-public class ChromeDriverConfigTest {
+public class EdgeDriverConfigTest {
 
-    private ChromeDriverConfig config;
+    private EdgeDriverConfig config;
     private JMeterVariables variables;
 
     @Before
     public void createConfig() {
-        config = new ChromeDriverConfig();
+        config = new EdgeDriverConfig();
         variables = new JMeterVariables();
         JMeterContextService.getContext().setVariables(variables);
     }
@@ -73,100 +73,100 @@ public class ChromeDriverConfigTest {
         output.close();
 
         ObjectInputStream input = new ObjectInputStream(new ByteArrayInputStream(bytes.toByteArray()));
-        final ChromeDriverConfig deserializedConfig = (ChromeDriverConfig) input.readObject();
+        final EdgeDriverConfig deserializedConfig = (EdgeDriverConfig) input.readObject();
 
         assertThat(deserializedConfig, is(config));
     }
 
     @Test
-    public void shouldCreateChromeAndStartService() throws Exception {
-        ChromeDriver mockChromeDriver = mock(ChromeDriver.class);
-        whenNew(ChromeDriver.class).withParameterTypes(ChromeDriverService.class, ChromeOptions.class).withArguments(isA(ChromeDriverService.class), isA(ChromeOptions.class)).thenReturn(mockChromeDriver);
-        ChromeDriverService.Builder mockServiceBuilder = mock(ChromeDriverService.Builder.class);
-        whenNew(ChromeDriverService.Builder.class).withNoArguments().thenReturn(mockServiceBuilder);
+    public void shouldCreateEdgeAndStartService() throws Exception {
+        EdgeDriver mockEdgeDriver = mock(EdgeDriver.class);
+        whenNew(EdgeDriver.class).withParameterTypes(EdgeDriverService.class, EdgeOptions.class).withArguments(isA(EdgeDriverService.class), isA(EdgeOptions.class)).thenReturn(mockEdgeDriver);
+        EdgeDriverService.Builder mockServiceBuilder = mock(EdgeDriverService.Builder.class);
+        whenNew(EdgeDriverService.Builder.class).withNoArguments().thenReturn(mockServiceBuilder);
         when(mockServiceBuilder.usingDriverExecutable(isA(File.class))).thenReturn(mockServiceBuilder);
-        ChromeDriverService mockService = mock(ChromeDriverService.class);
+        EdgeDriverService mockService = mock(EdgeDriverService.class);
         when(mockServiceBuilder.build()).thenReturn(mockService);
 
-        final ChromeDriver browser = config.createBrowser();
+        final EdgeDriver browser = config.createBrowser();
 
-        assertThat(browser, is(mockChromeDriver));
-        verifyNew(ChromeDriver.class, times(1)).withArguments(isA(ChromeDriverService.class), isA(ChromeOptions.class));
+        assertThat(browser, is(mockEdgeDriver));
+        verifyNew(EdgeDriver.class, times(1)).withArguments(isA(EdgeDriverService.class), isA(EdgeOptions.class));
         verify(mockServiceBuilder, times(1)).build();
         assertThat(config.getServices().size(), is(1));
         assertThat(config.getServices().values(), hasItem(mockService));
     }
 
     @Test
-    public void shouldNotCreateChromeWhenStartingServiceThrowsAnException() throws Exception {
-        ChromeDriverService.Builder mockServiceBuilder = mock(ChromeDriverService.Builder.class);
-        whenNew(ChromeDriverService.Builder.class).withNoArguments().thenReturn(mockServiceBuilder);
+    public void shouldNotCreateEdgeWhenStartingServiceThrowsAnException() throws Exception {
+        EdgeDriverService.Builder mockServiceBuilder = mock(EdgeDriverService.Builder.class);
+        whenNew(EdgeDriverService.Builder.class).withNoArguments().thenReturn(mockServiceBuilder);
         when(mockServiceBuilder.usingDriverExecutable(isA(File.class))).thenReturn(mockServiceBuilder);
-        ChromeDriverService mockService = mock(ChromeDriverService.class);
+        EdgeDriverService mockService = mock(EdgeDriverService.class);
         when(mockServiceBuilder.build()).thenReturn(mockService);
         doThrow(new IOException("Stubbed exception")).when(mockService).start();
 
-        final ChromeDriver browser = config.createBrowser();
+        final EdgeDriver browser = config.createBrowser();
 
         assertThat(browser, is(nullValue()));
-        assertThat(config.getServices(), is(Collections.<String, ChromeDriverService>emptyMap()));
+        assertThat(config.getServices(), is(Collections.<String, EdgeDriverService>emptyMap()));
         verify(mockServiceBuilder, times(1)).build();
     }
 
     @Test
     public void shouldQuitWebDriverAndStopServiceWhenQuitBrowserIsInvoked() throws Exception {
-        ChromeDriver mockChromeDriver = mock(ChromeDriver.class);
-        ChromeDriverService mockService = mock(ChromeDriverService.class);
+        EdgeDriver mockEdgeDriver = mock(EdgeDriver.class);
+        EdgeDriverService mockService = mock(EdgeDriverService.class);
         when(mockService.isRunning()).thenReturn(true);
         config.getServices().put(config.currentThreadName(), mockService);
 
-        config.quitBrowser(mockChromeDriver);
+        config.quitBrowser(mockEdgeDriver);
 
-        verify(mockChromeDriver).quit();
-        assertThat(config.getServices(), is(Collections.<String, ChromeDriverService>emptyMap()));
+        verify(mockEdgeDriver).quit();
+        assertThat(config.getServices(), is(Collections.<String, EdgeDriverService>emptyMap()));
         verify(mockService, times(1)).stop();
     }
 
     @Test
     public void shouldNotStopServiceIfNotRunningWhenQuitBrowserIsInvoked() throws Exception {
-        ChromeDriver mockChromeDriver = mock(ChromeDriver.class);
-        ChromeDriverService mockService = mock(ChromeDriverService.class);
+        EdgeDriver mockEdgeDriver = mock(EdgeDriver.class);
+        EdgeDriverService mockService = mock(EdgeDriverService.class);
         when(mockService.isRunning()).thenReturn(false);
         config.getServices().put(config.currentThreadName(), mockService);
 
-        config.quitBrowser(mockChromeDriver);
+        config.quitBrowser(mockEdgeDriver);
 
-        verify(mockChromeDriver).quit();
-        assertThat(config.getServices(), is(Collections.<String, ChromeDriverService>emptyMap()));
+        verify(mockEdgeDriver).quit();
+        assertThat(config.getServices(), is(Collections.<String, EdgeDriverService>emptyMap()));
         verify(mockService, times(0)).stop();
     }
 
     @Test
     public void shouldBeAbleToCallQuitBrowserMultipleTimes() throws Exception {
-        ChromeDriver mockChromeDriver = mock(ChromeDriver.class);
-        ChromeDriverService mockService = mock(ChromeDriverService.class);
+        EdgeDriver mockEdgeDriver = mock(EdgeDriver.class);
+        EdgeDriverService mockService = mock(EdgeDriverService.class);
         when(mockService.isRunning()).thenReturn(true);
         config.getServices().put(config.currentThreadName(), mockService);
 
-        config.quitBrowser(mockChromeDriver);
-        config.quitBrowser(mockChromeDriver);
+        config.quitBrowser(mockEdgeDriver);
+        config.quitBrowser(mockEdgeDriver);
 
-        assertThat(config.getServices(), is(Collections.<String, ChromeDriverService>emptyMap()));
+        assertThat(config.getServices(), is(Collections.<String, EdgeDriverService>emptyMap()));
         verify(mockService, times(1)).stop();
     }
 
     @Test
     public void shouldHaveProxyInCapability() {
-        final ChromeOptions options = config.createChromeOptions();
+        final EdgeOptions options = config.createEdgeOptions();
         assertThat(options.getCapability(CapabilityType.PROXY), is(notNullValue()));
     }
 
     @Test
-    public void shouldHaveChromeOptionsWhenRemoteIsEnabled() {
+    public void shouldHaveEdgeOptionsWhenRemoteIsEnabled() {
         config.setHeadless(true);
-        final ChromeOptions options = config.createChromeOptions();
+        final EdgeOptions options = config.createEdgeOptions();
         @SuppressWarnings("unchecked")
-		Map<String,Object> capability = (Map<String,Object>) options.getCapability(ChromeOptions.CAPABILITY);
+		Map<String,Object> capability = (Map<String,Object>) options.getCapability(EdgeOptions.CAPABILITY);
         assertThat(capability, is(notNullValue()));
 		@SuppressWarnings("unchecked")
 		List<String> args = (List<String>) capability.get("args");
@@ -176,35 +176,35 @@ public class ChromeDriverConfigTest {
     }
 
     @Test
-    public void shouldNotHaveChromeOptionsWhenRemoteIsNotEnabled() {
-        final ChromeOptions options = config.createChromeOptions();
-        org.hamcrest.MatcherAssert.assertThat(options.getCapability(ChromeOptions.CAPABILITY), Matchers.hasToString("{args=[], extensions=[]}"));
+    public void shouldNotHaveEdgeOptionsWhenRemoteIsNotEnabled() {
+        final EdgeOptions options = config.createEdgeOptions();
+        org.hamcrest.MatcherAssert.assertThat(options.getCapability(EdgeOptions.CAPABILITY), Matchers.hasToString("{args=[], extensions=[]}"));
     }
 
     @Test
     public void shouldHaveInsecureCertsWhenInsecureCertsIsEnabled() {
         config.setAcceptInsecureCerts(true);
-        final ChromeOptions options = config.createChromeOptions();
+        final EdgeOptions options = config.createEdgeOptions();
         assertThat((Boolean) options.getCapability("acceptInsecureCerts"), is(true));
     }
 
     @Test
     public void shouldNotHaveInsecureCertsWhenInsecureCertsIsNotEnabled() {
         config.setAcceptInsecureCerts(false);
-        final ChromeOptions options = config.createChromeOptions();
+        final EdgeOptions options = config.createEdgeOptions();
         assertThat(options.getCapability("acceptInsecureCerts"), is(false));
     }
 
     @Test
-    public void getSetChromeDriverPath() {
+    public void getSetEdgeDriverPath() {
         config.setDriverPath("some path");
         assertThat(config.getDriverPath(), is("some path"));
     }
 
     @Test
     public void getSetBinaryPath() {
-        config.setChromeBinaryPath("some/path");
-        assertThat(config.getChromeBinaryPath(), is("some/path"));
+        config.setEdgeBinaryPath("some/path");
+        assertThat(config.getEdgeBinaryPath(), is("some/path"));
     }
 
     @Test
@@ -223,7 +223,7 @@ public class ChromeDriverConfigTest {
 
     @Test
     public void getSetAdditionalArgs() {
-        config.setChromeAdditionalArgs("additional args");
-        assertThat(config.getChromeAdditionalArgs(), is("additional args"));
+        config.setEdgeAdditionalArgs("additional args");
+        assertThat(config.getEdgeAdditionalArgs(), is("additional args"));
     }
 }

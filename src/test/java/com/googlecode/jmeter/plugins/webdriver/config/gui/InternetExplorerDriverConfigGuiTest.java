@@ -82,6 +82,7 @@ public class InternetExplorerDriverConfigGuiTest {
         gui.ignoreProtectedMode.setSelected(true);
         gui.silent.setSelected(true);
         gui.initialBrowserUrl.setText("path");
+        gui.fileUploadDialogTimeout.setText("300");
 
         gui.clearGui();
 
@@ -90,6 +91,7 @@ public class InternetExplorerDriverConfigGuiTest {
         assertThat(gui.ignoreProtectedMode.isSelected(), is(false));
         assertThat(gui.silent.isSelected(), is(false));
         assertThat(gui.initialBrowserUrl.getText(), is("https://www.bing.com/"));
+        assertThat(gui.fileUploadDialogTimeout.getText(), is("1000"));
     }
 
     @Test
@@ -99,6 +101,15 @@ public class InternetExplorerDriverConfigGuiTest {
         gui.configure(config);
 
         assertThat(gui.driverPath.getText(), is(config.getDriverPath()));
+    }
+
+    @Test
+    public void shouldSetFileUploadDialogTimeoutOnConfigure() {
+        InternetExplorerDriverConfig config = new InternetExplorerDriverConfig();
+        config.setFileUploadDialogTimeout(300);
+        gui.configure(config);
+
+        assertThat(gui.fileUploadDialogTimeout.getText(), is(String.valueOf(config.getFileUploadDialogTimeout())));
     }
 
     @Test

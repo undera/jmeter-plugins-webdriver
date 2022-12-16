@@ -9,13 +9,13 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.googlecode.jmeter.plugins.webdriver.config.ChromeDriverConfig;
+import com.googlecode.jmeter.plugins.webdriver.config.EdgeDriverConfig;
 
 import kg.apc.emulators.TestJMeterUtils;
 
-public class ChromeDriverConfigGuiTest {
+public class EdgeDriverConfigGuiTest {
 
-    private ChromeDriverConfigGui gui;
+    private EdgeDriverConfigGui gui;
 
     @BeforeClass
     public static void setupJMeterEnv() {
@@ -24,12 +24,12 @@ public class ChromeDriverConfigGuiTest {
 
     @Before
     public void createConfig() {
-        gui = new ChromeDriverConfigGui();
+        gui = new EdgeDriverConfigGui();
     }
 
     @Test
     public void shouldReturnStaticLabel() {
-        assertThat(gui.getStaticLabel(), containsString("Chrome Driver Config"));
+        assertThat(gui.getStaticLabel(), containsString("Edge Driver Config"));
     }
 
     @Test
@@ -43,58 +43,58 @@ public class ChromeDriverConfigGuiTest {
     }
 
     @Test
-    public void shouldReturnChromeDriverConfig() {
-        assertThat(gui.createTestElement(), is(instanceOf(ChromeDriverConfig.class)));
+    public void shouldReturnEdgeDriverConfig() {
+        assertThat(gui.createTestElement(), is(instanceOf(EdgeDriverConfig.class)));
     }
 
     @Test
-    public void shouldSetChromeDriverPath() {
-        gui.driverPath.setText("chromedriver");
-        final ChromeDriverConfig testElement = (ChromeDriverConfig) gui.createTestElement();
-        assertThat(testElement.getDriverPath(), is("chromedriver"));
+    public void shouldSetEdgeDriverPath() {
+        gui.driverPath.setText("edgedriver");
+        final EdgeDriverConfig testElement = (EdgeDriverConfig) gui.createTestElement();
+        assertThat(testElement.getDriverPath(), is("edgedriver"));
     }
 
     @Test
     public void shouldSetHeadlessEnabled() {
         gui.headless.setSelected(true);
-        final ChromeDriverConfig testElement = (ChromeDriverConfig) gui.createTestElement();
+        final EdgeDriverConfig testElement = (EdgeDriverConfig) gui.createTestElement();
         assertThat(testElement.isHeadless(), is(true));
     }
 
     @Test
     public void shouldSetInsecureCertsEnabled() {
         gui.acceptInsecureCerts.setSelected(true);
-        final ChromeDriverConfig testElement = (ChromeDriverConfig) gui.createTestElement();
+        final EdgeDriverConfig testElement = (EdgeDriverConfig) gui.createTestElement();
         assertThat(testElement.isAcceptInsecureCerts(), is(true));
     }
 
     @Test
     public void shouldSetAdditionalArgs() {
-        gui.chromeAdditionalArgs.setText("additionalArgs");
-        final ChromeDriverConfig testElement = (ChromeDriverConfig) gui.createTestElement();
-        assertThat(testElement.getChromeAdditionalArgs(), is("additionalArgs"));
+        gui.edgeAdditionalArgs.setText("additionalArgs");
+        final EdgeDriverConfig testElement = (EdgeDriverConfig) gui.createTestElement();
+        assertThat(testElement.getEdgeAdditionalArgs(), is("additionalArgs"));
     }
 
     @Test
     public void shouldResetValuesOnClearGui() {
         gui.driverPath.setText("path");
-        gui.chromeBinaryPath.setText("path/binary");
+        gui.edgeBinaryPath.setText("path/binary");
         gui.headless.setSelected(true);
         gui.acceptInsecureCerts.setSelected(true);
-        gui.chromeAdditionalArgs.setText("additional");
+        gui.edgeAdditionalArgs.setText("additional");
 
         gui.clearGui();
 
         assertThat(gui.driverPath.getText(), is("path to driver.exe of the relevant browser"));
         assertThat(gui.headless.isSelected(), is(false));
         assertThat(gui.acceptInsecureCerts.isSelected(), is(false));
-        assertThat(gui.chromeAdditionalArgs.getText(), is(""));
+        assertThat(gui.edgeAdditionalArgs.getText(), is(""));
     }
 
     @Test
-    public void shouldSetChromeDriverPathOnConfigure() {
-        ChromeDriverConfig config = new ChromeDriverConfig();
-        config.setDriverPath("chromedriver.path");
+    public void shouldSetEdgeDriverPathOnConfigure() {
+        EdgeDriverConfig config = new EdgeDriverConfig();
+        config.setDriverPath("edgedriver.path");
         gui.configure(config);
 
         assertThat(gui.driverPath.getText(), is(config.getDriverPath()));
@@ -102,16 +102,16 @@ public class ChromeDriverConfigGuiTest {
 
     @Test
     public void shouldSetBinaryPathOnConfigure() {
-        ChromeDriverConfig config = new ChromeDriverConfig();
-        config.setChromeBinaryPath("chromedriver.binary_path");
+        EdgeDriverConfig config = new EdgeDriverConfig();
+        config.setEdgeBinaryPath("edgedriver.binary_path");
         gui.configure(config);
 
-        assertThat(gui.chromeBinaryPath.getText(), is(config.getChromeBinaryPath()));
+        assertThat(gui.edgeBinaryPath.getText(), is(config.getEdgeBinaryPath()));
     }
 
     @Test
     public void shouldSetHeadlessEnabledOnConfigure() {
-        ChromeDriverConfig config = new ChromeDriverConfig();
+        EdgeDriverConfig config = new EdgeDriverConfig();
         config.setHeadless(true);
         gui.configure(config);
 
@@ -120,7 +120,7 @@ public class ChromeDriverConfigGuiTest {
 
     @Test
     public void shouldSetInsecureCertsEnabledOnConfigure() {
-        ChromeDriverConfig config = new ChromeDriverConfig();
+        EdgeDriverConfig config = new EdgeDriverConfig();
         config.setAcceptInsecureCerts(true);
         gui.configure(config);
 
@@ -135,9 +135,9 @@ public class ChromeDriverConfigGuiTest {
 
     @Test
     public void shouldSetAdditionalArgsOnConfigure() {
-        ChromeDriverConfig config = new ChromeDriverConfig();
-        config.setChromeAdditionalArgs("chromedriver.additional_args");
+        EdgeDriverConfig config = new EdgeDriverConfig();
+        config.setEdgeAdditionalArgs("edgedriver.additional_args");
         gui.configure(config);
-       assertThat(gui.chromeAdditionalArgs.getText(), is(config.getChromeAdditionalArgs()));
+       assertThat(gui.edgeAdditionalArgs.getText(), is(config.getEdgeAdditionalArgs()));
     }
 }
