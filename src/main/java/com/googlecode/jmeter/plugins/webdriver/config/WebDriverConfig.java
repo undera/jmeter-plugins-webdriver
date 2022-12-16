@@ -396,7 +396,6 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
         // Settings to launch Microsoft Edge in IE mode
         // As of v4.5.0, IE Driver will automatically locate Edge on the system.
         options.attachToEdgeChrome();
-        options.ignoreZoomSettings();	// always set otherwise driver may throw an exception
         options.withInitialBrowserUrl(getInitialIeUrl());
 
         // Other options
