@@ -19,6 +19,7 @@ import org.openqa.selenium.Proxy;
 import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerOptions;
@@ -57,8 +58,12 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
 	private static final String DEV_MODE = "WebDriverConfig.dev_mode";
 
 	// Constants for Chrome
-	private static final String ADDITIONAL_ARGS = "ChromeDriverConfig.additional_args";
-	private static final String BINARY_PATH = "ChromeDriverConfig.binary_path";
+	private static final String CHROME_ADDITIONAL_ARGS = "ChromeDriverConfig.additional_args";
+	private static final String CHROME_BINARY_PATH = "ChromeDriverConfig.binary_path";
+
+	// Constants for Edge
+	private static final String EDGE_ADDITIONAL_ARGS = "EdgeDriverConfig.additional_args";
+	private static final String EDGE_BINARY_PATH = "EdgeDriverConfig.binary_path";
 
 	// Constants for Firefox
     private static final String GENERAL_USERAGENT_OVERRIDE = "FirefoxDriverConfig.general.useragent.override";
@@ -72,6 +77,7 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
     private static final String ENSURE_CLEAN_SESSION = "InternetExplorerDriverConfig.ensure_clean_session";
     private static final String IGNORE_PROTECTED_MODE = "InternetExplorerDriverConfig.ignore_protected_mode";
     private static final String SILENT = "InternetExplorerDriverConfig.silent";
+	private static final String INITIAL_IE_URL = "InternetExplorerDriverConfig.initial_browser_url";
 
 	// Constants for Proxy
 	private static final String PROXY_PAC_URL = "WebDriverConfig.proxy_pac_url";
@@ -269,13 +275,40 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
 		}
         options.setHeadless(isHeadless());
 
-		String additionalArgs = trimmed(getAdditionalArgs());
+		String additionalArgs = trimmed(getChromeAdditionalArgs());
 		if (null != additionalArgs && !additionalArgs.isEmpty()) {
 			options.addArguments(additionalArgs.split("\\s+"));
 		}
 
 		// Starting browser in a specified location
-		String binaryPath = trimmed(getBinaryPath());
+		String binaryPath = trimmed(getChromeBinaryPath());
+		if (null != binaryPath && !binaryPath.isEmpty()) {
+			options.setBinary(binaryPath);
+		}
+
+		// Capabilities shared by all browsers
+		setSharedCaps(options);
+
+		return options;
+	}
+
+	protected EdgeOptions createEdgeOptions() {
+		EdgeOptions options = new EdgeOptions();
+
+		// Custom Edge capabilities
+		// Arguments
+		if (isBrowserMaximized()) {
+			options.addArguments("--start-maximized");
+		}
+        options.setHeadless(isHeadless());
+
+		String additionalArgs = trimmed(getEdgeAdditionalArgs());
+		if (null != additionalArgs && !additionalArgs.isEmpty()) {
+			options.addArguments(additionalArgs.split("\\s+"));
+		}
+
+		// Starting browser in a specified location
+		String binaryPath = trimmed(getEdgeBinaryPath());
 		if (null != binaryPath && !binaryPath.isEmpty()) {
 			options.setBinary(binaryPath);
 		}
@@ -292,11 +325,6 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
 		// Custom Firefox capabilities
         options.setHeadless(isHeadless());
         options.setProfile(createProfile());
-
-		String additionalArgs = trimmed(getAdditionalArgs());
-		if (null != additionalArgs && !additionalArgs.isEmpty()) {
-			options.addArguments(additionalArgs.split("\\s+"));
-		}
 
 		// Capabilities shared by all browsers
 		setSharedCaps(options);
@@ -368,9 +396,7 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
         // Settings to launch Microsoft Edge in IE mode
         // As of v4.5.0, IE Driver will automatically locate Edge on the system.
         options.attachToEdgeChrome();
-        options.ignoreZoomSettings();	// always set otherwise driver may throw an exception
-        // Set an initial valid page otherwise IeDriver hangs on page load...
-        options.withInitialBrowserUrl("https://www.bing.com/");
+        options.withInitialBrowserUrl(getInitialIeUrl());
 
         // Other options
         options.waitForUploadDialogUpTo(Duration.ofMillis(getFileUploadDialogTimeout()));
@@ -396,11 +422,18 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
 		caps.setProxy(createProxy());
 	}
 
-	public String getBinaryPath() {
-		return getPropertyAsString(BINARY_PATH);
+	public String getChromeBinaryPath() {
+		return getPropertyAsString(CHROME_BINARY_PATH);
 	}
-	public void setBinaryPath(String binaryPath) {
-		setProperty(BINARY_PATH, binaryPath);
+	public void setChromeBinaryPath(String binaryPath) {
+		setProperty(CHROME_BINARY_PATH, binaryPath);
+	}
+
+	public String getEdgeBinaryPath() {
+		return getPropertyAsString(EDGE_BINARY_PATH);
+	}
+	public void setEdgeBinaryPath(String binaryPath) {
+		setProperty(EDGE_BINARY_PATH, binaryPath);
 	}
 
 	public String getDriverPath() {
@@ -410,11 +443,18 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
 		setProperty(DRIVER_PATH, path);
 	}
 
-	public String getAdditionalArgs() {
-		return getPropertyAsString(ADDITIONAL_ARGS);
+	public String getChromeAdditionalArgs() {
+		return getPropertyAsString(CHROME_ADDITIONAL_ARGS);
 	}
-	public void setAdditionalArgs(String additionalArgs) {
-		setProperty(ADDITIONAL_ARGS, additionalArgs);
+	public void setChromeAdditionalArgs(String additionalArgs) {
+		setProperty(CHROME_ADDITIONAL_ARGS, additionalArgs);
+	}
+
+	public String getEdgeAdditionalArgs() {
+		return getPropertyAsString(EDGE_ADDITIONAL_ARGS);
+	}
+	public void setEdgeAdditionalArgs(String additionalArgs) {
+		setProperty(EDGE_ADDITIONAL_ARGS, additionalArgs);
 	}
 
 	public String getFtpHost() {
@@ -600,6 +640,13 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
     public void setSilent(boolean state) {
         setProperty(SILENT, state);
     }
+
+	public String getInitialIeUrl() {
+		return getPropertyAsString(INITIAL_IE_URL);
+	}
+	public void setInitialIeUrl(String webUrl) {
+		setProperty(INITIAL_IE_URL, webUrl);
+	}
 
 	private String trimmed(String str) {
 		return null == str ? null : str.trim();

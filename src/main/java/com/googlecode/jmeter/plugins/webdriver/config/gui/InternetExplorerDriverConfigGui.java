@@ -1,21 +1,17 @@
 package com.googlecode.jmeter.plugins.webdriver.config.gui;
 
-import java.text.NumberFormat;
-
-import javax.swing.JCheckBox;
-import javax.swing.JFormattedTextField;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import kg.apc.jmeter.JMeterPluginsUtils;
 
-import org.apache.jmeter.gui.util.HorizontalPanel;
-import org.apache.jmeter.gui.util.VerticalPanel;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.ItemListener;
+
 import org.apache.jmeter.testelement.TestElement;
 
 import com.googlecode.jmeter.plugins.webdriver.config.InternetExplorerDriverConfig;
 import com.googlecode.jmeter.plugins.webdriver.config.WebDriverConfig;
 
-public class InternetExplorerDriverConfigGui extends WebDriverConfigGui {
+public class InternetExplorerDriverConfigGui extends WebDriverConfigGui implements ItemListener, FocusListener {
 
     private static final long serialVersionUID = 100L;
 
@@ -71,4 +67,18 @@ public class InternetExplorerDriverConfigGui extends WebDriverConfigGui {
     public void configure(TestElement element) {
         super.configure(element);
     }
+
+    @Override
+	public void focusGained(FocusEvent e) {
+		// Nothing to do
+	}
+
+    @Override
+	public void focusLost(FocusEvent e) {
+		if (initialBrowserUrl.equals(e.getComponent()) && !isValidUrl(initialBrowserUrl.getText())) {
+			IEerrorMsg.setText("The URL is malformed");
+		} else {
+			IEerrorMsg.setText("");
+		}
+	}
 }

@@ -22,8 +22,6 @@ public class RemoteDriverConfig extends WebDriverConfig<RemoteWebDriver> {
 	@Override
 	protected RemoteWebDriver createBrowser() {
 		try {
-			// We pass the browser option instance to the remote so it can determine which
-			// browser to use
 			RemoteWebDriver driver = new RemoteWebDriver(new URL(getSeleniumGridUrl()), createCapabilities());
 			if (isLocalFileDectedor()) {
 				driver.setFileDetector(new LocalFileDetector());
@@ -36,10 +34,14 @@ public class RemoteDriverConfig extends WebDriverConfig<RemoteWebDriver> {
 	}
 
 	Capabilities createCapabilities() {
+		// We pass the browser option instance to the remote so it knows which browser to use
 		AbstractDriverOptions<?> caps = null;
 		switch (getCapability()) {
 		case CHROME:
 			caps = createChromeOptions();
+			break;
+		case EDGE:
+			caps = createEdgeOptions();
 			break;
 		case FIREFOX:
 			caps = createFirefoxOptions();

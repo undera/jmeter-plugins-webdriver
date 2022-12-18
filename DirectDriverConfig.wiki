@@ -4,13 +4,14 @@ These configurations are suited when you want to test desktop browsers on the sa
 
 For an overview of performing client side performance testing, refer to the [[WebDriverTutorial.wiki|Web Driver Tutorial]].
 
-At the time of writing, four types of browsers are supported by JMeter Web Driver plugin:
+At the time of writing, five types of browsers are supported by JMeter Web Driver plugin:
 * Chrome (Chrome Driver Config);
+* Edge (Edge Driver Config);
 * Firefox (Firefox Driver Config);
 * Internet Explorer (InternetExplorer Driver Config);
 * HtmlUnit (HtmlUnit Driver Config), a GUI-Less browser;
 
-For Internet Explorer, the system will start Edge in "IE Mode" as Internet Explorer is now deprecated as of June 2022. Upon start-up, IE will load "http://wwww.bing.com". So ensure the browser can access this url otherwise the driver will fail.
+For Internet Explorer, the system will start Edge in "IE Mode" as Internet Explorer is now deprecated as of June 2022. 
 
 HtmlUnit is a good compromise between speed of execution and the CPU usage per thread while maintaining Selenium API.
 The main drawback is that there is no screen so it's more difficult to understand the cause of problems and also that the javascript engine is not powerful as browsers such Firefox or Chrome.
@@ -40,6 +41,11 @@ In the Options tab of Chrome for instance, you can specify the location of a Chr
 
 You can find more information on the Chrome options presented in this tab at [https://chromedriver.chromium.org/capabilities Capabilities & ChromeOptions].
 
+=== Edge ===
+In the Options tab of Edge, you can specify the path to a fixed Edge version to use in case you want to test a different version of the default one on your PC. Leave this field blank if you are happy to test the Edge that is defined in your path variable.
+
+You can find more information on the Edge options presented in this tab at [https://learn.microsoft.com/en-us/microsoft-edge/webdriver-chromium/capabilities-edge-options Capabilities & EdgeOptions]
+
 === Firefox ===
 In the Options tab of Firefox, you can override the user agent of Firefox. To do so, check the 'Override User Agent' checkbox and then paste in the user agent string to use. The UserAgentString.com site has an [https://www.useragentstring.com/pages/useragentstring.php extensive list of user agent strings].
 
@@ -48,7 +54,9 @@ There is also an option to enable NTLM.
 You can find more information on the Firefox options presented in this tab at [https://developer.mozilla.org/en-US/docs/Web/WebDriver/Capabilities/firefoxOptions firefoxOptions].
 
 === Internet Explorer ===
-You can find more information on the IE options presented in this tab at [https://www.selenium.dev/documentation/webdriver/browsers/internet_explorer/ IE specific functionality]
+In this tab, specify the url IE will load on start-up. By default, it will go to "https://wwww.bing.com".
+
+You can find information on the other options presented in this tab at [https://www.selenium.dev/documentation/webdriver/browsers/internet_explorer/ IE specific functionality]
 
 == Proxy Tab ==
 The default configuration (Use system proxy) is suitable for most. However, if you are in a corporate environment and a browser fails to connect to a URL, this is most likely because the environmemt needs a proxy to be accessed.
