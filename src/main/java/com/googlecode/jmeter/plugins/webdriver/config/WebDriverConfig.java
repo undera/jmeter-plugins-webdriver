@@ -273,7 +273,9 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
 		if (isBrowserMaximized()) {
 			options.addArguments("--start-maximized");
 		}
-        options.setHeadless(isHeadless());
+		if (isHeadless()) {
+			options.addArguments("--headless=new");
+		}
 
 		String additionalArgs = trimmed(getChromeAdditionalArgs());
 		if (null != additionalArgs && !additionalArgs.isEmpty()) {
@@ -300,7 +302,9 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
 		if (isBrowserMaximized()) {
 			options.addArguments("--start-maximized");
 		}
-        options.setHeadless(isHeadless());
+		if (isHeadless()) {
+			options.addArguments("--headless=new");
+		}
 
 		String additionalArgs = trimmed(getEdgeAdditionalArgs());
 		if (null != additionalArgs && !additionalArgs.isEmpty()) {
@@ -323,7 +327,9 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
 		FirefoxOptions options = new FirefoxOptions();
 
 		// Custom Firefox capabilities
-        options.setHeadless(isHeadless());
+		if (isHeadless()) {
+			options.addArguments("--headless");
+		}
         options.setProfile(createProfile());
 
 		// Capabilities shared by all browsers
