@@ -210,11 +210,12 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements It
 		panel.add(acceptInsecureCerts);
 
 		if (!(browserName().equals("HtmlUnit"))) {
-			headless = new JCheckBox("Headless");
-			headless.setSelected(false);
-			headless.setEnabled(true);
-			panel.add(headless);
-
+			if (!(browserName().equals("internet explorer"))) {
+				headless = new JCheckBox("Headless");
+				headless.setSelected(false);
+				headless.setEnabled(true);
+				panel.add(headless);
+			}
 			maximizeBrowser = new JCheckBox("Maximize browser window");
 			maximizeBrowser.setSelected(true);
 			panel.add(maximizeBrowser);
@@ -486,8 +487,10 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements It
 		}
 
 		if (!(browserName().equals("HtmlUnit"))) {
+			if (!(browserName().equals("internet explorer"))) {
+				headless.setSelected(false);
+			}
 			maximizeBrowser.setSelected(true);
-			headless.setSelected(false);
 		}
 
 		if ((browserName().equals("chrome")) || (browserName().equals("Remote"))) {
@@ -552,7 +555,9 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements It
 			}
 
 			if (!(browserName().equals("HtmlUnit"))) {
-				headless.setSelected(webDriverConfig.isHeadless());
+				if (!(browserName().equals("internet explorer"))) {
+					headless.setSelected(webDriverConfig.isHeadless());
+				}
 				maximizeBrowser.setSelected(webDriverConfig.isBrowserMaximized());
 			}
 
@@ -644,8 +649,10 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements It
 			}
 
 			if (!(browserName().equals("HtmlUnit"))) {
+				if (!(browserName().equals("internet explorer"))) {
+					webDriverConfig.setHeadless(headless.isSelected());
+				}
 				webDriverConfig.setBrowserMaximized(maximizeBrowser.isSelected());
-				webDriverConfig.setHeadless(headless.isSelected());
 			}
 
 			// Chrome elements

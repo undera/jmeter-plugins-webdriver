@@ -172,7 +172,7 @@ public class EdgeDriverConfigTest {
 		List<String> args = (List<String>) capability.get("args");
         assertThat(args, is(notNullValue()));
         assertEquals(1, args.size());
-        assertEquals("--headless", args.get(0));
+        assertEquals("--headless=new", args.get(0));
     }
 
     @Test
