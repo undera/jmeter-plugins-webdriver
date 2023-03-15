@@ -1,15 +1,12 @@
 package com.googlecode.jmeter.plugins.webdriver.config.gui;
 
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-
 import org.apache.jmeter.testelement.TestElement;
 import com.googlecode.jmeter.plugins.webdriver.config.FirefoxDriverConfig;
 import com.googlecode.jmeter.plugins.webdriver.config.WebDriverConfig;
 
 import kg.apc.jmeter.JMeterPluginsUtils;
 
-public class FirefoxDriverConfigGui extends WebDriverConfigGui implements ItemListener {
+public class FirefoxDriverConfigGui extends WebDriverConfigGui {
 
 	private static final long serialVersionUID = 100L;
 
@@ -64,11 +61,5 @@ public class FirefoxDriverConfigGui extends WebDriverConfigGui implements ItemLi
 	@Override
 	public void configure(TestElement element) {
 		super.configure(element);
-	}
-
-	public void itemStateChanged(ItemEvent itemEvent) {
-		if (itemEvent.getSource() == userAgentOverrideCheckbox) {
-			userAgentOverrideText.setEnabled(userAgentOverrideCheckbox.isSelected());
-		}
 	}
 }

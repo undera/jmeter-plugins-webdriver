@@ -2,6 +2,7 @@ package com.googlecode.jmeter.plugins.webdriver.config.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -36,7 +37,7 @@ import com.googlecode.jmeter.plugins.webdriver.proxy.ProxyType;
 import kg.apc.jmeter.JMeterPluginsUtils;
 import kg.apc.jmeter.gui.Grid;
 
-public abstract class WebDriverConfigGui extends AbstractConfigGui implements ItemListener {
+public abstract class WebDriverConfigGui extends AbstractConfigGui implements FocusListener, ItemListener {
 
 	private static final long serialVersionUID = 100L;
 
@@ -449,6 +450,29 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements It
 	}
 
 	@Override
+	public void focusGained(FocusEvent e) {
+		// Nothing to do
+	}
+
+	@Override
+	public void focusLost(FocusEvent e) {
+		if (e.getComponent().equals(remoteSeleniumGridText)) {
+			if (!isValidUrl(remoteSeleniumGridText.getText())) {
+				RemoteErrorMsg.setText("The selenium grid URL is malformed");
+			} else {
+			RemoteErrorMsg.setText("");
+			}
+		}
+		if (e.getComponent().equals(initialBrowserUrl)) {
+			if (!isValidUrl(initialBrowserUrl.getText())) {
+				IEerrorMsg.setText("The URL is malformed");
+			} else {
+				IEerrorMsg.setText("");
+			}
+		}
+	}
+
+	@Override
 	public void itemStateChanged(ItemEvent itemEvent) {
 		if (itemEvent.getSource() == pacUrlProxy) {
 			pacUrl.setEnabled(itemEvent.getStateChange() == ItemEvent.SELECTED);
@@ -460,6 +484,8 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements It
 			enableOtherProtocolsOnlyIfManualProxySelectedAndUseHttpSettingsIsNotSelected();
 		} else if (itemEvent.getSource() == useHttpSettingsForAllProtocols) {
 			enableOtherProtocolsOnlyIfManualProxySelectedAndUseHttpSettingsIsNotSelected();
+		} else if (itemEvent.getSource() == userAgentOverrideCheckbox) {
+			userAgentOverrideText.setEnabled(userAgentOverrideCheckbox.isSelected());
 		}
 	}
 

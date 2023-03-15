@@ -2,16 +2,12 @@ package com.googlecode.jmeter.plugins.webdriver.config.gui;
 
 import kg.apc.jmeter.JMeterPluginsUtils;
 
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.ItemListener;
-
 import org.apache.jmeter.testelement.TestElement;
 
 import com.googlecode.jmeter.plugins.webdriver.config.InternetExplorerDriverConfig;
 import com.googlecode.jmeter.plugins.webdriver.config.WebDriverConfig;
 
-public class InternetExplorerDriverConfigGui extends WebDriverConfigGui implements ItemListener, FocusListener {
+public class InternetExplorerDriverConfigGui extends WebDriverConfigGui {
 
     private static final long serialVersionUID = 100L;
 
@@ -67,18 +63,4 @@ public class InternetExplorerDriverConfigGui extends WebDriverConfigGui implemen
     public void configure(TestElement element) {
         super.configure(element);
     }
-
-    @Override
-	public void focusGained(FocusEvent e) {
-		// Nothing to do
-	}
-
-    @Override
-	public void focusLost(FocusEvent e) {
-		if (initialBrowserUrl.equals(e.getComponent()) && !isValidUrl(initialBrowserUrl.getText())) {
-			IEerrorMsg.setText("The URL is malformed");
-		} else {
-			IEerrorMsg.setText("");
-		}
-	}
 }
