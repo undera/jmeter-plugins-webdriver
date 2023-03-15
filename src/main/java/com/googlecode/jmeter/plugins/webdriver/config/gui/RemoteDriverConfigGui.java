@@ -1,8 +1,5 @@
 package com.googlecode.jmeter.plugins.webdriver.config.gui;
 
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.ItemListener;
 import org.apache.commons.lang.StringUtils;
 import org.apache.jmeter.testelement.TestElement;
 
@@ -12,7 +9,7 @@ import com.googlecode.jmeter.plugins.webdriver.config.WebDriverConfig;
 
 import kg.apc.jmeter.JMeterPluginsUtils;
 
-public class RemoteDriverConfigGui extends WebDriverConfigGui implements ItemListener, FocusListener {
+public class RemoteDriverConfigGui extends WebDriverConfigGui {
 
 	private static final long serialVersionUID = 100L;
 
@@ -81,25 +78,6 @@ public class RemoteDriverConfigGui extends WebDriverConfigGui implements ItemLis
 			remoteSeleniumGridText.setText(config.getSeleniumGridUrl());
 			capabilitiesComboBox.setSelectedItem(config.getCapability());
 			localFileDetector.setSelected(config.isLocalFileDectedor());
-		}
-	}
-
-	@Override
-	public void focusGained(FocusEvent e) {
-		// Nothing to do
-	}
-
-	@Override
-	public void focusLost(FocusEvent e) {
-		if (remoteSeleniumGridText.equals(e.getComponent()) && !isValidUrl(remoteSeleniumGridText.getText())) {
-			RemoteErrorMsg.setText("The selenium grid URL is malformed");
-		} else {
-			RemoteErrorMsg.setText("");
-		}
-		if (initialBrowserUrl.equals(e.getComponent()) && !isValidUrl(initialBrowserUrl.getText())) {
-			IEerrorMsg.setText("The URL is malformed");
-		} else {
-			IEerrorMsg.setText("");
 		}
 	}
 }
