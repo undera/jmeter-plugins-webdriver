@@ -35,7 +35,9 @@ public class WebDriverSampler extends AbstractSampler {
     public static final String SCRIPT = "WebDriverSampler.script";
     public static final String PARAMETERS = "WebDriverSampler.parameters";
     private static final Logger LOGGER = LoggerFactory.getLogger(WebDriverSampler.class);
-    public static final String DEFAULT_ENGINE = "javascript";
+    // javascript engine removed in jdk>13 https://openjdk.org/jeps/372
+    // existing defaultScript works in groovy
+    public static final String DEFAULT_ENGINE = "groovy";
     public static final String SCRIPT_LANGUAGE = "WebDriverSampler.language";
     private final transient ScriptEngineManager scriptEngineManager;
     private final Class<SampleResult> sampleResultClass;

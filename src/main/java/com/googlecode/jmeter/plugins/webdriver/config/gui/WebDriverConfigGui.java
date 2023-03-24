@@ -1,7 +1,6 @@
 package com.googlecode.jmeter.plugins.webdriver.config.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
+import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
@@ -9,19 +8,15 @@ import java.awt.event.ItemListener;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.NumberFormat;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFormattedTextField;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.jmeter.config.gui.AbstractConfigGui;
 import org.apache.jmeter.gui.util.HorizontalPanel;
 import org.apache.jmeter.gui.util.VerticalPanel;
@@ -30,7 +25,7 @@ import org.apache.jmeter.testelement.property.CollectionProperty;
 import org.apache.jmeter.testelement.property.JMeterProperty;
 import org.apache.jmeter.testelement.property.NullProperty;
 
-import com.googlecode.jmeter.plugins.webdriver.config.RemoteCapability;
+import com.googlecode.jmeter.plugins.webdriver.config.RemoteBrowser;
 import com.googlecode.jmeter.plugins.webdriver.config.WebDriverConfig;
 import com.googlecode.jmeter.plugins.webdriver.proxy.ProxyType;
 
@@ -47,6 +42,7 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements Fo
 	private static final int DEFAULT_PROXY_PORT = 8080;
 	private static final NumberFormat NUMBER_FORMAT = NumberFormat.getIntegerInstance();
 	private static final int PROXY_FIELD_INDENT = 28;
+	private static final ObjectMapper mapper = new ObjectMapper();
 
 	static {
 		NUMBER_FORMAT.setGroupingUsed(false);
@@ -62,7 +58,7 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements Fo
 
 	// Remote variables
 	JTextField remoteSeleniumGridText;
-	JComboBox<?> capabilitiesComboBox;
+	JComboBox<?> browserCapabilitiesComboBox;
 	JCheckBox localFileDetector;
 	JLabel RemoteErrorMsg;
 
@@ -106,6 +102,7 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements Fo
 	JFormattedTextField socksProxyPort;
 	JRadioButton systemProxy;
 	JCheckBox useHttpSettingsForAllProtocols;
+	JTextArea customCapabilitiesTextArea;
 
 	protected abstract String getWikiPage();
 
@@ -166,6 +163,7 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements Fo
 		if (isProxyEnabled()) {
 			tabbedPane.add("Proxy", createProxyPanel());
 		}
+		tabbedPane.add("Capabilities Management", createCustomCapabilities());
 		add(tabbedPane, BorderLayout.CENTER);
 	}
 
@@ -197,11 +195,11 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements Fo
 			panel.add(RemoteErrorMsg = new JLabel());
 			RemoteErrorMsg.setForeground(Color.red);
 
-			JLabel capabilitiesLabel = new JLabel();
-			capabilitiesLabel.setText("Capability");
-			panel.add(capabilitiesLabel);
-			capabilitiesComboBox = new JComboBox<Object>(RemoteCapability.values());
-			panel.add(capabilitiesComboBox);
+			JLabel browserCapabilitiesLabel = new JLabel();
+			browserCapabilitiesLabel.setText("Remote Browser Capability");
+			panel.add(browserCapabilitiesLabel);
+			browserCapabilitiesComboBox = new JComboBox<Object>(RemoteBrowser.values());
+			panel.add(browserCapabilitiesComboBox);
 
 			localFileDetector = new JCheckBox("Local File Detector");
 			panel.add(localFileDetector);
@@ -434,6 +432,71 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements Fo
 		return noProxyPanel;
 	}
 
+	private JPanel createCustomCapabilities() {
+		JPanel capabilitiesPanel = new VerticalPanel();
+		JLabel parsedJsonStatusLabel = new JLabel();
+		final JLabel capabilityEditorLabel = new JLabel("Capabilities JSON Editor");
+		customCapabilitiesTextArea = new JTextArea();
+		JLabel previewLabel = new JLabel("Capabilities Preview");
+		// TODO: would be nice to merge in ALL capabilities into previewPane,
+		//  similar to how they would be used in webdriver network request,
+		//  but currently Browser related capabilities are not exposed from WebDriverConfig.java
+		final JTextArea previewTextArea = new JTextArea();
+		previewTextArea.setEditable(false);
+		previewTextArea.setWrapStyleWord(true);
+		previewTextArea.setLineWrap(true);
+		previewTextArea.setVisible(true);
+		previewTextArea.setBackground(Color.BLACK);
+		Map<String, Object> customCapabilitiesJsonMap = new LinkedHashMap<>();
+
+		customCapabilitiesTextArea.getDocument().addDocumentListener(new DocumentListener() {
+			private void doUpdate() {
+				if (customCapabilitiesTextArea.getText().trim().isEmpty()) {
+					previewTextArea.setText("");
+					parsedJsonStatusLabel.setVisible(false);
+				} else {
+					parsedJsonStatusLabel.setText("Status: OK");
+					parsedJsonStatusLabel.setForeground(Color.GREEN);
+					parsedJsonStatusLabel.setVisible(true);
+					previewTextArea.setForeground(Color.GREEN);
+
+					try {
+						LinkedHashMap parsedJson = mapper.readValue(customCapabilitiesTextArea.getText(), LinkedHashMap.class);
+						customCapabilitiesJsonMap.clear();
+						customCapabilitiesJsonMap.putAll(parsedJson);
+						previewTextArea.setText(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(customCapabilitiesJsonMap));
+					} catch (JsonProcessingException e) {
+						parsedJsonStatusLabel.setText("Status: ERROR");
+						parsedJsonStatusLabel.setForeground(Color.RED);
+						previewTextArea.setText(e.getMessage());
+						previewTextArea.setForeground(Color.RED);
+					}
+				}
+			}
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				doUpdate();
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				doUpdate();
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) { }
+		});
+
+		capabilitiesPanel.add(capabilityEditorLabel);
+		capabilitiesPanel.add(customCapabilitiesTextArea);
+		capabilitiesPanel.add(parsedJsonStatusLabel);
+		capabilitiesPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
+		capabilitiesPanel.add(previewLabel);
+		capabilitiesPanel.add(previewTextArea);
+
+		return capabilitiesPanel;
+	}
+
 	private void createPacUrlProxy(JPanel panel, ButtonGroup group) {
 		pacUrlProxy = new JRadioButton("Automatic proxy configuration URL");
 		group.add(pacUrlProxy);
@@ -545,6 +608,7 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements Fo
 	        // Set a default initial page that is valid otherwise IeDriver may hang on startup...
 	        initialBrowserUrl.setText("https://www.bing.com/");
 		}
+		customCapabilitiesTextArea.setText("");
 
 		// Proxy
 		clearProxy();
@@ -573,6 +637,7 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements Fo
 
 			acceptInsecureCerts.setSelected(webDriverConfig.isAcceptInsecureCerts());
 			recreateBrowserOnIterationStart.setSelected(webDriverConfig.isRecreateBrowserOnIterationStart());
+			customCapabilitiesTextArea.setText(webDriverConfig.getCustomCapabilities());
 
 			// Commmon browser configs
 			if (isBrowser()) {
@@ -715,6 +780,8 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements Fo
 
 			// Proxy
 			modifyProxy(webDriverConfig);
+
+			webDriverConfig.setCustomCapabilities(customCapabilitiesTextArea.getText());
 		}
 	}
 

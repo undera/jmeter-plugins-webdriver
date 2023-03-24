@@ -15,7 +15,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.googlecode.jmeter.plugins.webdriver.config.RemoteCapability;
+import com.googlecode.jmeter.plugins.webdriver.config.RemoteBrowser;
 import com.googlecode.jmeter.plugins.webdriver.config.RemoteDriverConfig;
 import kg.apc.emulators.TestJMeterUtils;
 
@@ -73,11 +73,11 @@ public class RemoteDriverConfigGuiTest {
     public void shouldSetRemoteDriverConfigOnConfigure() {
         RemoteDriverConfig config = new RemoteDriverConfig();
         config.setSeleniumGridUrl("my.awesome.grid.com");
-        config.setCapability(RemoteCapability.FIREFOX);
+        config.setSelectedBrowser(RemoteBrowser.FIREFOX);
         gui.configure(config);
 
         assertThat(gui.remoteSeleniumGridText.getText(), is(config.getSeleniumGridUrl()));
-        assertThat((RemoteCapability)gui.capabilitiesComboBox.getSelectedItem(), is(config.getCapability()));
+        assertThat((RemoteBrowser)gui.browserCapabilitiesComboBox.getSelectedItem(), is(config.getSelectedBrowser()));
         assertFalse(gui.headless.isSelected());
     }
 
@@ -85,7 +85,7 @@ public class RemoteDriverConfigGuiTest {
     public void shouldSetHeadlessEnabledOnConfigure() {
         RemoteDriverConfig config = new RemoteDriverConfig();
         config.setSeleniumGridUrl("my.awesome.grid.com");
-        config.setCapability(RemoteCapability.CHROME);
+        config.setSelectedBrowser(RemoteBrowser.CHROME);
         config.setHeadless(true);
         gui.configure(config);
         assertTrue(gui.headless.isSelected());
