@@ -3,9 +3,12 @@ package com.googlecode.jmeter.plugins.webdriver.config;
 import java.io.File;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jmeter.config.ConfigTestElement;
 import org.apache.jmeter.engine.event.LoopIterationEvent;
@@ -15,6 +18,7 @@ import org.apache.jmeter.testelement.ThreadListener;
 import org.apache.jmeter.testelement.property.CollectionProperty;
 import org.apache.jmeter.testelement.property.JMeterProperty;
 import org.apache.jmeter.testelement.property.NullProperty;
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriver;
@@ -38,6 +42,7 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
 
 	private static final long serialVersionUID = 100L;
 	private static final Logger LOGGER = LoggerFactory.getLogger(WebDriverConfig.class);
+	private static final ObjectMapper mapper = new ObjectMapper();
 
 	/**
 	 * This is the key used to store a WebDriver instance in the
@@ -50,6 +55,7 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
 	private static final String ACCEPT_INSECURE_CERTS = "WebDriverConfig.acceptinsecurecerts";
     private static final String ENABLE_HEADLESS = "WebDriverConfig.headless";
 	private static final String MAXIMIZE_WINDOW = "WebDriverConfig.maximize_browser";
+	private static final String CUSTOM_CAPABILITIES = "WebDriverConfig.custom_capabilites";
 
 	/*
 	 * THE FOLLOWING CONFIGS ARE EXPERIMENTAL AND ARE SUBJECT TO CHANGE/REMOVAL.
@@ -290,6 +296,7 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
 
 		// Capabilities shared by all browsers
 		setSharedCaps(options);
+		combineCustomCapabilities(options);
 
 		return options;
 	}
@@ -319,6 +326,7 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
 
 		// Capabilities shared by all browsers
 		setSharedCaps(options);
+		combineCustomCapabilities(options);
 
 		return options;
 	}
@@ -334,6 +342,7 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
 
 		// Capabilities shared by all browsers
 		setSharedCaps(options);
+		combineCustomCapabilities(options);
 
 		return options;
 	}
@@ -418,6 +427,7 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
 
         // Capabilities shared by all browsers
         setSharedCaps(options);
+		combineCustomCapabilities(options);
 
         return options;
     }
@@ -426,6 +436,18 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
 	    // Capabilities shared by all browsers
 		caps.setAcceptInsecureCerts(isAcceptInsecureCerts());
 		caps.setProxy(createProxy());
+	}
+
+	public void combineCustomCapabilities(MutableCapabilities baseCapabilities) {
+		String customCaps = getCustomCapabilities();
+		if (customCaps != null && customCaps != "") {
+			try {
+				Map<String, Object> customCapsJson = mapper.readValue(customCaps, LinkedHashMap.class);
+				customCapsJson.keySet().stream().forEach(key -> baseCapabilities.setCapability(key, customCapsJson.get(key)));
+			} catch (JsonProcessingException e) {
+				LOGGER.error("Unable to parse custom capabilities JSON: " + e.getMessage());
+			}
+		}
 	}
 
 	public String getChromeBinaryPath() {
@@ -545,6 +567,16 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
 	}
 	public void setAcceptInsecureCerts(boolean enabled) {
 		setProperty(ACCEPT_INSECURE_CERTS, enabled);
+	}
+
+	public String getCustomCapabilities() {
+		// this is stringified map of json data
+		return getPropertyAsString(CUSTOM_CAPABILITIES);
+	}
+
+	public void setCustomCapabilities(String customCapabilities) {
+		// this is stringified map of json data
+		setProperty(CUSTOM_CAPABILITIES, customCapabilities);
 	}
 
 	public boolean isUseHttpSettingsForAllProtocols() {

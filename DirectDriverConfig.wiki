@@ -16,10 +16,11 @@ For Internet Explorer, the system will start Edge in "IE Mode" as Internet Explo
 HtmlUnit is a good compromise between speed of execution and the CPU usage per thread while maintaining Selenium API.
 The main drawback is that there is no screen so it's more difficult to understand the cause of problems and also that the javascript engine is not powerful as browsers such Firefox or Chrome.
 
-The configuration of eacḣ browser follows the same principle and is divided across three different tabs:
+The configuration of eacḣ browser follows the same principle and is divided across four different tabs:
 * the Driver tab;
 * the Options tab;
 * the Proxy tab;
+* the Capabilities Management tab;
 
 == Driver Tab ==
 === Install Drivers ===
@@ -60,6 +61,15 @@ You can find information on the other options presented in this tab at [https://
 
 == Proxy Tab ==
 The default configuration (Use system proxy) is suitable for most. However, if you are in a corporate environment and a browser fails to connect to a URL, this is most likely because the environmemt needs a proxy to be accessed.
+
+== Capabilties Management Tab ==
+This tab enables custom webdriver capability configuration using Json as input.
+These custom capabilities are appended after the browser options configured from all other tabs.
+These capabilities are appeneded to both "capabilities" and/or "desiredCapabilities" as allowed by webdriver.
+
+This is especically useful when using webdriver W3C extension capabilites, which allow more advanced/custom webdriver requests. See https://www.w3.org/TR/webdriver1/#dfn-extension-capability
+
+Example: Some webdriver requests require vendor specific capabilities (eg: authentication). This enables that.
 
 === No proxy ===
 Use this option if you directly connect to the internet, and your network will not make use of any proxies.  

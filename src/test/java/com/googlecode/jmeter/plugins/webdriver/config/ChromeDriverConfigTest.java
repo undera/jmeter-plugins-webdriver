@@ -32,6 +32,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -159,6 +160,13 @@ public class ChromeDriverConfigTest {
     public void shouldHaveProxyInCapability() {
         final ChromeOptions options = config.createChromeOptions();
         assertThat(options.getCapability(CapabilityType.PROXY), is(notNullValue()));
+    }
+
+    @Test
+    public void shouldMergeCustomCapabilities() {
+        config.setCustomCapabilities("{\"myCustomCapability\": \"myCustomValue\"}");
+        final Capabilities capabilities = config.createChromeOptions();
+        assertThat(capabilities.getCapability("myCustomCapability"), is("myCustomValue"));
     }
 
     @Test

@@ -16,7 +16,7 @@ public class RemoteDriverConfig extends WebDriverConfig<RemoteWebDriver> {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RemoteDriverConfig.class);
 
 	private static final String LOCAL_FILE_DETECTOR = "RemoteDriverConfig.general.selenium.file.detector";
-	private static final String REMOTE_CAPABILITY = "RemoteDriverConfig.general.selenium.capability";
+	private static final String REMOTE_BROWSER = "RemoteDriverConfig.general.selenium.capability";
 	private static final String REMOTE_SELENIUM_GRID_URL = "RemoteDriverConfig.general.selenium.grid.url";
 
 	@Override
@@ -33,10 +33,10 @@ public class RemoteDriverConfig extends WebDriverConfig<RemoteWebDriver> {
 		}
 	}
 
-	Capabilities createCapabilities() {
+	public Capabilities createCapabilities() {
 		// We pass the browser option instance to the remote so it knows which browser to use
 		AbstractDriverOptions<?> caps = null;
-		switch (getCapability()) {
+		switch (getSelectedBrowser()) {
 		case CHROME:
 			caps = createChromeOptions();
 			break;
@@ -52,14 +52,15 @@ public class RemoteDriverConfig extends WebDriverConfig<RemoteWebDriver> {
 		default:
 			throw new IllegalArgumentException("No such capability");
 		}
+		combineCustomCapabilities(caps);
 		return caps;
 	}
 
-	public RemoteCapability getCapability() {
-		return RemoteCapability.valueOf(getPropertyAsString(REMOTE_CAPABILITY));
+	public RemoteBrowser getSelectedBrowser() {
+		return RemoteBrowser.valueOf(getPropertyAsString(REMOTE_BROWSER));
 	}
-	public void setCapability(RemoteCapability selectedCapability) {
-		setProperty(REMOTE_CAPABILITY, selectedCapability.name());
+	public void setSelectedBrowser(RemoteBrowser remoteBrowser) {
+		setProperty(REMOTE_BROWSER, remoteBrowser.name());
 	}
 
 	public String getSeleniumGridUrl() {

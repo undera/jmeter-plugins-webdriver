@@ -162,6 +162,13 @@ public class InternetExplorerDriverConfigTest {
     }
 
     @Test
+    public void shouldMergeCustomCapabilities() {
+        config.setCustomCapabilities("{\"myCustomCapability\": \"myCustomValue\"}");
+        final Capabilities capabilities = config.createIEOptions();
+        assertThat(capabilities.getCapability("myCustomCapability"), is("myCustomValue"));
+    }
+
+    @Test
     public void getSetCleanSession() {
         assertThat(config.isEnsureCleanSession(), is(false));
         config.setEnsureCleanSession(true);
