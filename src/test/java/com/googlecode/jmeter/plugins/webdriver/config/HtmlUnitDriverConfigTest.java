@@ -81,4 +81,11 @@ public class HtmlUnitDriverConfigTest {
         final Capabilities capabilities = config.createCapabilities();
         assertThat(capabilities.getCapability(CapabilityType.PROXY), is(notNullValue()));
     }
+
+    @Test
+    public void shouldMergeCustomCapabilities() {
+        config.setCustomCapabilities("{\"myCustomCapability\": \"myCustomValue\"}");
+        final Capabilities capabilities = config.createCapabilities();
+        assertThat(capabilities.getCapability("myCustomCapability"), is("myCustomValue"));
+    }
 }

@@ -3,7 +3,7 @@ package com.googlecode.jmeter.plugins.webdriver.config.gui;
 import org.apache.commons.lang.StringUtils;
 import org.apache.jmeter.testelement.TestElement;
 
-import com.googlecode.jmeter.plugins.webdriver.config.RemoteCapability;
+import com.googlecode.jmeter.plugins.webdriver.config.RemoteBrowser;
 import com.googlecode.jmeter.plugins.webdriver.config.RemoteDriverConfig;
 import com.googlecode.jmeter.plugins.webdriver.config.WebDriverConfig;
 
@@ -57,7 +57,7 @@ public class RemoteDriverConfigGui extends WebDriverConfigGui {
 		if (element instanceof RemoteDriverConfig) {
 			RemoteDriverConfig config = (RemoteDriverConfig) element;
 			config.setSeleniumGridUrl(remoteSeleniumGridText.getText());
-			config.setCapability((RemoteCapability) capabilitiesComboBox.getSelectedItem());
+			config.setSelectedBrowser((RemoteBrowser) browserCapabilitiesComboBox.getSelectedItem());
 			config.setLocalFileDetector(localFileDetector.isSelected());
 		}
 	}
@@ -66,7 +66,7 @@ public class RemoteDriverConfigGui extends WebDriverConfigGui {
 	public void clearGui() {
 		super.clearGui();
 		remoteSeleniumGridText.setText(StringUtils.EMPTY);
-		capabilitiesComboBox.setSelectedIndex(1);
+		browserCapabilitiesComboBox.setSelectedIndex(1);
 		localFileDetector.setSelected(false);
 	}
 
@@ -76,7 +76,7 @@ public class RemoteDriverConfigGui extends WebDriverConfigGui {
 		if (element instanceof RemoteDriverConfig) {
 			RemoteDriverConfig config = (RemoteDriverConfig) element;
 			remoteSeleniumGridText.setText(config.getSeleniumGridUrl());
-			capabilitiesComboBox.setSelectedItem(config.getCapability());
+			browserCapabilitiesComboBox.setSelectedItem(config.getSelectedBrowser());
 			localFileDetector.setSelected(config.isLocalFileDectedor());
 		}
 	}

@@ -27,3 +27,6 @@ For more information on the options, please refer to [[DirectDriverConfig.wiki#O
 
 == Proxy Tab ==
 Please see the [[DirectDriverConfig.wiki#Proxy Tab|Proxy Tab]] in the Direct Driver wiki page for more information on the Proxy settings of browser.
+
+== Capabilties Management Tab ==
+Please see the [[DirectDriverConfig.wiki#Capabilties Management Tab|Capabilties Management Tab]] in the Direct Driver wiki page for more information on configuring custom webdriver capabilties.

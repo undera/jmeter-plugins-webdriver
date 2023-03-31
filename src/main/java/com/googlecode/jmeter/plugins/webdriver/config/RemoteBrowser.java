@@ -1,6 +1,6 @@
 package com.googlecode.jmeter.plugins.webdriver.config;
 
-public enum RemoteCapability {
+public enum RemoteBrowser {
 	CHROME,
 	EDGE,
 	FIREFOX,

@@ -14,6 +14,7 @@ public class HtmlUnitDriverConfig extends WebDriverConfig<HtmlUnitDriver> {
         capabilities.setBrowserName("htmlunit");
         capabilities.setAcceptInsecureCerts(isAcceptInsecureCerts());
         capabilities.setCapability(CapabilityType.PROXY, createProxy());
+        combineCustomCapabilities(capabilities);
         return capabilities;
     }
 

@@ -49,7 +49,7 @@ public class RemoteDriverConfigTest {
     public void createConfig() {
         config = new RemoteDriverConfig();
         variables = new JMeterVariables();
-        config.setCapability(RemoteCapability.CHROME);
+        config.setSelectedBrowser(RemoteBrowser.CHROME);
         JMeterContextService.getContext().setVariables(variables);
     }
 
@@ -61,11 +61,11 @@ public class RemoteDriverConfigTest {
     
     @Test
 	public void shouldSetTheCapability() throws Exception {
-		assertThat(config.getCapability(), is(RemoteCapability.CHROME));
-		config.setCapability(RemoteCapability.FIREFOX);
-		assertThat(config.getCapability(), is(RemoteCapability.FIREFOX));
-		config.setCapability(RemoteCapability.INTERNET_EXPLORER);
-		assertThat(config.getCapability(), is(RemoteCapability.INTERNET_EXPLORER));
+		assertThat(config.getSelectedBrowser(), is(RemoteBrowser.CHROME));
+		config.setSelectedBrowser(RemoteBrowser.FIREFOX);
+		assertThat(config.getSelectedBrowser(), is(RemoteBrowser.FIREFOX));
+		config.setSelectedBrowser(RemoteBrowser.INTERNET_EXPLORER);
+		assertThat(config.getSelectedBrowser(), is(RemoteBrowser.INTERNET_EXPLORER));
 	}
 
     @Test
@@ -103,6 +103,13 @@ public class RemoteDriverConfigTest {
         final Capabilities capabilities = config.createCapabilities();
         assertThat(capabilities.getCapability(CapabilityType.PROXY), is(notNullValue()));
         assertThat(capabilities.getCapability(ChromeOptions.CAPABILITY), is(notNullValue()));
+    }
+
+    @Test
+    public void shouldMergeCustomCapabilities() {
+        config.setCustomCapabilities("{\"myCustomCapability\": \"myCustomValue\"}");
+        final Capabilities capabilities = config.createCapabilities();
+        assertThat(capabilities.getCapability("myCustomCapability"), is("myCustomValue"));
     }
 
     @Test
