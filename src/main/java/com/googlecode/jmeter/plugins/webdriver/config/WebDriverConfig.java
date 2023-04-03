@@ -440,7 +440,7 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
 
 	public void combineCustomCapabilities(MutableCapabilities baseCapabilities) {
 		String customCaps = getCustomCapabilities();
-		if (customCaps != null && customCaps != "") {
+		if (!(customCaps.isBlank()) && !(customCaps.isEmpty())) {
 			try {
 				Map<String, Object> customCapsJson = mapper.readValue(customCaps, LinkedHashMap.class);
 				customCapsJson.keySet().stream().forEach(key -> baseCapabilities.setCapability(key, customCapsJson.get(key)));

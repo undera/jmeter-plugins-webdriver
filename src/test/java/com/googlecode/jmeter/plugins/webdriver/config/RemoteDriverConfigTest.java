@@ -122,8 +122,9 @@ public class RemoteDriverConfigTest {
 		@SuppressWarnings("unchecked")
 		List<String> args = (List<String>) capability.get("args");
         assertThat(args, is(notNullValue()));
-        assertEquals(1, args.size());
-        assertEquals("--headless=new", args.get(0));
+        assertEquals(2, args.size());
+        assertEquals("--remote-allow-origins=*", args.get(0));
+        assertEquals("--headless=new", args.get(1));
     }
 
     @Test
@@ -136,7 +137,7 @@ public class RemoteDriverConfigTest {
 		@SuppressWarnings("unchecked")
 		List<String> args = (List<String>) capability.get("args");
         assertThat(args, is(notNullValue()));
-        assertEquals(0, args.size());
+        assertEquals(1, args.size());
     }
 
     @Test
