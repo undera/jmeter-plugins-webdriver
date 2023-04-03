@@ -64,8 +64,6 @@ public class WebDriverSamplerGuiTest {
 
         assertThat(gui.script.getText(), is(WebDriverSampler.defaultScript));
         assertThat(gui.parameters.getText(), is(""));
-        // Continuous Integration expecting WebDriverSampler.DEFAULT_ENGINE (or "javascript" and not "beanshell")
-        // assertThat((String) gui.languages.getSelectedItem(), is("beanshell"));
         assertThat((String) gui.languages.getSelectedItem(), is(WebDriverSampler.DEFAULT_ENGINE));
     }
 
