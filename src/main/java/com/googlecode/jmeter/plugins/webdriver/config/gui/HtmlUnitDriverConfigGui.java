@@ -22,11 +22,6 @@ public class HtmlUnitDriverConfigGui extends WebDriverConfigGui {
         return JMeterPluginsUtils.prefixLabel("HtmlUnit Driver Config");
     }
 
-    @Override
-    protected String getWikiPage() {
-        return "DirectDriverConfig";
-    }
-
 	@Override
 	protected boolean isBrowser() {
 		return false;

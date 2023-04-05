@@ -22,11 +22,6 @@ public class FirefoxDriverConfigGui extends WebDriverConfigGui {
 	}
 
 	@Override
-	protected String getWikiPage() {
-		return "DirectDriverConfig";
-	}
-
-	@Override
 	protected boolean isBrowser() {
 		return true;
 	}

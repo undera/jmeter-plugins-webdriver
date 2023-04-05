@@ -446,11 +446,6 @@ public class WebDriverConfigGuiTest {
         }
 
         @Override
-        protected String getWikiPage() {
-            return "dummy";
-        }
-
-        @Override
         public String getLabelResource() {
             return null;
         }

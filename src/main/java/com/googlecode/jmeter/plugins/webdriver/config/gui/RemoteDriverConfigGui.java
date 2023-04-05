@@ -25,11 +25,6 @@ public class RemoteDriverConfigGui extends WebDriverConfigGui {
 	}
 
 	@Override
-	protected String getWikiPage() {
-		return "RemoteDriverConfig";
-	}
-
-	@Override
 	protected boolean isBrowser() {
 		return false;
 	}

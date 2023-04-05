@@ -33,7 +33,7 @@ public class InternetExplorerDriverConfigGuiTest {
 
     @Test
     public void shouldReturnWikiPage() {
-        assertThat(gui.getWikiPage(), is("DirectDriverConfig"));
+        assertThat(gui.getWikiPage(), is("https://github.com/undera/jmeter-plugins-webdriver"));
     }
 
     @Test

@@ -23,11 +23,6 @@ public class ChromeDriverConfigGui extends WebDriverConfigGui {
 	}
 
 	@Override
-	protected String getWikiPage() {
-		return "DirectDriverConfig";
-	}
-
-	@Override
 	protected boolean isBrowser() {
 		return true;
 	}
