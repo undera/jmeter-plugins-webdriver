@@ -440,7 +440,8 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
 
 	public void combineCustomCapabilities(MutableCapabilities baseCapabilities) {
 		String customCaps = getCustomCapabilities();
-		if (!(customCaps.isBlank()) && !(customCaps.isEmpty())) {
+// Cannot use !(customCaps.isBlank()) as isBlank requires Java 11 and JMeter targets Java 8.
+		if ((customCaps != null) && !(customCaps.isEmpty())) {
 			try {
 				Map<String, Object> customCapsJson = mapper.readValue(customCaps, LinkedHashMap.class);
 				customCapsJson.keySet().stream().forEach(key -> baseCapabilities.setCapability(key, customCapsJson.get(key)));

@@ -40,7 +40,7 @@ public class RemoteDriverConfigGuiTest {
 
     @Test
     public void shouldReturnWikiPage() {
-        assertThat(gui.getWikiPage(), is("RemoteDriverConfig"));
+        assertThat(gui.getWikiPage(), is("https://github.com/undera/jmeter-plugins-webdriver"));
     }
 
     @Test

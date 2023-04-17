@@ -22,11 +22,6 @@ public class InternetExplorerDriverConfigGui extends WebDriverConfigGui {
         return JMeterPluginsUtils.prefixLabel("Internet Explorer Driver Config");
     }
 
-    @Override
-    protected String getWikiPage() {
-        return "DirectDriverConfig";
-    }
-
 	@Override
 	protected boolean isBrowser() {
 		return true;

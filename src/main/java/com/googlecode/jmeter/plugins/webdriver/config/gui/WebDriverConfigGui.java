@@ -104,7 +104,10 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements Fo
 	JCheckBox useHttpSettingsForAllProtocols;
 	JTextArea customCapabilitiesTextArea;
 
-	protected abstract String getWikiPage();
+	public static final String WIKIPAGE = "https://github.com/undera/jmeter-plugins-webdriver";
+	public String getWikiPage() {
+		return WIKIPAGE;
+	}
 
 	abstract String browserName();
 

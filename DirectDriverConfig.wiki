@@ -62,15 +62,6 @@ You can find information on the other options presented in this tab at [https://
 == Proxy Tab ==
 The default configuration (Use system proxy) is suitable for most. However, if you are in a corporate environment and a browser fails to connect to a URL, this is most likely because the environmemt needs a proxy to be accessed.
 
-== Capabilties Management Tab ==
-This tab enables custom webdriver capability configuration using Json as input.
-These custom capabilities are appended after the browser options configured from all other tabs.
-These capabilities are appeneded to both "capabilities" and/or "desiredCapabilities" as allowed by webdriver.
-
-This is especically useful when using webdriver W3C extension capabilites, which allow more advanced/custom webdriver requests. See https://www.w3.org/TR/webdriver1/#dfn-extension-capability
-
-Example: Some webdriver requests require vendor specific capabilities (eg: authentication). This enables that.
-
 === No proxy ===
 Use this option if you directly connect to the internet, and your network will not make use of any proxies.  
 
@@ -103,6 +94,13 @@ This is a comma separated list of all host(s) and/or IP Address(es) that will by
 
 === Automatic proxy configuration URL ===
 For networks that have a proxy configuration server (PAC), and its name and the location of the PAC file is known, please use this option.  The usual configuration for this is http://proxy-server/proxy.pac
+
+== Capabilities Management Tab ==
+This tab enables custom webdriver capability configuration using Json as input.
+You need to specify the capabilities you want as a JSON string such as in "{"key1":"value1","key2":"value2"} where "keyx" is the capability name and "valuex" the value you want for this property.
+These capabilities are appended to both "capabilities" and/or "desiredCapabilities" as allowed by webdriver.
+
+This is especially useful when using webdriver W3C extension capabilities, which allows for more advanced/custom webdriver requests. See https://www.w3.org/TR/webdriver1/#dfn-extension-capability.
 
 == Code Samples ==
 === Chrome Logs ===
