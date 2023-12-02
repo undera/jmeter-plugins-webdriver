@@ -179,15 +179,14 @@ public class ChromeDriverConfigTest {
 		@SuppressWarnings("unchecked")
 		List<String> args = (List<String>) capability.get("args");
         assertThat(args, is(notNullValue()));
-        assertEquals(2, args.size());
-        assertEquals("--remote-allow-origins=*", args.get(0));
-        assertEquals("--headless=new", args.get(1));
+        assertEquals(1, args.size());
+        assertEquals("--headless=new", args.get(0));
     }
 
     @Test
     public void shouldNotHaveChromeOptionsWhenRemoteIsNotEnabled() {
         final ChromeOptions options = config.createChromeOptions();
-        org.hamcrest.MatcherAssert.assertThat(options.getCapability(ChromeOptions.CAPABILITY), Matchers.hasToString("{args=[--remote-allow-origins=*], extensions=[]}"));
+        org.hamcrest.MatcherAssert.assertThat(options.getCapability(ChromeOptions.CAPABILITY), Matchers.hasToString("{args=[], extensions=[]}"));
     }
 
     @Test

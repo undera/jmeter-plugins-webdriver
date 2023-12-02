@@ -4,7 +4,7 @@
 
     <groupId>kg.apc</groupId>
     <artifactId>jmeter-plugins-webdriver</artifactId>
-    <version>4.13.0.0</version>
+    <version>4.15.0.0</version>
     <packaging>jar</packaging>
 
     <name>WebDriver/Selenium</name>
@@ -34,7 +34,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <selenium.version>4.13.0</selenium.version>
+        <!--    "Chrome DevTools support is now: v117, v118, and v119 (Firefox still uses v85 for all versions)"    -->
+        <!--    @see https://www.selenium.dev/blog/2023/selenium-4-15-released/    -->
+        <selenium.version>4.15.0</selenium.version>
     </properties>
 
     <build>
@@ -51,22 +53,22 @@
                 </configuration>
             </plugin>
             <plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.0.0-M7</version>
-				<configuration>
-					<argLine>
-						--add-opens java.base/java.io=ALL-UNNAMED
-						--add-opens java.base/java.lang=ALL-UNNAMED
-						--add-opens java.base/java.lang.reflect=ALL-UNNAMED
-						--add-opens java.base/java.time=ALL-UNNAMED
-						--add-opens java.base/java.util=ALL-UNNAMED
-						--add-opens java.base/java.util.concurrent=ALL-UNNAMED
-						--add-opens java.base/java.util.stream=ALL-UNNAMED
-						--add-opens=java.base/sun.security.jca=ALL-UNNAMED
-					</argLine>
-				</configuration>
-			</plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M7</version>
+                <configuration>
+                    <argLine>
+                        --add-opens java.base/java.io=ALL-UNNAMED
+                        --add-opens java.base/java.lang=ALL-UNNAMED
+                        --add-opens java.base/java.lang.reflect=ALL-UNNAMED
+                        --add-opens java.base/java.time=ALL-UNNAMED
+                        --add-opens java.base/java.util=ALL-UNNAMED
+                        --add-opens java.base/java.util.concurrent=ALL-UNNAMED
+                        --add-opens java.base/java.util.stream=ALL-UNNAMED
+                        --add-opens=java.base/sun.security.jca=ALL-UNNAMED
+                    </argLine>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
@@ -141,9 +143,16 @@
         </dependency>
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>htmlunit-driver</artifactId>
+            <artifactId>htmlunit3-driver</artifactId>
+            <version>4.15.0</version>
+        </dependency>
+        <!-- @since 4.15.0.0 -->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-manager</artifactId>
             <version>${selenium.version}</version>
         </dependency>
+
         <!-- begin need this libraries for HtmlUnitDriver -->
         <dependency>
             <groupId>xml-apis</groupId>
@@ -202,4 +211,5 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
 </project>
