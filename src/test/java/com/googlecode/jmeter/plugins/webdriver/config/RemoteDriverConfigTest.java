@@ -58,7 +58,7 @@ public class RemoteDriverConfigTest {
         config.clearThreadBrowsers();
         JMeterContextService.getContext().setVariables(null);
     }
-    
+
     @Test
 	public void shouldSetTheCapability() throws Exception {
 		assertThat(config.getSelectedBrowser(), is(RemoteBrowser.CHROME));
@@ -122,9 +122,8 @@ public class RemoteDriverConfigTest {
 		@SuppressWarnings("unchecked")
 		List<String> args = (List<String>) capability.get("args");
         assertThat(args, is(notNullValue()));
-        assertEquals(2, args.size());
-        assertEquals("--remote-allow-origins=*", args.get(0));
-        assertEquals("--headless=new", args.get(1));
+        assertEquals(1, args.size());
+        assertEquals("--headless=new", args.get(0));
     }
 
     @Test
@@ -137,7 +136,7 @@ public class RemoteDriverConfigTest {
 		@SuppressWarnings("unchecked")
 		List<String> args = (List<String>) capability.get("args");
         assertThat(args, is(notNullValue()));
-        assertEquals(1, args.size());
+        assertEquals(0, args.size());
     }
 
     @Test
