@@ -102,6 +102,9 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements Fo
 	JFormattedTextField socksProxyPort;
 	JRadioButton systemProxy;
 	JCheckBox useHttpSettingsForAllProtocols;
+	JCheckBox useFtpProxy;
+	JCheckBox useSocksProxy;
+
 	JTextArea customCapabilitiesTextArea;
 
 	public static final String WIKIPAGE = "https://github.com/undera/jmeter-plugins-webdriver";
@@ -390,10 +393,23 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements Fo
 		httpsProxyPort.setText(String.valueOf(DEFAULT_PROXY_PORT));
 		manualPanel.add(createProxyHostAndPortPanel(httpsProxyHost, httpsProxyPort, "SSL Proxy:"));
 
+		useFtpProxy = new JCheckBox("Set the FTP proxy");
+		useFtpProxy.setSelected(true);
+		useFtpProxy.setEnabled(false);
+		useFtpProxy.addItemListener(this);
+		manualPanel.add(useFtpProxy);
+
 		ftpProxyHost = new JTextField();
 		ftpProxyPort = new JFormattedTextField(NUMBER_FORMAT);
 		ftpProxyPort.setText(String.valueOf(DEFAULT_PROXY_PORT));
 		manualPanel.add(createProxyHostAndPortPanel(ftpProxyHost, ftpProxyPort, "FTP Proxy:"));
+
+
+		useSocksProxy = new JCheckBox("Set the SOCKS proxy");
+		useSocksProxy.setSelected(true);
+		useSocksProxy.setEnabled(false);
+		useSocksProxy.addItemListener(this);
+		manualPanel.add(useSocksProxy);
 
 		socksProxyHost = new JTextField();
 		socksProxyPort = new JFormattedTextField(NUMBER_FORMAT);
@@ -550,6 +566,8 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements Fo
 			enableOtherProtocolsOnlyIfManualProxySelectedAndUseHttpSettingsIsNotSelected();
 		} else if (itemEvent.getSource() == useHttpSettingsForAllProtocols) {
 			enableOtherProtocolsOnlyIfManualProxySelectedAndUseHttpSettingsIsNotSelected();
+		} else if (itemEvent.getSource() == useFtpProxy || itemEvent.getSource() == useSocksProxy) {
+			enableOtherProtocolsOnlyIfManualProxySelectedAndUseHttpSettingsIsNotSelected();
 		} else if (itemEvent.getSource() == userAgentOverrideCheckbox) {
 			userAgentOverrideText.setEnabled(userAgentOverrideCheckbox.isSelected());
 		}
@@ -559,10 +577,12 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements Fo
 		final boolean enabledState = !useHttpSettingsForAllProtocols.isSelected() && manualProxy.isSelected();
 		httpsProxyHost.setEnabled(enabledState);
 		httpsProxyPort.setEnabled(enabledState);
-		ftpProxyHost.setEnabled(enabledState);
-		ftpProxyPort.setEnabled(enabledState);
-		socksProxyHost.setEnabled(enabledState);
-		socksProxyPort.setEnabled(enabledState);
+		useFtpProxy.setEnabled(!useHttpSettingsForAllProtocols.isSelected());
+		ftpProxyHost.setEnabled(enabledState && useFtpProxy.isSelected());
+		ftpProxyPort.setEnabled(enabledState && useFtpProxy.isSelected());
+		useSocksProxy.setEnabled(!useHttpSettingsForAllProtocols.isSelected());
+		socksProxyHost.setEnabled(enabledState && useSocksProxy.isSelected());
+		socksProxyPort.setEnabled(enabledState && useSocksProxy.isSelected());
 	}
 
 	@Override
@@ -625,8 +645,10 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements Fo
 		useHttpSettingsForAllProtocols.setSelected(true);
 		httpsProxyHost.setText("");
 		httpsProxyPort.setText(String.valueOf(DEFAULT_PROXY_PORT));
+		useFtpProxy.setSelected(true);
 		ftpProxyHost.setText("");
 		ftpProxyPort.setText(String.valueOf(DEFAULT_PROXY_PORT));
+		useSocksProxy.setSelected(true);
 		socksProxyHost.setText("");
 		socksProxyPort.setText(String.valueOf(DEFAULT_PROXY_PORT));
 		noProxyList.setText(DEFAULT_NO_PROXY_LIST);
@@ -668,7 +690,7 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements Fo
 			}
 
 			// Firefox configs
-			if ((browserName().equals("firefox")) || (browserName().equals("Remote"))) {				
+			if ((browserName().equals("firefox")) || (browserName().equals("Remote"))) {
 				userAgentOverrideCheckbox.setSelected(webDriverConfig.isUserAgentOverridden());
 				userAgentOverrideText.setText(webDriverConfig.getUserAgentOverride());
 				userAgentOverrideText.setEnabled(webDriverConfig.isUserAgentOverridden());
@@ -720,8 +742,10 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements Fo
 		useHttpSettingsForAllProtocols.setSelected(webDriverConfig.isUseHttpSettingsForAllProtocols());
 		httpsProxyHost.setText(webDriverConfig.getHttpsHost());
 		httpsProxyPort.setText(String.valueOf(webDriverConfig.getHttpsPort()));
+		useFtpProxy.setSelected(webDriverConfig.isUseFtpProxy());
 		ftpProxyHost.setText(webDriverConfig.getFtpHost());
 		ftpProxyPort.setText(String.valueOf(webDriverConfig.getFtpPort()));
+		useSocksProxy.setSelected(webDriverConfig.isUseSocksProxy());
 		socksProxyHost.setText(webDriverConfig.getSocksHost());
 		socksProxyPort.setText(String.valueOf(webDriverConfig.getSocksPort()));
 		noProxyList.setText(webDriverConfig.getNoProxyHost());
@@ -806,8 +830,10 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements Fo
 		webDriverConfig.setUseHttpSettingsForAllProtocols(useHttpSettingsForAllProtocols.isSelected());
 		webDriverConfig.setHttpsHost(httpsProxyHost.getText());
 		webDriverConfig.setHttpsPort(Integer.parseInt(httpsProxyPort.getText()));
+		webDriverConfig.setUseFtpProxy(useFtpProxy.isSelected());
 		webDriverConfig.setFtpHost(ftpProxyHost.getText());
 		webDriverConfig.setFtpPort(Integer.parseInt(ftpProxyPort.getText()));
+		webDriverConfig.setUseSocksProxy(useSocksProxy.isSelected());
 		webDriverConfig.setSocksHost(socksProxyHost.getText());
 		webDriverConfig.setSocksPort(Integer.parseInt(socksProxyPort.getText()));
 		webDriverConfig.setNoProxyHost(noProxyList.getText());

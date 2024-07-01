@@ -12,28 +12,39 @@ public class ProxyFactory {
         return INSTANCE;
     }
 
-    private ProxyFactory() {}
+    private ProxyFactory() {
+    }
 
     /**
-     * This returns a {@link Proxy} with HTTP, HTTPS and FTP hosts and ports configured as specified.
+     * This returns a {@link Proxy} with HTTP, HTTPS and FTP hosts and ports
+     * configured as specified.
      *
      *
-     * @param httpProxy is the http proxy host and port
+     * @param httpProxy  is the http proxy host and port
      * @param httpsProxy is the https proxy host and port
-     * @param ftpProxy is the ftp proxy host and port
+     * @param ftpProxy   is the ftp proxy host and port
      * @param socksProxy is the socks proxy host and port
-     * @param noProxy is a comma separated list of hosts that will bypass the proxy
+     * @param noProxy    is a comma separated list of hosts that will bypass the
+     *                   proxy
      *
      * @return a proxy object with the hosts manually specified.
      */
-    public Proxy getManualProxy(ProxyHostPort httpProxy, ProxyHostPort httpsProxy, ProxyHostPort ftpProxy, ProxyHostPort socksProxy, String noProxy) {
-        return new Proxy()
-            .setProxyType(Proxy.ProxyType.MANUAL)
-            .setHttpProxy(httpProxy.toUnifiedForm())
-            .setSslProxy(httpsProxy.toUnifiedForm())
-            .setFtpProxy(ftpProxy.toUnifiedForm())
-            .setSocksProxy(socksProxy.toUnifiedForm())
-            .setNoProxy(noProxy);
+    public Proxy getManualProxy(ProxyHostPort httpProxy, ProxyHostPort httpsProxy, ProxyHostPort ftpProxy,
+            ProxyHostPort socksProxy, String noProxy) {
+        Proxy proxy = new Proxy().setProxyType(Proxy.ProxyType.MANUAL).setNoProxy(noProxy);
+        if (httpProxy != null) {
+            proxy.setHttpProxy(httpProxy.toUnifiedForm());
+        }
+        if (httpsProxy != null) {
+            proxy.setSslProxy(httpsProxy.toUnifiedForm());
+        }
+        if (ftpProxy != null) {
+            proxy.setFtpProxy(ftpProxy.toUnifiedForm());
+        }
+        if (socksProxy != null) {
+            proxy.setSocksProxy(socksProxy.toUnifiedForm());
+        }
+        return proxy;
     }
 
     /**
@@ -43,31 +54,34 @@ public class ProxyFactory {
      */
     public Proxy getDirectProxy() {
         return new Proxy()
-            .setProxyType(Proxy.ProxyType.DIRECT);
+                .setProxyType(Proxy.ProxyType.DIRECT);
     }
 
     /**
      * This is a proxy which will have its settings automatically configured.
      *
-     * @return a proxy object which will try to automatically detect the proxy settings.
+     * @return a proxy object which will try to automatically detect the proxy
+     *         settings.
      */
     public Proxy getAutodetectProxy() {
         return new Proxy()
-            .setProxyType(Proxy.ProxyType.AUTODETECT)
-            .setAutodetect(true);
+                .setProxyType(Proxy.ProxyType.AUTODETECT)
+                .setAutodetect(true);
     }
 
     /**
-     * If the proxy can be configured using a PAC file at a URL, set this value to the location of this PAC file.
+     * If the proxy can be configured using a PAC file at a URL, set this value to
+     * the location of this PAC file.
      *
      * @param pacUrl is the url to the Proxy PAC file
      *
-     * @return a proxy object with its proxies configured automatically using a PAC file.
+     * @return a proxy object with its proxies configured automatically using a PAC
+     *         file.
      */
     public Proxy getConfigUrlProxy(String pacUrl) {
         return new Proxy()
-            .setProxyType(Proxy.ProxyType.PAC)
-            .setProxyAutoconfigUrl(pacUrl);
+                .setProxyType(Proxy.ProxyType.PAC)
+                .setProxyAutoconfigUrl(pacUrl);
     }
 
     /**
@@ -77,6 +91,6 @@ public class ProxyFactory {
      */
     public Proxy getSystemProxy() {
         return new Proxy()
-            .setProxyType(Proxy.ProxyType.SYSTEM);
+                .setProxyType(Proxy.ProxyType.SYSTEM);
     }
 }
