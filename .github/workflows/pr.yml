@@ -14,11 +14,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: browser-actions/setup-geckodriver@latest
-    - uses: browser-actions/setup-firefox@v1
+    #- uses: browser-actions/setup-geckodriver@latest
+    #- uses: browser-actions/setup-firefox@v1
 
-    - run: geckodriver --version
-    - run: firefox --version
+    #- run: geckodriver --version
+    #- run: firefox --version
 
     - uses: actions/checkout@v3
     - uses: actions/setup-java@v3
@@ -27,8 +27,11 @@ jobs:
         java-version: '8'
         cache: maven
 
+    - name: Maven Install
+      run: mvn -Dmaven.test.skip=true clean install --batch-mode
     - name: Maven tests
-      run: mvn -T 1C -Djava.awt.headless=true -Dmaven.test.redirectTestOutputToFile=true --fail-at-end --batch-mode org.jacoco:jacoco-maven-plugin:prepare-agent test org.jacoco:jacoco-maven-plugin:report install
+      run: mvn -Djava.awt.headless=true -Dmaven.test.redirectTestOutputToFile=true --fail-at-end --batch-mode org.jacoco:jacoco-maven-plugin:prepare-agent test org.jacoco:jacoco-maven-plugin:report
+      # run: mvn -T 1C -Djava.awt.headless=true -Dmaven.test.redirectTestOutputToFile=true --fail-at-end --batch-mode org.jacoco:jacoco-maven-plugin:prepare-agent test org.jacoco:jacoco-maven-plugin:report install
 
     - name: Codecov
       uses: codecov/codecov-action@v3.1.1
