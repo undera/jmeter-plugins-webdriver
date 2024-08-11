@@ -77,16 +77,16 @@ public class WebDriverSampler extends AbstractSampler {
         } catch (IllegalArgumentException e1) {
             LOGGER.warn("Class " + sampleResultClass + " failed to instantiate, defaulted to " + SampleResult.class.getCanonicalName(), e1);
             res = new SampleResult();
-		} catch (InvocationTargetException e1) {
+        } catch (InvocationTargetException e1) {
             LOGGER.warn("Class " + sampleResultClass + " failed to instantiate, defaulted to " + SampleResult.class.getCanonicalName(), e1);
             res = new SampleResult();
-		} catch (NoSuchMethodException e1) {
+        } catch (NoSuchMethodException e1) {
             LOGGER.warn("Class " + sampleResultClass + " failed to instantiate, defaulted to " + SampleResult.class.getCanonicalName(), e1);
             res = new SampleResult();
-		} catch (SecurityException e1) {
+        } catch (SecurityException e1) {
             LOGGER.warn("Class " + sampleResultClass + " failed to instantiate, defaulted to " + SampleResult.class.getCanonicalName(), e1);
             res = new SampleResult();
-		}
+        }
         res.setSampleLabel(getName());
         res.setSamplerData(toString());
         res.setDataType(SampleResult.TEXT);
@@ -95,7 +95,7 @@ public class WebDriverSampler extends AbstractSampler {
         res.setSuccessful(true);
 
         LOGGER.debug("Current thread name: '" + getThreadName() + "', has browser: '" + getWebDriver() + "'");
-
+        res.sampleStart();
         try {
             final ScriptEngine scriptEngine = createScriptEngineWith(res);
             scriptEngine.eval(getScript());
@@ -103,7 +103,7 @@ public class WebDriverSampler extends AbstractSampler {
             // setup the data in the SampleResult
             res.setResponseData(getWebDriver().getPageSource(), null);
             res.setURL(new URL(getWebDriver().getCurrentUrl()));
-            if(StringUtils.isEmpty(res.getResponseCode())) {
+            if (StringUtils.isEmpty(res.getResponseCode())) {
                 res.setResponseCode(res.isSuccessful() ? "200" : "500");
             }
             if (res.isSuccessful()) {
@@ -115,13 +115,8 @@ public class WebDriverSampler extends AbstractSampler {
             res.setResponseData((ex.toString() + "\r\n" + JMeterPluginsUtils.getStackTrace(ex)).getBytes());
             res.setResponseCode("500");
             res.setSuccessful(false);
-            if (res.getStartTime() == 0) {
-                res.sampleStart();
-            }
-
-            if (res.getEndTime() == 0) {
-                res.sampleEnd();
-            }
+        } finally {
+            res.sampleEnd();
         }
 
         return res;
