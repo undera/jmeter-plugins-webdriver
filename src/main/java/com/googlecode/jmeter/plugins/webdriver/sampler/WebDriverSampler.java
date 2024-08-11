@@ -53,7 +53,7 @@ public class WebDriverSampler extends AbstractSampler {
         try {
             srClass = (Class<SampleResult>) Class.forName(className);
         } catch (ClassNotFoundException e) {
-            LOGGER.warn("Class " + className + " not found, defaulted to " + SampleResult.class.getCanonicalName(), e);
+            LOGGER.warn("Class {} not found, defaulted to {}", className, SampleResult.class.getCanonicalName(), e);
             srClass = SampleResult.class;
         }
         sampleResultClass = srClass;
@@ -65,28 +65,13 @@ public class WebDriverSampler extends AbstractSampler {
             throw new IllegalArgumentException("Browser has not been configured.  Please ensure at least 1 WebDriverConfig is created for a ThreadGroup.");
         }
 
-        SampleResult res = null;
+        SampleResult res;
         try {
             res = sampleResultClass.getDeclaredConstructor().newInstance();
-        } catch (InstantiationException e1) {
-            LOGGER.warn("Class " + sampleResultClass + " failed to instantiate, defaulted to " + SampleResult.class.getCanonicalName(), e1);
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e1) {
+            LOGGER.warn("Class {} failed to instantiate, defaulted to {}", sampleResultClass, SampleResult.class.getCanonicalName(), e1);
             res = new SampleResult();
-        } catch (IllegalAccessException e1) {
-            LOGGER.warn("Class " + sampleResultClass + " failed to instantiate, defaulted to " + SampleResult.class.getCanonicalName(), e1);
-            res = new SampleResult();
-        } catch (IllegalArgumentException e1) {
-            LOGGER.warn("Class " + sampleResultClass + " failed to instantiate, defaulted to " + SampleResult.class.getCanonicalName(), e1);
-            res = new SampleResult();
-		} catch (InvocationTargetException e1) {
-            LOGGER.warn("Class " + sampleResultClass + " failed to instantiate, defaulted to " + SampleResult.class.getCanonicalName(), e1);
-            res = new SampleResult();
-		} catch (NoSuchMethodException e1) {
-            LOGGER.warn("Class " + sampleResultClass + " failed to instantiate, defaulted to " + SampleResult.class.getCanonicalName(), e1);
-            res = new SampleResult();
-		} catch (SecurityException e1) {
-            LOGGER.warn("Class " + sampleResultClass + " failed to instantiate, defaulted to " + SampleResult.class.getCanonicalName(), e1);
-            res = new SampleResult();
-		}
+        }
         res.setSampleLabel(getName());
         res.setSamplerData(toString());
         res.setDataType(SampleResult.TEXT);
@@ -94,8 +79,8 @@ public class WebDriverSampler extends AbstractSampler {
         res.setDataEncoding("UTF-8");
         res.setSuccessful(true);
 
-        LOGGER.debug("Current thread name: '" + getThreadName() + "', has browser: '" + getWebDriver() + "'");
-
+        LOGGER.debug("Current thread name: '{}', has browser: '{}'", getThreadName(), getWebDriver());
+        res.sampleStart();
         try {
             final ScriptEngine scriptEngine = createScriptEngineWith(res);
             scriptEngine.eval(getScript());
@@ -103,7 +88,7 @@ public class WebDriverSampler extends AbstractSampler {
             // setup the data in the SampleResult
             res.setResponseData(getWebDriver().getPageSource(), null);
             res.setURL(new URL(getWebDriver().getCurrentUrl()));
-            if(StringUtils.isEmpty(res.getResponseCode())) {
+            if (StringUtils.isEmpty(res.getResponseCode())) {
                 res.setResponseCode(res.isSuccessful() ? "200" : "500");
             }
             if (res.isSuccessful()) {
@@ -115,13 +100,8 @@ public class WebDriverSampler extends AbstractSampler {
             res.setResponseData((ex.toString() + "\r\n" + JMeterPluginsUtils.getStackTrace(ex)).getBytes());
             res.setResponseCode("500");
             res.setSuccessful(false);
-            if (res.getStartTime() == 0) {
-                res.sampleStart();
-            }
-
-            if (res.getEndTime() == 0) {
-                res.sampleEnd();
-            }
+        } finally {
+            res.sampleEnd();
         }
 
         return res;
