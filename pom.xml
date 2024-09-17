@@ -4,7 +4,7 @@
 
     <groupId>kg.apc</groupId>
     <artifactId>jmeter-plugins-webdriver</artifactId>
-    <version>4.13.0.0</version>
+    <version>4.13.0.1</version>
     <packaging>jar</packaging>
 
     <name>WebDriver/Selenium</name>
@@ -42,7 +42,7 @@
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.7</version>
+                <version>1.7.0</version>
                 <extensions>true</extensions>
                 <configuration>
                     <serverId>sonatype-nexus-staging</serverId>

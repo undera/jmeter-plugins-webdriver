@@ -92,8 +92,10 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
 	private static final String USE_HTTP_FOR_ALL_PROTOCOLS = "WebDriverConfig.use_http_for_all_protocols";
 	private static final String HTTPS_HOST = "WebDriverConfig.https_host";
 	private static final String HTTPS_PORT = "WebDriverConfig.https_port";
+	private static final String USE_FTP_PROXY = "WebDriverConfig.use_ftp_proxy";
 	private static final String FTP_HOST = "WebDriverConfig.ftp_host";
 	private static final String FTP_PORT = "WebDriverConfig.ftp_port";
+	private static final String USE_SOCKS_PROXY = "WebDriverConfig.use_socks_proxy";
 	private static final String SOCKS_HOST = "WebDriverConfig.socks_host";
 	private static final String SOCKS_PORT = "WebDriverConfig.socks_port";
 	private static final String NO_PROXY = "WebDriverConfig.no_proxy";
@@ -255,8 +257,18 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
 			}
 			ProxyHostPort http = new ProxyHostPort(getHttpHost(), getHttpPort());
 			ProxyHostPort https = new ProxyHostPort(getHttpsHost(), getHttpsPort());
-			ProxyHostPort ftp = new ProxyHostPort(getFtpHost(), getFtpPort());
-			ProxyHostPort socks = new ProxyHostPort(getSocksHost(), getSocksPort());
+
+			ProxyHostPort ftp = null;
+			if (isUseFtpProxy()) {
+				ftp = new ProxyHostPort(getFtpHost(), getFtpPort());
+			}
+
+			ProxyHostPort socks = null;
+
+			if (isUseSocksProxy()) {
+				socks = new ProxyHostPort(getSocksHost(), getSocksPort());
+			}
+
 			return proxyFactory.getManualProxy(http, https, ftp, socks, getNoProxyHost());
 		default:
 			return proxyFactory.getSystemProxy();
@@ -585,6 +597,22 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
 	}
 	public void setUseHttpSettingsForAllProtocols(boolean override) {
 		setProperty(USE_HTTP_FOR_ALL_PROTOCOLS, override);
+	}
+
+	public boolean isUseFtpProxy() {
+		return getPropertyAsBoolean(USE_FTP_PROXY, true);
+	}
+
+	public void setUseFtpProxy(boolean useFtpProxy) {
+		setProperty(USE_FTP_PROXY, useFtpProxy);
+	}
+
+	public boolean isUseSocksProxy() {
+		return getPropertyAsBoolean(USE_SOCKS_PROXY, true);
+	}
+
+	public void setUseSocksProxy(boolean useSocksProxy) {
+		setProperty(USE_SOCKS_PROXY, useSocksProxy);
 	}
 
     public boolean isHeadless() {
