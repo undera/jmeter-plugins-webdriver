@@ -40,6 +40,15 @@ This tab contains some custom options for each browser. Their names are meaningf
 === Chrome ===
 In the Options tab of Chrome for instance, you can specify the location of a Chrome Binary in case you want to test a different version of Chrome from the standard one. Leave this field blank if you are happy to test the Chrome that is defined in your path variable.
 
+There is also a 'Command line options' section, which lets you pass specific command line flags to the Chrome binary. These are mainly useful when running headless load tests in containers or on virtualized machines, and can remove the need to wrap the browser in a custom launcher script. The available flags are:
+
+* 'Disable GPU' (--disable-gpu) - disables hardware GPU acceleration;
+* 'Disable /dev/shm usage' (--disable-dev-shm-usage) - makes Chrome write its temporary files to /tmp instead of /dev/shm, avoiding out-of-memory crashes in containers with a small shared memory area;
+* 'Disable extensions' (--disable-extensions) - prevents the loading of browser extensions;
+* 'Disable background networking' (--disable-background-networking) - prevents background network activity, such as component updates;
+* 'Disable metrics recording' (--metrics-recording-off) - disables metrics collection;
+* 'Mute audio' (--mute-audio) - suppresses all audio output.
+
 You can find more information on the Chrome options presented in this tab at [https://chromedriver.chromium.org/capabilities Capabilities & ChromeOptions].
 
 === Edge ===
