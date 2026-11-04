@@ -76,12 +76,40 @@ public class ChromeDriverConfigGuiTest {
     }
 
     @Test
+    public void shouldSetCommandLineOptions() {
+        gui.chromeDisableGpu.setSelected(true);
+        gui.chromeDisableDevShmUsage.setSelected(true);
+        gui.chromeDisableExtensions.setSelected(true);
+        gui.chromeDisableBackgroundNetworking.setSelected(true);
+        gui.chromeMetricsRecordingOff.setSelected(true);
+        gui.chromeMuteAudio.setSelected(true);
+        gui.chromeNoSandbox.setSelected(true);
+
+        final ChromeDriverConfig testElement = (ChromeDriverConfig) gui.createTestElement();
+
+        assertThat(testElement.isDisableGpu(), is(true));
+        assertThat(testElement.isDisableDevShmUsage(), is(true));
+        assertThat(testElement.isDisableExtensions(), is(true));
+        assertThat(testElement.isDisableBackgroundNetworking(), is(true));
+        assertThat(testElement.isMetricsRecordingOff(), is(true));
+        assertThat(testElement.isMuteAudio(), is(true));
+        assertThat(testElement.isNoSandboxEnabled(), is(true));
+    }
+
+    @Test
     public void shouldResetValuesOnClearGui() {
         gui.driverPath.setText("path");
         gui.chromeBinaryPath.setText("path/binary");
         gui.headless.setSelected(true);
         gui.acceptInsecureCerts.setSelected(true);
         gui.chromeAdditionalArgs.setText("additional");
+        gui.chromeDisableGpu.setSelected(true);
+        gui.chromeDisableDevShmUsage.setSelected(true);
+        gui.chromeDisableExtensions.setSelected(true);
+        gui.chromeDisableBackgroundNetworking.setSelected(true);
+        gui.chromeMetricsRecordingOff.setSelected(true);
+        gui.chromeMuteAudio.setSelected(true);
+        gui.chromeNoSandbox.setSelected(true);
 
         gui.clearGui();
 
@@ -89,6 +117,13 @@ public class ChromeDriverConfigGuiTest {
         assertThat(gui.headless.isSelected(), is(false));
         assertThat(gui.acceptInsecureCerts.isSelected(), is(false));
         assertThat(gui.chromeAdditionalArgs.getText(), is(""));
+        assertThat(gui.chromeDisableGpu.isSelected(), is(false));
+        assertThat(gui.chromeDisableDevShmUsage.isSelected(), is(false));
+        assertThat(gui.chromeDisableExtensions.isSelected(), is(false));
+        assertThat(gui.chromeDisableBackgroundNetworking.isSelected(), is(false));
+        assertThat(gui.chromeMetricsRecordingOff.isSelected(), is(false));
+        assertThat(gui.chromeMuteAudio.isSelected(), is(false));
+        assertThat(gui.chromeNoSandbox.isSelected(), is(false));
     }
 
     @Test
@@ -125,6 +160,27 @@ public class ChromeDriverConfigGuiTest {
         gui.configure(config);
 
         assertThat(gui.acceptInsecureCerts.isSelected(), is(config.isAcceptInsecureCerts()));
+    }
+
+    @Test
+    public void shouldSetCommandLineOptionsOnConfigure() {
+        ChromeDriverConfig config = new ChromeDriverConfig();
+        config.setDisableGpu(true);
+        config.setDisableDevShmUsage(true);
+        config.setDisableExtensions(true);
+        config.setDisableBackgroundNetworking(true);
+        config.setMetricsRecordingOff(true);
+        config.setMuteAudio(true);
+        config.setNoSandboxEnabled(true);
+        gui.configure(config);
+
+        assertThat(gui.chromeDisableGpu.isSelected(), is(config.isDisableGpu()));
+        assertThat(gui.chromeDisableDevShmUsage.isSelected(), is(config.isDisableDevShmUsage()));
+        assertThat(gui.chromeDisableExtensions.isSelected(), is(config.isDisableExtensions()));
+        assertThat(gui.chromeDisableBackgroundNetworking.isSelected(), is(config.isDisableBackgroundNetworking()));
+        assertThat(gui.chromeMetricsRecordingOff.isSelected(), is(config.isMetricsRecordingOff()));
+        assertThat(gui.chromeMuteAudio.isSelected(), is(config.isMuteAudio()));
+        assertThat(gui.chromeNoSandbox.isSelected(), is(config.isNoSandboxEnabled()));
     }
 
     @Test

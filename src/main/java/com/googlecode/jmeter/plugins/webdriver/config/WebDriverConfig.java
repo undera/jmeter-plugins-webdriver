@@ -66,6 +66,13 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
 	// Constants for Chrome
 	private static final String CHROME_ADDITIONAL_ARGS = "ChromeDriverConfig.additional_args";
 	private static final String CHROME_BINARY_PATH = "ChromeDriverConfig.binary_path";
+	private static final String CHROME_DISABLE_GPU = "ChromeDriverConfig.disable_gpu";
+	private static final String CHROME_DISABLE_DEV_SHM_USAGE = "ChromeDriverConfig.disable_dev_shm_usage";
+	private static final String CHROME_DISABLE_EXTENSIONS = "ChromeDriverConfig.disable_extensions";
+	private static final String CHROME_DISABLE_BACKGROUND_NETWORKING = "ChromeDriverConfig.disable_background_networking";
+	private static final String CHROME_METRICS_RECORDING_OFF = "ChromeDriverConfig.metrics_recording_off";
+	private static final String CHROME_MUTE_AUDIO = "ChromeDriverConfig.mute_audio";
+	private static final String CHROME_NO_SANDBOX = "ChromeDriverConfig.no_sandbox_enabled";
 
 	// Constants for Edge
 	private static final String EDGE_ADDITIONAL_ARGS = "EdgeDriverConfig.additional_args";
@@ -294,6 +301,27 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
 		if (isHeadless()) {
 			options.addArguments("--headless=new");
 		}
+		if (isDisableGpu()) {
+			options.addArguments("--disable-gpu");
+		}
+		if (isDisableDevShmUsage()) {
+			options.addArguments("--disable-dev-shm-usage");
+		}
+		if (isDisableExtensions()) {
+			options.addArguments("--disable-extensions");
+		}
+		if (isDisableBackgroundNetworking()) {
+			options.addArguments("--disable-background-networking");
+		}
+		if (isMetricsRecordingOff()) {
+			options.addArguments("--metrics-recording-off");
+		}
+		if (isMuteAudio()) {
+			options.addArguments("--mute-audio");
+		}
+		if (isNoSandboxEnabled()) {
+			options.addArguments("--no-sandbox");
+		}
 
 		String additionalArgs = trimmed(getChromeAdditionalArgs());
 		if (null != additionalArgs && !additionalArgs.isEmpty()) {
@@ -489,6 +517,55 @@ public abstract class WebDriverConfig<T extends WebDriver> extends ConfigTestEle
 	}
 	public void setChromeAdditionalArgs(String additionalArgs) {
 		setProperty(CHROME_ADDITIONAL_ARGS, additionalArgs);
+	}
+
+	public boolean isDisableGpu() {
+		return getPropertyAsBoolean(CHROME_DISABLE_GPU);
+	}
+	public void setDisableGpu(boolean state) {
+		setProperty(CHROME_DISABLE_GPU, state);
+	}
+
+	public boolean isDisableDevShmUsage() {
+		return getPropertyAsBoolean(CHROME_DISABLE_DEV_SHM_USAGE);
+	}
+	public void setDisableDevShmUsage(boolean state) {
+		setProperty(CHROME_DISABLE_DEV_SHM_USAGE, state);
+	}
+
+	public boolean isDisableExtensions() {
+		return getPropertyAsBoolean(CHROME_DISABLE_EXTENSIONS);
+	}
+	public void setDisableExtensions(boolean state) {
+		setProperty(CHROME_DISABLE_EXTENSIONS, state);
+	}
+
+	public boolean isDisableBackgroundNetworking() {
+		return getPropertyAsBoolean(CHROME_DISABLE_BACKGROUND_NETWORKING);
+	}
+	public void setDisableBackgroundNetworking(boolean state) {
+		setProperty(CHROME_DISABLE_BACKGROUND_NETWORKING, state);
+	}
+
+	public boolean isMetricsRecordingOff() {
+		return getPropertyAsBoolean(CHROME_METRICS_RECORDING_OFF);
+	}
+	public void setMetricsRecordingOff(boolean state) {
+		setProperty(CHROME_METRICS_RECORDING_OFF, state);
+	}
+
+	public boolean isMuteAudio() {
+		return getPropertyAsBoolean(CHROME_MUTE_AUDIO);
+	}
+	public void setMuteAudio(boolean state) {
+		setProperty(CHROME_MUTE_AUDIO, state);
+	}
+
+	public boolean isNoSandboxEnabled() {
+		return getPropertyAsBoolean(CHROME_NO_SANDBOX);
+	}
+	public void setNoSandboxEnabled(boolean state) {
+		setProperty(CHROME_NO_SANDBOX, state);
 	}
 
 	public String getEdgeAdditionalArgs() {

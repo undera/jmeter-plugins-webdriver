@@ -1,6 +1,7 @@
 package com.googlecode.jmeter.plugins.webdriver.config;
 
 import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.core.Is.is;
@@ -234,5 +235,95 @@ public class ChromeDriverConfigTest {
     public void getSetAdditionalArgs() {
         config.setChromeAdditionalArgs("additional args");
         assertThat(config.getChromeAdditionalArgs(), is("additional args"));
+    }
+
+    @Test
+    public void shouldAddSelectedCommandLineOptionsToChromeOptions() {
+        config.setDisableGpu(true);
+        config.setDisableDevShmUsage(true);
+        config.setDisableExtensions(true);
+        config.setDisableBackgroundNetworking(true);
+        config.setMetricsRecordingOff(true);
+        config.setMuteAudio(true);
+        config.setNoSandboxEnabled(true);
+        final ChromeOptions options = config.createChromeOptions();
+        @SuppressWarnings("unchecked")
+		Map<String,Object> capability = (Map<String,Object>) options.getCapability(ChromeOptions.CAPABILITY);
+        assertThat(capability, is(notNullValue()));
+		@SuppressWarnings("unchecked")
+		List<String> args = (List<String>) capability.get("args");
+        assertThat(args, hasItem("--disable-gpu"));
+        assertThat(args, hasItem("--disable-dev-shm-usage"));
+        assertThat(args, hasItem("--disable-extensions"));
+        assertThat(args, hasItem("--disable-background-networking"));
+        assertThat(args, hasItem("--metrics-recording-off"));
+        assertThat(args, hasItem("--mute-audio"));
+        assertThat(args, hasItem("--no-sandbox"));
+    }
+
+    @Test
+    public void shouldNotAddCommandLineOptionsWhenNotEnabled() {
+        final ChromeOptions options = config.createChromeOptions();
+        @SuppressWarnings("unchecked")
+		Map<String,Object> capability = (Map<String,Object>) options.getCapability(ChromeOptions.CAPABILITY);
+        assertThat(capability, is(notNullValue()));
+		@SuppressWarnings("unchecked")
+		List<String> args = (List<String>) capability.get("args");
+        assertThat(args, is(not(hasItem("--disable-gpu"))));
+        assertThat(args, is(not(hasItem("--disable-dev-shm-usage"))));
+        assertThat(args, is(not(hasItem("--disable-extensions"))));
+        assertThat(args, is(not(hasItem("--disable-background-networking"))));
+        assertThat(args, is(not(hasItem("--metrics-recording-off"))));
+        assertThat(args, is(not(hasItem("--mute-audio"))));
+        assertThat(args, is(not(hasItem("--no-sandbox"))));
+    }
+
+    @Test
+    public void getSetDisableGpu() {
+        assertThat(config.isDisableGpu(), is(false));
+        config.setDisableGpu(true);
+        assertThat(config.isDisableGpu(), is(true));
+    }
+
+    @Test
+    public void getSetDisableDevShmUsage() {
+        assertThat(config.isDisableDevShmUsage(), is(false));
+        config.setDisableDevShmUsage(true);
+        assertThat(config.isDisableDevShmUsage(), is(true));
+    }
+
+    @Test
+    public void getSetDisableExtensions() {
+        assertThat(config.isDisableExtensions(), is(false));
+        config.setDisableExtensions(true);
+        assertThat(config.isDisableExtensions(), is(true));
+    }
+
+    @Test
+    public void getSetDisableBackgroundNetworking() {
+        assertThat(config.isDisableBackgroundNetworking(), is(false));
+        config.setDisableBackgroundNetworking(true);
+        assertThat(config.isDisableBackgroundNetworking(), is(true));
+    }
+
+    @Test
+    public void getSetMetricsRecordingOff() {
+        assertThat(config.isMetricsRecordingOff(), is(false));
+        config.setMetricsRecordingOff(true);
+        assertThat(config.isMetricsRecordingOff(), is(true));
+    }
+
+    @Test
+    public void getSetMuteAudio() {
+        assertThat(config.isMuteAudio(), is(false));
+        config.setMuteAudio(true);
+        assertThat(config.isMuteAudio(), is(true));
+    }
+
+    @Test
+    public void getSetNoSandboxEnabled() {
+        assertThat(config.isNoSandboxEnabled(), is(false));
+        config.setNoSandboxEnabled(true);
+        assertThat(config.isNoSandboxEnabled(), is(true));
     }
 }
