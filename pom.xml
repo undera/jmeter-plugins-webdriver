@@ -4,7 +4,7 @@
 
     <groupId>kg.apc</groupId>
     <artifactId>jmeter-plugins-webdriver</artifactId>
-    <version>4.13.0.2</version>
+    <version>4.13.0.3</version>
     <packaging>jar</packaging>
 
     <name>WebDriver/Selenium</name>
@@ -40,14 +40,15 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.7.0</version>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.11.0</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <serverId>sonatype-nexus-staging</serverId>
-                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                    <publishingServerId>central</publishingServerId>
+                    <autoPublish>true</autoPublish>
+                    <!-- default waits only until VALIDATED; wait for the real end state -->
+                    <waitUntil>published</waitUntil>
                 </configuration>
             </plugin>
             <plugin>
@@ -68,6 +69,28 @@
 				</configuration>
 			</plugin>
         </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>3.3.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>3.11.2</version>
+                    <configuration>
+                        <doclint>none</doclint>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>3.2.7</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 
     <dependencyManagement>
@@ -215,4 +238,52 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <!-- Used by ../jmeter-plugins/maven-bundle.sh. Central requires sources, javadoc and signatures. -->
+        <profile>
+            <id>sonatype-oss-release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
