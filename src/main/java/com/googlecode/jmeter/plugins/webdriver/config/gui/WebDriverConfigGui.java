@@ -65,6 +65,13 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements Fo
 	// Chrome variables
 	JTextField chromeAdditionalArgs;
 	JTextField chromeBinaryPath;
+	JCheckBox chromeDisableGpu;
+	JCheckBox chromeDisableDevShmUsage;
+	JCheckBox chromeDisableExtensions;
+	JCheckBox chromeDisableBackgroundNetworking;
+	JCheckBox chromeMetricsRecordingOff;
+	JCheckBox chromeMuteAudio;
+	JCheckBox chromeNoSandbox;
 
 	// Edge variables
 	JTextField edgeAdditionalArgs;
@@ -249,6 +256,24 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements Fo
 		additionalArgsPanel.add(additionalArgsLabel);
 		additionalArgsPanel.add(chromeAdditionalArgs);
 		browserPanel.add(additionalArgsPanel);
+
+		final JPanel commandLineOptionsPanel = new VerticalPanel();
+		commandLineOptionsPanel.setBorder(BorderFactory.createTitledBorder("Command line options"));
+		chromeDisableGpu = new JCheckBox("Disable GPU");
+		commandLineOptionsPanel.add(chromeDisableGpu);
+		chromeDisableDevShmUsage = new JCheckBox("Disable /dev/shm usage (useful when running in a container)");
+		commandLineOptionsPanel.add(chromeDisableDevShmUsage);
+		chromeDisableExtensions = new JCheckBox("Disable extensions");
+		commandLineOptionsPanel.add(chromeDisableExtensions);
+		chromeDisableBackgroundNetworking = new JCheckBox("Disable background networking");
+		commandLineOptionsPanel.add(chromeDisableBackgroundNetworking);
+		chromeMetricsRecordingOff = new JCheckBox("Disable metrics recording");
+		commandLineOptionsPanel.add(chromeMetricsRecordingOff);
+		chromeMuteAudio = new JCheckBox("Mute audio");
+		commandLineOptionsPanel.add(chromeMuteAudio);
+		chromeNoSandbox = new JCheckBox("Run in No sandbox mode");
+		commandLineOptionsPanel.add(chromeNoSandbox);
+		browserPanel.add(commandLineOptionsPanel);
 
 		return browserPanel;
 	}
@@ -608,6 +633,13 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements Fo
 		if ((browserName().equals("chrome")) || (browserName().equals("Remote"))) {
 			chromeAdditionalArgs.setText("");
 			chromeBinaryPath.setText("");
+			chromeDisableGpu.setSelected(false);
+			chromeDisableDevShmUsage.setSelected(false);
+			chromeDisableExtensions.setSelected(false);
+			chromeDisableBackgroundNetworking.setSelected(false);
+			chromeMetricsRecordingOff.setSelected(false);
+			chromeMuteAudio.setSelected(false);
+			chromeNoSandbox.setSelected(false);
 		}
 
 		if ((browserName().equals("edge")) || (browserName().equals("Remote"))) {
@@ -681,6 +713,13 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements Fo
 			if ((browserName().equals("chrome")) || (browserName().equals("Remote"))) {
 				chromeAdditionalArgs.setText(webDriverConfig.getChromeAdditionalArgs());
 				chromeBinaryPath.setText(webDriverConfig.getChromeBinaryPath());
+				chromeDisableGpu.setSelected(webDriverConfig.isDisableGpu());
+				chromeDisableDevShmUsage.setSelected(webDriverConfig.isDisableDevShmUsage());
+				chromeDisableExtensions.setSelected(webDriverConfig.isDisableExtensions());
+				chromeDisableBackgroundNetworking.setSelected(webDriverConfig.isDisableBackgroundNetworking());
+				chromeMetricsRecordingOff.setSelected(webDriverConfig.isMetricsRecordingOff());
+				chromeMuteAudio.setSelected(webDriverConfig.isMuteAudio());
+				chromeNoSandbox.setSelected(webDriverConfig.isNoSandboxEnabled());
 			}
 
 			// Edge configs
@@ -777,6 +816,13 @@ public abstract class WebDriverConfigGui extends AbstractConfigGui implements Fo
 			if ((browserName().equals("chrome")) || (browserName().equals("Remote"))) {
 				webDriverConfig.setChromeAdditionalArgs(chromeAdditionalArgs.getText());
 				webDriverConfig.setChromeBinaryPath(chromeBinaryPath.getText());
+				webDriverConfig.setDisableGpu(chromeDisableGpu.isSelected());
+				webDriverConfig.setDisableDevShmUsage(chromeDisableDevShmUsage.isSelected());
+				webDriverConfig.setDisableExtensions(chromeDisableExtensions.isSelected());
+				webDriverConfig.setDisableBackgroundNetworking(chromeDisableBackgroundNetworking.isSelected());
+				webDriverConfig.setMetricsRecordingOff(chromeMetricsRecordingOff.isSelected());
+				webDriverConfig.setMuteAudio(chromeMuteAudio.isSelected());
+				webDriverConfig.setNoSandboxEnabled(chromeNoSandbox.isSelected());
 			}
 
 			// Edge elements
